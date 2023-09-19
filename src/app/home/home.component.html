@@ -1,0 +1,33 @@
+<mat-sidenav-container>
+  <!--左側欄-->
+  <mat-sidenav #sideNav mode="side">
+    <div class="aside_left">
+      <diV>
+        <app-aside></app-aside>
+      </diV>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content style="height: 100vh; width: 100%;">
+     <div class="layout">
+      <!--上層-->
+      <div class="top">
+        <div class="top_layout">
+          <button  style="margin-top: 5px;color: #EAEEE5;"  mat-mini-fab  color="primary" (click)="toggleSideNav(sideNav)">
+            <mat-icon>{{ sideNav.opened ? 'chevron_left' : 'menu' }}</mat-icon>
+          </button>
+          <div class="{{sideNav.opened ? 'top_item2':'top_item'}}">
+              <app-top></app-top>
+          </div>
+        </div>
+      </div>
+      <!--內容-->
+      <div class="content">
+        <div class="content_layout">
+          <div class="{{sideNav.opened ? 'content_item2':'content_item'}}">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

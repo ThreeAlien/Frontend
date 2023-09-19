@@ -1,0 +1,33 @@
+.layout{
+  display: flex;
+  font-size: 24px;
+  margin: 0;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
+  line-height: 1.2em;
+  color:#EAEEE5;
+  letter-spacing:2px;
+  -webkit-text-size-adjust:100%;
+}
+/**原來的兩倍*/
+.icon{
+  transform: scale(1.5);
+  margin-bottom: 8px;
+}
+.loginNameCss{
+  margin-right: 50px;
+  margin-top: 10px;
+}
+.signOut{
+  font-weight: bold;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+.signOut:hover{
+  cursor: pointer;
+}
+.status{
+  font-size: 14px;
+  padding-top: 10px;
+  padding-right: 27px;
+  color: red;
+}

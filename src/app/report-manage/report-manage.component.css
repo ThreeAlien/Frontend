@@ -1,0 +1,102 @@
+/**最外層*/
+.layout {
+  position: relative;
+  margin-top: 10px;
+  height: auto;
+  width: 93%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  background-color: #EAEEE5;
+}
+
+/**table 內容*/
+.table-container {
+  margin: 10px;
+  position: relative;
+  min-height: 200px;
+  max-height: 500px;
+  overflow: auto;
+  border-radius: 10px;
+  border: 2px solid #808080;
+  box-shadow: 0 5px 5px -3px #0003, 0 3px 14px 2px #0000001f;
+}
+
+table {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* .mat-header-cell.mat-column-accActName {
+  color: red; 500: #AADCB6, //預設
+  600: #7ABD87,
+  700: #3E7E55,
+} */
+.mat-cell.mat-column-accActName {
+  font-weight: bold;
+}
+
+.mat-header-cell.mat-column-func {
+  text-align: center;
+}
+
+.mat-header-row {
+  background-color: #AADCB6;
+}
+.titleCss{
+
+  font-size: 18px;
+  letter-spacing: 1.2px;
+}
+.top{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  background-color: #EAEEE5;
+  max-height: 84vh;
+  width: 93%;
+}
+.topTitle{
+  font-size: 24px;
+  letter-spacing: 1.2px;
+  font-weight: bold;
+}
+.pageFooter{
+  font-size: 14px;
+  background-color: #EAEEE5;
+}
+.qryLable1{
+  font-size: 14px;
+  line-height: 1.43;
+}
+.qryLable2{
+  margin-left: 10px;
+}
+.input{
+  width: 166px;
+  height: 32px;
+  padding: 0px 12px;
+  font-size: 18px;
+  line-height: 1.43;
+  color: #676767;
+  background-color: #fafafa;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.addBtn{
+  width: 4.6em;
+  height: 2.3em;
+  margin-left: 10px;
+  border-radius: 20px;
+  font-size: 0.5em;
+  color: #676767;
+  margin-bottom: 5px;
+}
+.testBtn{
+  background-color: #EAEEE5;
+}
+.isTestBtn{
+  background-color: #676767;
+}

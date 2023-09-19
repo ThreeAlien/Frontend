@@ -1,0 +1,163 @@
+<div class="header">
+  <label class="modal-header_Ttitle_label">新增範本</label>
+  <div class="CloseBtn" (click)="onCancel()">
+    <ng-container>
+      <mat-icon>clear</mat-icon>
+    </ng-container>
+  </div>
+</div>
+
+<div class="Windows">
+  <div class="WindwsDiv">
+    <div class="modal-body">
+      <div style="margin:0px auto;">
+        <form>
+          <table class="InputTable_S">
+            <tr>
+              <td>
+                <label>媒體選項:</label>
+                <mat-radio-group style="margin-left: 10px;">
+                  <mat-radio-button (click)="changeFormType(mediaG)" [value]="mediaG">Google</mat-radio-button>
+                  <mat-radio-button (click)="changeFormType(mediaM)" style="margin-left: 20px;" [value]="mediaM">Meta
+                  </mat-radio-button>
+                </mat-radio-group>
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
+              <td>
+                <div style="display: flex;">
+                  <label class="tdMarginTop">帳戶設定:</label>
+                  <mat-form-field class="tdMarginLeft">
+                    <mat-label>客戶名稱</mat-label>
+                    <mat-select name="AccItem" [(ngModel)]="AccItem" (selectionChange)="changeAcc($event.value)">
+                      <mat-option [value]="d" *ngFor="let d of AccItemList">
+                        {{d.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- <mat-form-field class="tdMarginLeft">
+                  <mat-label>帳戶名稱(MCC)</mat-label>
+                  <mat-select [(ngModel)]="MccItem" name="food">
+                    <mat-option [value]="d" *ngFor="let d of MccItemItemList">
+                      {{d.viewValue}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+                  <mat-form-field class="tdMarginLeft">
+                    <mat-label>帳戶活動名稱</mat-label>
+                    <mat-select name="ChildAccItem" [(ngModel)]="ChildAccItem" name="food" (selectionChange)="changeChilAcc($event)">
+                      <mat-option [value]="d" *ngFor="let d of ChildAccItemList">
+                        {{d.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+              </td>
+              <td colspan="5"></td>
+              <td></td>
+            </tr>
+            <tr *ngIf="mediaType == mediaM">
+              <td>
+                <label>行銷活動(帳戶名稱):</label>
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaM">
+              <td>
+                <label>廣告組合:</label>
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaM">
+              <td>
+                <label>廣告素材:</label>
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaM">
+              <td>
+                <label>媒體素材:</label>
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
+              <td>
+                <div style="display: flex;">
+                  <label class="tdMarginTop">目標廣告:</label>
+                  <mat-form-field class="tdMarginLeft">
+                    <mat-label>廣告類型</mat-label>
+                    <input matInput disabled [value]="targetMedia">
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
+              <td>
+                <label>報表內容:</label>
+                <!-- <mat-form-field class="tdMarginLeft">
+                  <mat-label>報表內容</mat-label>
+                  <mat-select  (selectionChange)="changeAcc($event.value)">
+                    <mat-option [value]="d" *ngFor="let d of reportContentList">
+                      {{d.viewValue}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+              </td>
+            </tr>
+            <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
+              <td>
+                <div style="display: flex;">
+                  <label class="tdMarginTop">範本名稱:</label>
+                  <mat-form-field class="tdMarginLeft">
+                    <mat-label>範本名稱</mat-label>
+                    <input matInput value="測試">
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+            <tr >
+              <td>
+                <div style="display: flex;">
+                  <label class="tdMarginTop">報表欄位:</label>
+                  <input  type="text"
+                          style="margin-left: 10px;"
+                          id="addcol"
+                          list="browsers"
+                          [value]="col"
+                          (change)="addCol($event)"
+                    name="addcol" class="selection">
+                  <datalist id="browsers">
+                    <ng-container *ngFor="let d of colList">
+                      <option [value]="d.viewValue">{{d.viewValue}}</option>
+                    </ng-container>
+                  </datalist>
+                </div>
+                <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
+                  (cdkDropListDropped)="drop($event)">
+                  <mat-chip class="example-box" cdkDrag *ngFor="let d of column">
+                    {{d.name}}
+                    <button matChipRemove (click)="onRemoveCol(d)">
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip>
+                </mat-chip-set>
+              </td>
+              <!-- <td colspan="9" class="Listarea">
+              <div style="margin-left: 11px;margin-bottom: 11px;" *ngFor="let d of colList"
+                [ngClass]="setStatusClass(d)">{{d.name}}
+              </div>
+            </td> -->
+            </tr>
+
+          </table>
+        </form>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="Btn" (click)="onOk()">
+        確認
+      </button>
+      <div style="width: 50px;"></div>
+      <button class="Btn" (click)="onCancel()">
+        取消
+      </button>
+    </div>
+  </div>
+</div>

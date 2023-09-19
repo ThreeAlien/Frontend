@@ -1,0 +1,10 @@
+mat-select {
+  height: auto !important;
+  width: fit-content !important;
+  min-width: 100% !important;
+}
+mat-option {
+  font-size: 14px !important;
+  min-height: 37px !important;
+}
+

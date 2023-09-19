@@ -1,0 +1,65 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+$mandate-color: (
+  50: #e7ebf0,
+  100: #EAEEE5,
+  200: #9badbf,
+  300: #738ca5,
+  400: #557392,
+  500: #AADCB6, //預設
+  600: #7ABD87,
+  700: #3E7E55,
+  800: #1b5a23,
+  900: #08470d,
+  A100: #8bb8ff,
+  A200: #5898ff,
+  A400: #2579ff,
+  A700: #0c69ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff
+  )
+);
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$iData-primary: mat.define-palette($mandate-color);
+$iData-accent: mat.define-palette($mandate-color,700);
+
+// The warn palette is optional (defaults to red).
+$iData-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$iData-theme: mat.define-light-theme((
+  color: (
+    primary: $iData-primary,
+    accent: $iData-accent,
+    warn: $iData-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($iData-theme);
+

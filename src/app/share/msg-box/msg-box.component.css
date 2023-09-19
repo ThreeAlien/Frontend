@@ -1,0 +1,89 @@
+.dialog-header{
+  display: flex;
+  height: 50;
+  border-bottom: 1px solid #AADCB6 !important;
+  color: #AADCB6;
+  padding: 4px;
+  margin-bottom: 10px;
+}
+.dialog-header-title{
+  float: left;
+  font-size: 20px;
+}
+.dialog-header-btn{
+  width: auto;
+  height: auto;
+  color: #AADCB6;
+  float: right;
+  margin-left: auto;
+}
+.dialog-header-btn:hover{
+  color: rgba(106, 201, 62, 0.3);
+  cursor: pointer;
+}
+
+.dialog-body{
+  width: 100%;
+}
+.dialog-body-content{
+  width: 100%;
+  height: auto;
+  overflow: auto;
+}
+.dialog-msg{
+  text-align: left;
+  word-wrap: break-word;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 2.45;
+  letter-spacing: 2px;
+  color: #747474;
+}
+
+.dialog-footer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-align: center;
+  border-top: 2px solid #AADCB6;
+  margin-top: 10px;
+}
+
+
+.msgbtn{
+  margin: 4px;
+  color: #AADCB6;
+  border-color: #3d3d3d;
+  border-width: 2px;
+}
+.msgbtn:hover{
+  background-color: rgba(106, 201, 62, 0.3);
+}
+.msgbtn:active{
+  color: black;
+}
+
+.msgbtn-ok{
+  border-color: #AADCB6;
+}
+.msgbtn-ok:hover{
+  background-color: #AADCB6;
+  color: white;
+}
+.msgbtn-ok:active{
+  color: #AADCB6;
+}
+
+.msgbtn-no{
+  border-color: indianred;
+}
+.msgbtn-no:hover{
+  background-color: indianred;
+  color: white;
+}
+.msgbtn-no:active{
+  color: indianred;
+}

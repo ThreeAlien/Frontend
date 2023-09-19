@@ -1,0 +1,23 @@
+.btnitemOut{
+  width: 100%;
+  border-left:#3E7E55 5px solid;
+  border-right:#3E7E55 5px solid;
+  margin-left: 2px;
+  background-color: #EAEEE5;
+  font-size: 16px;
+  letter-spacing: 1.2px;
+}
+.btnitemIn{
+  width: 100%;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  background-color: #EAEEE5;
+}
+.logo{
+  /* background-image: url("/assets/img/logo_black.png"); */
+  background-size: 100% 100%;
+  border: 0;
+  margin-right:3px;
+  margin-top:2px;
+  background-repeat: no-repeat;
+}

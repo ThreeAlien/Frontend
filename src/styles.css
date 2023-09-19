@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
+  font-size: 20px;
+  line-height: 1.4em;
+  color:#414141;
+  letter-spacing:2px;
+  -webkit-text-size-adjust:100%;
+}
+

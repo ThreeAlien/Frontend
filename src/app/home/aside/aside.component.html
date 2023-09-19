@@ -1,0 +1,24 @@
+<mat-list style="display:flex;">
+  <div style="width: 12vw;">
+    <div class="logo">
+      <div style="width: 100px;height: 100px;"></div>
+    </div>
+    <div style="margin-top: 20px;">
+      <mat-div [matMenuTriggerFor]="afterMenu">
+        <button  mat-raised-button  class="btnitemOut">報表設定</button>
+      </mat-div>
+      <mat-menu #afterMenu="matMenu">
+        <button mat-menu-item routerLink="./reportManage" class="btnitemIn">範本管理</button>
+        <button mat-menu-item routerLink="./report-manage/export" class="btnitemIn">匯出</button>
+      </mat-menu>
+    </div>
+    <div style="margin-top: 3px;">
+      <mat-div [matMenuTriggerFor]="beforeMenu">
+        <button  mat-raised-button  class="btnitemOut">客戶管理</button>
+      </mat-div>
+      <mat-menu #beforeMenu="matMenu" xPosition="after">
+        <button mat-menu-item class="btnitemIn">廠商設定</button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-list>
