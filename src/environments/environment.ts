@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiServiceHost: '/',
-  scrumApi:'http://localhost:5000/',
+  scrumApi:'http://localhost:7077/',
  // apiServiceHost: 'http://localhost:50610/'
 };
 

@@ -30,6 +30,7 @@ import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
 import { MsgBoxComponent } from './share/msg-box/msg-box.component';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,6 +66,7 @@ import { CommonModule } from '@angular/common';
     CdkDrag,
     CdkDropList,
     FormsModule,
+    HttpClientModule,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,8 +1,13 @@
+import { ApiService } from './../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { exportSampleManageModels } from '../report-manage.models';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import * as $ from 'jquery';
+import { environment } from 'src/environments/environment';
+import { MsgBoxService } from 'src/app/service/msg-box.service';
+import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-rep-exmple-pop',
@@ -14,12 +19,16 @@ export class AddRepExmplePopComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddRepExmplePopComponent>,
-    @Inject(MAT_DIALOG_DATA) public inPutdata: exportSampleManageModels) { }
+    @Inject(MAT_DIALOG_DATA) public inPutdata: exportSampleManageModels,
+    public apiService: ApiService,
+    private msgBoxService: MsgBoxService) { }
+  //#region 資料宣告
+
   mediaType = "";
   mediaG = "G";
   mediaM = "M"
   /**範本名稱 */
-  repExmName ="";
+  repExmName = "";
   /**目標廣告 */
   targetMedia = "";
   /**客戶名稱下拉選單 */
@@ -65,7 +74,7 @@ export class AddRepExmplePopComponent implements OnInit {
     { value: '06', viewValue: '每日報表/轉換', targetM: "F" },
   ];
   /**報表欄位下拉選單 */
-  col: any="123";
+  col: any = "123";
   colList = [
     { value: '01', viewValue: '週期', targetM: "" },
     { value: '02', viewValue: '廣告活動', targetM: "" },
@@ -75,22 +84,25 @@ export class AddRepExmplePopComponent implements OnInit {
     { value: '06', viewValue: '廣告群組', targetM: "" }
   ];
   column = [
-    {name: '日期'},
-    {name: '曝光數'},
-    {name: '點擊數'},
-    {name: '點閱率(CTR)'},
-    {name: '點擊成本(CPC)'},
-    {name: '費用(未)'},
+    { name: '日期' },
+    { name: '曝光數' },
+    { name: '點擊數' },
+    { name: '點閱率(CTR)' },
+    { name: '點擊成本(CPC)' },
+    { name: '費用(未)' },
   ];
+  msgData = new MsgBoxInfo;
+  //#endregion
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.mediaType = "";
+    await this.getClinetName();
   }
   changeFormType(value: string) {
     this.mediaType = value;
   }
   /**選擇客戶名稱 */
-  changeAcc(data:any): void {
+  changeAcc(data: any): void {
     console.log(data.value);
     this.ChildAccItemList = [];
     switch (data.value) {
@@ -117,7 +129,7 @@ export class AddRepExmplePopComponent implements OnInit {
     }
   }
   /**選擇子帳戶 */
-  changeChilAcc(data:any): void {
+  changeChilAcc(data: any): void {
     console.log(data);
     switch (data.targetM) {
       case "A":
@@ -147,30 +159,52 @@ export class AddRepExmplePopComponent implements OnInit {
     console.log(this.column);
   }
   /**新增報表欄位*/
-  addCol(data:any){
+  addCol(data: any) {
     console.log(data);
     var a = $("addCol").val();
     console.log(a);
   }
   /**刪除報表欄位 */
-  onRemoveCol(data:any){
+  onRemoveCol(data: any) {
     console.log(data);
-    var itemIndex = this.column.findIndex(x=>x.name == data.name);
-    this.column.splice(itemIndex,1);
+    var itemIndex = this.column.findIndex(x => x.name == data.name);
+    this.column.splice(itemIndex, 1);
     console.log(this.column);
   }
-  //#region CSS事件
-    //設定狀態按鈕CSS
-    setStatusClass(d:any, s:any) {
-      //console.log(d);
-      let css = "";
-      if (d == s) {
-        css = "btnStatusSelect";
-      } else {
-        css = "btnStatus";
-      }
-      return css;
+  //#region API事件
+  /**客戶名稱API */
+  async getClinetName() {
+    try {
+      const qryDataUrl = environment.apiServiceHost+`Customer`;
+      console.log(qryDataUrl);
+      this.apiService.CallApi(qryDataUrl, 'GET', {}).subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.error);
+        },
+      });
     }
+    catch (e: any) {
+      this.msgBoxService.msgBoxShow(e.toString());
+    }
+  }
+  //#endregion
+
+
+  //#region CSS事件
+  //設定狀態按鈕CSS
+  setStatusClass(d: any, s: any) {
+    //console.log(d);
+    let css = "";
+    if (d == s) {
+      css = "btnStatusSelect";
+    } else {
+      css = "btnStatus";
+    }
+    return css;
+  }
   //#endregion
   onOk(): void {
     this.dialogRef.close({ data: false });
