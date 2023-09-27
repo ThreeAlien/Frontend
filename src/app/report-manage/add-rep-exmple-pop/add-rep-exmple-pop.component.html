@@ -31,7 +31,7 @@
                     <mat-label>客戶名稱</mat-label>
                     <mat-select name="AccItem" [(ngModel)]="AccItem" (selectionChange)="changeAcc($event.value)">
                       <mat-option [value]="d" *ngFor="let d of AccItemList">
-                        {{d.viewValue}}
+                        {{d.client_name}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

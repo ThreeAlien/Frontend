@@ -1,9 +1,9 @@
+import { data } from 'jquery';
 import { ApiService } from './../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { exportSampleManageModels } from '../report-manage.models';
+import { AccModel, BaseResponse, exportSampleManageModels } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import * as $ from 'jquery';
 import { environment } from 'src/environments/environment';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
@@ -33,14 +33,7 @@ export class AddRepExmplePopComponent implements OnInit {
   targetMedia = "";
   /**客戶名稱下拉選單 */
   AccItem: any;
-  AccItemList = [
-    { value: 'nike', viewValue: 'Nike' },
-    { value: '02', viewValue: '勤大德滙' },
-    { value: '03', viewValue: 'Puma' },
-    { value: '04', viewValue: '家樂福' },
-    { value: 'pc', viewValue: 'PcHome24h' },
-    { value: '06', viewValue: '汎古' }
-  ];
+  AccItemList: AccModel[] = [];
   /**帳戶名稱(MCC)下拉選單 */
   MccItem: any;
   MccItemList = [
@@ -175,16 +168,54 @@ export class AddRepExmplePopComponent implements OnInit {
   /**客戶名稱API */
   async getClinetName() {
     try {
-      const qryDataUrl = environment.apiServiceHost+`Customer`;
+
+      const qryDataUrl = environment.apiServiceHost + `api/Customer`;
       console.log(qryDataUrl);
-      this.apiService.CallApi(qryDataUrl, 'GET', {}).subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error.error);
-        },
-      });
+      this.apiService.CallApi(qryDataUrl, 'GET', { BaseResponse }).subscribe({
+          next:(res)=> {
+            var data =  res as BaseResponse;
+            //console.log(a.data);
+            if (data) {
+              data.data.forEach((x:AccModel) => {
+                this.AccItemList.push(x);
+              });
+              console.log(this.AccItemList);
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+          },
+        });
+    }
+    catch (e: any) {
+      this.msgBoxService.msgBoxShow(e.toString());
+    }
+  }
+  /**客戶子帳戶名稱 */
+  async getChildName(name:string){
+    try {
+      this.msgData = new MsgBoxInfo;
+      const qryDataUrl = environment.apiServiceHost + `api/Customer`;
+      console.log(qryDataUrl);
+      this.apiService.CallApi(qryDataUrl, 'GET', { BaseResponse }).subscribe({
+          next:(res)=> {
+            var data =  res as BaseResponse;
+            //console.log(a.data);
+            if (data) {
+              data.data.forEach((x:AccModel) => {
+                this.AccItemList.push(x);
+              });
+              console.log(this.AccItemList);
+            }else{
+              var data =  res as BaseResponse;
+              this.msgData.title = `回應碼${data.code}`
+              this.msgBoxService.msgBoxShow()
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+          },
+        });
     }
     catch (e: any) {
       this.msgBoxService.msgBoxShow(e.toString());

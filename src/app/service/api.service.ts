@@ -35,7 +35,7 @@ export class ApiService {
       );
      */
   public CallApi(apiPath: string, methodType: string, sendParams: any = null, responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 'json'): Observable<object> {
-    var ret: Observable<any> = new Observable<any>();
+    var ret = new Observable<any>();
     switch (methodType.toUpperCase()) {
       case 'GET':
         if (responseType == 'arraybuffer')
