@@ -200,7 +200,7 @@ export class AddRepExmplePopComponent implements OnInit {
       this.apiService.CallApi(qryDataUrl, 'GET', { BaseResponse }).subscribe({
           next:(res)=> {
             var data =  res as BaseResponse;
-            //console.log(a.data);
+
             if (data) {
               data.data.forEach((x:AccModel) => {
                 this.AccItemList.push(x);
