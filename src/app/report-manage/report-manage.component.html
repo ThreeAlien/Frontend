@@ -12,21 +12,21 @@
         <!--(keyup)="applyFilter($event)"-->
       </div>
       <div class="qryLable2">
-        <input class="input" matInput (keyup)="applyFilter($event)">
+        <input class="input" matInput (keyup)="filterAcc($event)">
       </div>
       <div class="qryLable1" style="margin-left: 20px;">
         <label>範本名稱:</label>
         <!--(keyup)="applyFilter($event)"-->
       </div>
       <div class="qryLable2">
-        <input class="input" matInput (keyup)="applyFilter($event)">
+        <input class="input" matInput (keyup)="filterExm($event)">
       </div>
       <div class="qryLable1" style="margin-left: 20px;">
         <label>目標廣告:</label>
         <!--(keyup)="applyFilter($event)"-->
       </div>
       <div class="qryLable2">
-        <input class="input" matInput>
+        <input class="input" matInput (keyup)="filterGoal($event)">
       </div>
     </div>
   </mat-card-content>

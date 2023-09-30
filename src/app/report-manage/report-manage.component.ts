@@ -13,11 +13,11 @@ import { exportSampleManageModels, media } from './report-manage.models';
   templateUrl: './report-manage.component.html',
   styleUrls: ['./report-manage.component.css']
 })
-export class ReportManageComponent implements AfterViewInit  {
+export class ReportManageComponent implements AfterViewInit {
 
   constructor(private _liveAnnouncer: LiveAnnouncer, public dialog: MatDialog) { };
   displayedColumns: string[] = ['accActName', 'exptSampleName', 'goalAds', 'mediaType', 'creatDt', 'func'];
-  exportSampleData = new MatTableDataSource<exportSampleManageModels>(Data);
+  exportSampleData = new MatTableDataSource(Data);
   totalCount = 0;
 
   @ViewChild(MatPaginator)
@@ -25,28 +25,54 @@ export class ReportManageComponent implements AfterViewInit  {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  testArray = ['A', 'B', 'A', 'C', 'B', 'AB', 'A B', 'AB', 'D'];
-
 
   ngAfterViewInit() {
     this.exportSampleData.paginator = this.paginator;
     this.exportSampleData.sort = this.sort;
   }
-  filterAccName(){
-    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.accActName == filter;
-     };
-  }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    console.log(filterValue);
-    console.log(this.filterAccName());
-    this.exportSampleData.filter = filterValue;
+  //#region 關鍵字搜尋
 
-    if (this.exportSampleData.paginator) {
-      this.exportSampleData.paginator.firstPage();
-    }
+
+  /**快速搜尋客戶名稱 */
+  filterAccName() {
+    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
+      return data.accActName.toLocaleLowerCase().includes(filter);
+    };
   }
+  filterAcc(event: Event) {
+    this.filterAccName();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    console.log(filterValue);
+    //console.log(this.filterAccName());
+    this.exportSampleData.filter = filterValue;
+  }
+  /**快速搜尋範本名稱 */
+  filterExmName() {
+    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
+      return data.exptSampleName.toLocaleLowerCase().includes(filter);
+    };
+  }
+  filterExm(event: Event) {
+    this.filterExmName();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    console.log(filterValue);
+    //console.log(this.filterAccName());
+    this.exportSampleData.filter = filterValue;
+  }
+  /**快速搜尋目標廣告 */
+  filterGoalAds() {
+    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
+      return data.goalAds.toLocaleLowerCase().includes(filter);
+    };
+  }
+  filterGoal(event: Event) {
+    this.filterGoalAds();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    console.log(filterValue);
+    this.exportSampleData.filter = filterValue;
+  }
+
+  //#endregion
   addExm() {
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
       width: "1080px",

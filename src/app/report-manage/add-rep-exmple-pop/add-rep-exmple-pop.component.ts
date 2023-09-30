@@ -208,8 +208,9 @@ export class AddRepExmplePopComponent implements OnInit {
               console.log(this.AccItemList);
             }else{
               var data =  res as BaseResponse;
-              this.msgData.title = `回應碼${data.code}`
-              this.msgBoxService.msgBoxShow()
+              this.msgData.title = `回應碼${data.code}`;
+              this.msgData.msg = `訊息${data.msg}`;
+              this.msgBoxService.msgBoxShow(this.msgData);
             }
           },
           error: (error: HttpErrorResponse) => {

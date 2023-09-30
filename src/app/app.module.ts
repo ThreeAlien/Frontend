@@ -27,7 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsgBoxComponent } from './share/msg-box/msg-box.component';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -43,6 +43,8 @@ import { HttpClientModule } from '@angular/common/http';
     MsgBoxComponent
   ],
   imports: [
+    ReactiveFormsModule,
+    FormsModule,
     CommonModule,
     BrowserModule,
     AppRoutingModule,
@@ -65,8 +67,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatChipsModule,
     CdkDrag,
     CdkDropList,
-    FormsModule,
     HttpClientModule,
+
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
