@@ -2,72 +2,86 @@
   <mat-card-header>
     <mat-card-title class="topTitle">範本管理</mat-card-title>
     <div>
-      <button class="addBtn" mat-raised-button color="primary" (click)="addExm()">新增</button>
+      <button class="addBtn" mat-raised-button color="primary" (click)="addExmBtn()">新增</button>
     </div>
   </mat-card-header>
   <mat-card-content>
     <div style="display: flex;align-items: center;">
       <div class="qryLable1">
-        <label>帳戶名稱:</label>
-        <!--(keyup)="applyFilter($event)"-->
+        <label>帳戶活動名稱:</label>
       </div>
       <div class="qryLable2">
         <input class="input" matInput (keyup)="filterAcc($event)">
       </div>
       <div class="qryLable1" style="margin-left: 20px;">
-        <label>範本名稱:</label>
-        <!--(keyup)="applyFilter($event)"-->
+        <label>報表範本名稱:</label>
       </div>
       <div class="qryLable2">
         <input class="input" matInput (keyup)="filterExm($event)">
       </div>
       <div class="qryLable1" style="margin-left: 20px;">
         <label>目標廣告:</label>
-        <!--(keyup)="applyFilter($event)"-->
       </div>
       <div class="qryLable2">
         <input class="input" matInput (keyup)="filterGoal($event)">
       </div>
+      <div class="qryLable1" style="margin-left: 20px;">
+        <label>媒體選項:</label>
+      </div>
+      <div class="qryLable2">
+        <input class="input" matInput (keyup)="filterMedia($event)">
+      </div>
+      <div class="qryLable1" style="margin-left: 20px;">
+        <label>日期區間:</label>
+      </div>
+      <div class="qryLable2">
+        <input class="input" matInput (keyup)="filterExm($event)">
+      </div>
+      <div style="font-size: 14px;">~</div>
+      <div>
+        <input class="input" matInput (keyup)="filterExm($event)">
+      </div>
+
     </div>
   </mat-card-content>
 
   <div>
-    <div class="table-container">
+    <div class="table-container" id="tableList">
       <table mat-table [dataSource]="exportSampleData" matSort style="background-color: #EAEEE5;">
         <!--帳戶活動名稱 -->
-        <ng-container matColumnDef="accActName">
+        <ng-container matColumnDef="client_subname">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="titleCss">帳戶活動名稱</div>
           </th>
-          <td mat-cell *matCellDef="let row"> {{row.accActName}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.client_subname}} </td>
         </ng-container>
         <!--報表範本名稱 -->
-        <ng-container matColumnDef="exptSampleName">
+        <ng-container matColumnDef="report_name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="titleCss">報表範本名稱</div>
           </th>
-          <td mat-cell *matCellDef="let row"> {{row.exptSampleName}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.report_name}} </td>
         </ng-container>
         <!--目標廣告 -->
-        <ng-container matColumnDef="goalAds">
+        <ng-container matColumnDef="report_goalads">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="titleCss">目標廣告</div>
           </th>
-          <td mat-cell *matCellDef="let row"> {{row.goalAds}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.report_goalads}} </td>
         </ng-container>
         <!--煤鐵選項 -->
-        <ng-container matColumnDef="mediaType">
+        <ng-container matColumnDef="report_media">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             <div class="titleCss">媒體選項</div>
           </th>
-          <td mat-cell *matCellDef="let row"> {{row.mediaType}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.report_media}} </td>
         </ng-container>
         <!--修改時間 -->
-        <ng-container matColumnDef="creatDt">
+        <ng-container matColumnDef="edit_date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            <div class="titleCss">修改時間</div>
+            <div class="titleCss">時間</div>
           </th>
-          <td mat-cell *matCellDef="let row"> {{row.creatDt}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.edit_date}} </td>
         </ng-container>
         <!--功能 -->
         <ng-container matColumnDef="func">
@@ -76,8 +90,21 @@
           </th>
           <td mat-cell *matCellDef="let row">
             <div style="display: flex;justify-content: center;">
-              <div><button mat-button color="primary">編輯</button></div>
-              <div><button mat-button color="warn">刪除</button></div>
+              <div><button mat-button (click)="addExmBtn()">
+                  <span class="material-icons">
+                    edit
+                  </span>
+                </button></div>
+              <div><button mat-button color="warn">
+                  <span class="material-icons">
+                    delete
+                  </span>
+                </button></div>
+              <div><button mat-button (click)="exportBtn()">
+                  <span class="material-icons">
+                    visibility
+                  </span>
+                </button></div>
             </div>
           </td>
         </ng-container>

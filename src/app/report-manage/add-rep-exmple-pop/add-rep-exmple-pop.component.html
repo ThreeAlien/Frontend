@@ -27,27 +27,20 @@
               <td>
                 <div style="display: flex;">
                   <label class="tdMarginTop">帳戶設定:</label>
-                  <mat-form-field class="tdMarginLeft">
+                  <mat-form-field class="tdMarginLeft" style="width: 22em;">
                     <mat-label>客戶名稱</mat-label>
                     <mat-select name="AccItem" [(ngModel)]="AccItem" (selectionChange)="changeAcc($event.value)">
                       <mat-option [value]="d" *ngFor="let d of AccItemList">
-                        {{d.client_name}}
+                        {{d.clientName}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <!-- <mat-form-field class="tdMarginLeft">
-                  <mat-label>帳戶名稱(MCC)</mat-label>
-                  <mat-select [(ngModel)]="MccItem" name="food">
-                    <mat-option [value]="d" *ngFor="let d of MccItemItemList">
-                      {{d.viewValue}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field> -->
-                  <mat-form-field class="tdMarginLeft">
+                  <mat-form-field class="tdMarginLeft" style="width:23em;" panelClass="childAcc">
                     <mat-label>帳戶活動名稱</mat-label>
-                    <mat-select name="ChildAccItem" [(ngModel)]="ChildAccItem" name="food" (selectionChange)="changeChilAcc($event)">
-                      <mat-option [value]="d" *ngFor="let d of ChildAccItemList">
-                        {{d.viewValue}}
+                    <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem"
+                      (selectionChange)="changeMcc($event.value)">
+                      <mat-option [value]="d" *ngFor="let d of ChildMccItemList" style="overflow: none;">
+                        {{d.subName}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -83,7 +76,11 @@
                   <label class="tdMarginTop">目標廣告:</label>
                   <mat-form-field class="tdMarginLeft">
                     <mat-label>廣告類型</mat-label>
-                    <input matInput disabled [value]="targetMedia">
+                    <mat-select name="targetMedia" [(value)]="targetMedia" [disabled]="true">
+                      <mat-option [value]="d" *ngFor="let d of targetMediaList">
+                        {{d.tMedia_name}}
+                      </mat-option>
+                    </mat-select>
                   </mat-form-field>
                 </div>
               </td>
@@ -91,14 +88,15 @@
             <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
               <td>
                 <label>報表內容:</label>
-                <!-- <mat-form-field class="tdMarginLeft">
-                  <mat-label>報表內容</mat-label>
-                  <mat-select  (selectionChange)="changeAcc($event.value)">
-                    <mat-option [value]="d" *ngFor="let d of reportContentList">
-                      {{d.viewValue}}
+                <mat-form-field class="tdMarginLeft" style="width: 30em;">
+                  <mat-label>廣告類型</mat-label>
+                  <mat-select name="targetMedia" [(ngModel)]="repContent"
+                    (valueChange)="onChangeDefauRepCon($event)" multiple>
+                    <mat-option [value]="d" *ngFor="let d of repContentList">
+                      {{d.contentName}}
                     </mat-option>
                   </mat-select>
-                </mat-form-field> -->
+                </mat-form-field>
               </td>
             </tr>
             <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
@@ -107,37 +105,42 @@
                   <label class="tdMarginTop">範本名稱:</label>
                   <mat-form-field class="tdMarginLeft">
                     <mat-label>範本名稱</mat-label>
-                    <input matInput value="測試">
+                    <input matInput name="repExmName" [(ngModel)]="repExmName">
                   </mat-form-field>
                 </div>
               </td>
             </tr>
-            <tr >
+            <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
               <td>
                 <div style="display: flex;">
                   <label class="tdMarginTop">報表欄位:</label>
-                  <input  type="text"
-                          style="margin-left: 10px;"
-                          id="addcol"
-                          list="browsers"
-                          [value]="col"
-                          (change)="addCol($event)"
-                    name="addcol" class="selection">
+                  <!-- <input type="text" style="margin-left: 10px;" id="addcol" list="browsers" [value]="col"
+                    (change)="addCol($event)" name="addcol" class="selection">
                   <datalist id="browsers">
                     <ng-container *ngFor="let d of colList">
                       <option [value]="d.viewValue">{{d.viewValue}}</option>
                     </ng-container>
-                  </datalist>
+                  </datalist> -->
                 </div>
-                <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
-                  (cdkDropListDropped)="drop($event)">
-                  <mat-chip class="example-box" cdkDrag *ngFor="let d of column">
-                    {{d.name}}
-                    <button matChipRemove (click)="onRemoveCol(d)">
-                      <mat-icon>cancel</mat-icon>
-                    </button>
-                  </mat-chip>
-                </mat-chip-set>
+                <ng-container *ngFor="let dArr of columnArray">
+                  <div style="display: flex;">
+                    <div>{{dArr.name}}:</div>
+                    <div style="margin-left: 10px;margin-top: 5px;">
+                      <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="drop($event)">
+                        <ng-container *ngFor="let d of dArr.List">
+                          <mat-chip class="example-box" cdkDrag *ngIf="d.name !='' ">
+                            {{d.name}}
+                            <button matChipRemove (click)="onRemoveCol(d)">
+                              <mat-icon>cancel</mat-icon>
+                            </button>
+                          </mat-chip>
+                        </ng-container>
+                      </mat-chip-set>
+                    </div>
+                  </div>
+
+                </ng-container>
               </td>
               <!-- <td colspan="9" class="Listarea">
               <div style="margin-left: 11px;margin-bottom: 11px;" *ngFor="let d of colList"
@@ -152,7 +155,7 @@
     </div>
     <div class="footer">
       <button class="Btn" (click)="onOk()">
-        確認
+        新增
       </button>
       <div style="width: 50px;"></div>
       <button class="Btn" (click)="onCancel()">

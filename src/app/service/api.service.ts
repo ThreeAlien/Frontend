@@ -11,6 +11,7 @@ export class ApiService {
 
   public httpOptions = {
     headers: new HttpHeaders({
+      'Content-Type':'application/json',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
       'Access-Control-Max-Age': '86400',
@@ -36,6 +37,7 @@ export class ApiService {
      */
   public CallApi(apiPath: string, methodType: string, sendParams: any = null, responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 'json'): Observable<object> {
     var ret = new Observable<any>();
+    console.log("進入CallApi");
     switch (methodType.toUpperCase()) {
       case 'GET':
         if (responseType == 'arraybuffer')

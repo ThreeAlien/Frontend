@@ -1,0 +1,53 @@
+<mat-card class="layoutShare">
+  <mat-card-header>
+    <mat-card-title class="topTitle">範本匯出</mat-card-title>
+    <div>
+      <button class="addBtn" mat-raised-button color="primary" (click)="addExmTest()">產報表</button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content >
+    <div class="table-container" id="list" #tableList>
+      <table mat-table [dataSource]="exportSampleData" matSort style="background-color: #EAEEE5;">
+        <!--帳戶活動名稱 -->
+        <ng-container matColumnDef="accActName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="titleCss">帳戶活動名稱</div>
+          </th>
+          <td mat-cell *matCellDef="let row"> {{row.accActName}} </td>
+        </ng-container>
+        <!--報表範本名稱 -->
+        <ng-container matColumnDef="exptSampleName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="titleCss">報表範本名稱</div>
+          </th>
+          <td mat-cell *matCellDef="let row"> {{row.exptSampleName}} </td>
+        </ng-container>
+        <!--目標廣告 -->
+        <ng-container matColumnDef="goalAds">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="titleCss">目標廣告</div>
+          </th>
+          <td mat-cell *matCellDef="let row"> {{row.goalAds}} </td>
+        </ng-container>
+        <!--煤鐵選項 -->
+        <ng-container matColumnDef="mediaType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="titleCss">媒體選項</div>
+          </th>
+          <td mat-cell *matCellDef="let row"> {{row.mediaType}} </td>
+        </ng-container>
+        <!--修改時間 -->
+        <ng-container matColumnDef="creatDt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <div class="titleCss">修改時間</div>
+          </th>
+          <td mat-cell *matCellDef="let row"> {{row.creatDt}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -73,7 +73,7 @@ table {
   margin-left: 10px;
 }
 .input{
-  width: 166px;
+  width: 100px;
   height: 32px;
   padding: 0px 12px;
   font-size: 18px;
@@ -100,3 +100,4 @@ table {
 .isTestBtn{
   background-color: #676767;
 }
+

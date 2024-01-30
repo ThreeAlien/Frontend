@@ -1,12 +1,21 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import html2canvas from 'html2canvas';
 import { data } from 'jquery';
+import * as printJS from 'print-js';
+import { environment } from 'src/environments/environment';
+import { ApiService } from '../service/api.service';
+import { MsgBoxService } from '../service/msg-box.service';
+import { MsgBoxInfo } from '../share/msg-box/msg-box.component';
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
-import { exportSampleManageModels, media } from './report-manage.models';
+import { ReportExpotPopComponent } from './report-expot-pop/report-expot-pop.component';
+import { BaseResponse, exportSampleManageModels, media } from './report-manage.models';
 
 @Component({
   selector: 'app-report-manage',
@@ -14,29 +23,53 @@ import { exportSampleManageModels, media } from './report-manage.models';
   styleUrls: ['./report-manage.component.css']
 })
 export class ReportManageComponent implements AfterViewInit {
+  @ViewChild('tableList') tableList?: ElementRef;
+  constructor(private _liveAnnouncer: LiveAnnouncer,
+    public dialog: MatDialog,
+    public datePipe: DatePipe,
+    public apiService: ApiService,
+    private msgBoxService: MsgBoxService) { };
+  displayedColumns: string[] = ['client_subname', 'report_name', 'report_goalads', 'report_media', 'edit_date', 'func'];
+  Data: exportSampleManageModels[] = [
+    { report_id: "123", report_name: "Nike", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "Nike", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "Nike", report_media: media.FB, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "家樂福", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "家樂福", report_media: media.FB, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "家樂福", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "好市多", report_media: media.FB, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "好市多", report_media: media.FB, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
+    { report_id: "123", report_name: "好市多", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
 
-  constructor(private _liveAnnouncer: LiveAnnouncer, public dialog: MatDialog) { };
-  displayedColumns: string[] = ['accActName', 'exptSampleName', 'goalAds', 'mediaType', 'creatDt', 'func'];
-  exportSampleData = new MatTableDataSource(Data);
+  ];
+  exportSampleData = new MatTableDataSource(this.Data);
   totalCount = 0;
-
+  /**資料總比數 */
+  dataCount = 0;
+  msgData = new MsgBoxInfo;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
+  qryMedia: any;
+  qryMediaList = [
+    { value: '0', viewValue: 'Google' },
+    { value: '1', viewValue: 'FB' },
+    { value: '2', viewValue: 'IG' },
+  ]
 
-
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    await this.getRepExm();
     this.exportSampleData.paginator = this.paginator;
     this.exportSampleData.sort = this.sort;
   }
-  //#region 關鍵字搜尋
+  //#region 關鍵字搜尋 TODO 目前沒辦法多重篩選
 
 
   /**快速搜尋客戶名稱 */
   filterAccName() {
     this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.accActName.toLocaleLowerCase().includes(filter);
+      return data.client_subname.toLocaleLowerCase().includes(filter);
     };
   }
   filterAcc(event: Event) {
@@ -49,7 +82,7 @@ export class ReportManageComponent implements AfterViewInit {
   /**快速搜尋範本名稱 */
   filterExmName() {
     this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.exptSampleName.toLocaleLowerCase().includes(filter);
+      return data.report_name.toLocaleLowerCase().includes(filter);
     };
   }
   filterExm(event: Event) {
@@ -60,25 +93,58 @@ export class ReportManageComponent implements AfterViewInit {
     this.exportSampleData.filter = filterValue;
   }
   /**快速搜尋目標廣告 */
-  filterGoalAds() {
+  filterreport_goalads() {
     this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.goalAds.toLocaleLowerCase().includes(filter);
+      return data.report_goalads.toLocaleLowerCase().includes(filter);
     };
   }
   filterGoal(event: Event) {
-    this.filterGoalAds();
+    this.filterreport_goalads();
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     console.log(filterValue);
     this.exportSampleData.filter = filterValue;
   }
+  /**快速搜尋媒體選項 */
+  filterMediaName() {
+    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
+      return data.report_media.toLocaleLowerCase().includes(filter);
+    };
+  }
+  filterMedia(event: Event) {
+    this.filterMediaName();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    console.log(filterValue);
+    //console.log(this.filterAccName());
+    this.exportSampleData.filter = filterValue;
+  }
 
   //#endregion
-  addExm() {
+
+  /**新增範本按鈕 */
+  addExmBtn() {
+    /**data 總數量 */
+    var count = (this.dataCount + 1).toString();
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
       width: "1080px",
-      maxHeight: "600px",
+      maxHeight: "760px",
       height: "auto",
-      data: null,
+      data: count,
+      hasBackdrop: true,
+      disableClose: true
+    })
+    dialogRef.afterClosed().subscribe(async result => {
+      console.log(result);
+    });
+  }
+  /**新增範本按鈕 */
+  exportBtn() {
+    /**data 總數量 */
+    var count = (this.dataCount + 1).toString();
+    const dialogRef = this.dialog.open(ReportExpotPopComponent, {
+      width: "1080px",
+      maxHeight: "760px",
+      height: "auto",
+      data: count,
       hasBackdrop: true,
       disableClose: true
     })
@@ -95,41 +161,41 @@ export class ReportManageComponent implements AfterViewInit {
     }
   }
   //#region API 相關
+  /**取得報表範本 */
+  async getRepExm() {
+    try {
+      this.msgData = new MsgBoxInfo;
+      const qryDataUrl = environment.apiServiceHost + `api/Report`;
+      console.log(qryDataUrl);
+      this.apiService.CallApi(qryDataUrl, 'GET', { BaseResponse }).subscribe({
+        next: (res) => {
+          var data = res as BaseResponse;
+          console.log(data);
+          if (data.data) {
+            data.data.forEach((x: exportSampleManageModels) => {
+              //x.edit_date = this.datePipe.transform(x.edit_date, 'yyyy/MM/dd');
+              x.report_media = x.report_media == "ADS" ? media.Google : "";
+              this.Data.push(x);
+            });
+            this.exportSampleData = new MatTableDataSource(this.Data);
+            this.dataCount = this.Data.length;
+            console.log(this.Data);
+          } else {
+            var data = res as BaseResponse;
+            this.msgData.title = `回應碼${data.code}`;
+            this.msgData.msg = `取得報表範本API-訊息${data.msg}`;
+            this.msgBoxService.msgBoxShow(this.msgData);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.error);
+        },
+      });
+    }
+    catch (e: any) {
+      this.msgBoxService.msgBoxShow(e.toString());
+    }
 
+  }
   //#endregion
 }
-/**報表範本資料*/
-const Data: exportSampleManageModels[] = [
-  { accActName: "好市多_鞋子_觸及廣告", exptSampleName: "範本名稱1", goalAds: "觸及廣告", mediaType: media.FB, creatDt: "2023/07/12" },
-  { accActName: "好市多_衣服_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.FB, creatDt: "2023/07/13" },
-  { accActName: "好市多_玩具_互動廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.FB, creatDt: "2023/07/14" },
-  { accActName: "好市多_觸及廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.IG, creatDt: "2023/07/15" },
-  { accActName: "好市多_食物_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.IG, creatDt: "2023/07/16" },
-  { accActName: "好市多_露營_搜尋廣告", exptSampleName: "範本名稱1", goalAds: "搜尋廣告", mediaType: media.Google, creatDt: "2023/07/11" },
-  { accActName: "好市多_工具_影音廣告", exptSampleName: "範本名稱2", goalAds: "影音廣告", mediaType: media.Google, creatDt: "2023/07/19" },
-  { accActName: "好市多_水果_購物廣告", exptSampleName: "範本名稱1", goalAds: "購物廣告", mediaType: media.Google, creatDt: "2023/07/18" },
-  { accActName: "全聯_鞋子_觸及廣告", exptSampleName: "範本名稱1", goalAds: "觸及廣告", mediaType: media.FB, creatDt: "2023/07/12" },
-  { accActName: "全聯_衣服_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.FB, creatDt: "2023/07/13" },
-  { accActName: "全聯_玩具_互動廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.FB, creatDt: "2023/07/14" },
-  { accActName: "全聯_觸及_觸及廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.IG, creatDt: "2023/07/15" },
-  { accActName: "全聯_食物_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.IG, creatDt: "2023/07/16" },
-  { accActName: "全聯_露營_搜尋廣告", exptSampleName: "範本名稱1", goalAds: "搜尋廣告", mediaType: media.Google, creatDt: "2023/07/11" },
-  { accActName: "全聯_工具_影音廣告", exptSampleName: "範本名稱2", goalAds: "影音廣告", mediaType: media.Google, creatDt: "2023/07/19" },
-  { accActName: "全聯_水果_購物廣告", exptSampleName: "範本名稱1", goalAds: "購物廣告", mediaType: media.Google, creatDt: "2023/07/18" },
-  { accActName: "Nike_鞋子_觸及廣告", exptSampleName: "範本名稱1", goalAds: "觸及廣告", mediaType: media.FB, creatDt: "2023/07/01" },
-  { accActName: "Nike_衣服_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.FB, creatDt: "2023/07/12" },
-  { accActName: "Nike_玩具_互動廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.FB, creatDt: "2023/07/13" },
-  { accActName: "Nike_觸及_觸及廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.IG, creatDt: "2023/07/05" },
-  { accActName: "Nike_食物_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.IG, creatDt: "2023/07/16" },
-  { accActName: "Nike_露營_搜尋廣告", exptSampleName: "範本名稱1", goalAds: "搜尋廣告", mediaType: media.Google, creatDt: "2023/07/11" },
-  { accActName: "Nike_工具_影音廣告", exptSampleName: "範本名稱2", goalAds: "影音廣告", mediaType: media.Google, creatDt: "2023/07/12" },
-  { accActName: "Nike_水果_購物廣告", exptSampleName: "範本名稱1", goalAds: "購物廣告", mediaType: media.Google, creatDt: "2023/07/13" },
-  { accActName: "家樂福_鞋子_觸及廣告", exptSampleName: "範本名稱1", goalAds: "觸及廣告", mediaType: media.FB, creatDt: "2023/07/12" },
-  { accActName: "家樂福_衣服_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.FB, creatDt: "2023/07/13" },
-  { accActName: "家樂福_玩具_互動廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.FB, creatDt: "2023/07/14" },
-  { accActName: "家樂福_觸及_觸及廣告", exptSampleName: "範本名稱3", goalAds: "互動廣告", mediaType: media.IG, creatDt: "2023/07/15" },
-  { accActName: "家樂福_食物_流量廣告", exptSampleName: "範本名稱2", goalAds: "流量廣告", mediaType: media.IG, creatDt: "2023/07/16" },
-  { accActName: "家樂福_露營_搜尋廣告", exptSampleName: "範本名稱1", goalAds: "搜尋廣告", mediaType: media.Google, creatDt: "2023/07/11" },
-  { accActName: "家樂福_工具_影音廣告", exptSampleName: "範本名稱2", goalAds: "影音廣告", mediaType: media.Google, creatDt: "2023/07/19" },
-  { accActName: "家樂福_水果_購物廣告", exptSampleName: "範本名稱1", goalAds: "購物廣告", mediaType: media.Google, creatDt: "2023/07/18" },
-];

@@ -29,8 +29,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsgBoxComponent } from './share/msg-box/msg-box.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { ReportExpotComponent } from './report-manage/report-export/report-expot.component';
+import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report-expot-pop.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +42,9 @@ import { HttpClientModule } from '@angular/common/http';
     HomeComponent,
     AsideComponent,
     TopComponent,
-    MsgBoxComponent
+    MsgBoxComponent,
+    ReportExpotComponent,
+    ReportExpotPopComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -71,6 +75,9 @@ import { HttpClientModule } from '@angular/common/http';
 
   ],
   bootstrap: [AppComponent],
+  providers: [
+    DatePipe,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }

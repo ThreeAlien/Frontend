@@ -1,0 +1,72 @@
+<div class="header">
+  <div style="display: flex;">
+    <div style="display: flex; width: 100%;justify-content: flex-end;">
+      <div class="IconBg" style="margin-right: 15px;margin-left: 20px;" (click)="exportExcel()">
+        <div class="ExcelIcon"></div>
+        <div>EXCEL</div>
+      </div>
+      <div class="IconBg" (click)="exportPDF()">
+        <div class="PdfIcon"></div>
+        <div>PDF</div>
+      </div>
+      <div class="IconBg" style="margin-left: 15px;" (click)="addReportTestData(tableCount)">
+        <div class="addExportBtn"></div>
+        <div>產報表</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="CloseBtn" (click)="onCancel()">
+    <ng-container>
+      <mat-icon>clear</mat-icon>
+    </ng-container>
+  </div>
+</div>
+<div class="Windows">
+  <div class="WindwsDiv">
+    <div style="margin-bottom: 10px;">
+      <div style="margin:0px auto;">
+        <form #tableList>
+          <ng-container *ngFor="let tableList of TestData">
+            <div class="table_center90">
+              <div style="display: flex;justify-content: space-between;" >
+                <div class="topTitle">{{tableList.title}}</div>
+                <div style="display: flex;" *ngIf="isIcon == true">
+                  <div class="ExcelIcon"></div>
+                  <div class="PdfIcon"></div>
+                  <div class="deleteIcon"></div>
+                </div>
+              </div>
+              <table id="{{tableList.tableID}}" class='table_title100'
+                style="width: 100%;align-items: center;border-collapse: collapse;border-color: #111111;">
+                <tr class='tr_th_1 str_center'>
+                  <ng-container *ngFor="let thD of tableList.colNameList">
+                    <th [width]="thD.width" class="th_1">{{thD.colName}}</th>
+                  </ng-container>
+                </tr>
+                <ng-container *ngFor="let trList of tableList.tableList">
+                  <tr class="tr_td_2 str_center">
+                    <ng-container *ngFor="let td of trList.tdList">
+                      <td class="td_1">{{td.data}}</td>
+                    </ng-container>
+                  </tr>
+                </ng-container>
+                <tr class='tr_th_1 str_center'>
+                  <ng-container *ngFor="let footD of tableList.footerList">
+                    <th class="th_2">{{footD.data}}</th>
+                  </ng-container>
+                </tr>
+              </table>
+            </div>
+          </ng-container>
+
+        </form>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="Btn" (click)="onCancel()">
+        取消
+      </button>
+    </div>
+  </div>
+</div>
