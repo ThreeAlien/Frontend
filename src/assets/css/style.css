@@ -3,8 +3,19 @@ mat-select {
   width: fit-content !important;
   min-width: 100% !important;
 }
+
 mat-option {
   font-size: 14px !important;
   min-height: 37px !important;
 }
 
+.contentLayout {
+  position: relative;
+  margin-top: 10px;
+  height: auto;
+  width: 93%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+
+}

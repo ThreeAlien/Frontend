@@ -1,5 +1,3 @@
-import { core } from "@angular/compiler";
-
 export interface exportSampleManageModels {
   /**範本報表ID */
   report_id: string;
@@ -26,7 +24,7 @@ export interface exportSampleManageModels {
   /**子帳戶ID */
   sub_id: string;
 }
-export interface exportSampleManageModelsTest{
+export interface exportSampleManageModelsTest {
   /**報表範本名稱 */
   exptSampleName: string;
   /**子帳戶名稱 */
@@ -83,49 +81,49 @@ export interface repConModel {
   /**報表內容名稱 */
   contentName: string;
   /**狀態是否選用 */
-  status:boolean;
+  status: boolean;
 }
 /**欄位名稱 */
 export interface columnModel {
-  content_id: string,
-  column_id: string,
-  content_name: string,
-  column_sort: string,
-  col_account: string,
-  col_cutomerID: string,
-  col_campaignID: string,
-  col_adgroupID: string,
-  col_adfinalURL: string,
-  col_headline: string,
-  col_shortheadline: string,
-  col_longheadline: string,
-  col_headline_1: string,
-  col_headline_2: string,
-  col_directions: string,
-  col_directions_1: string,
-  col_directions_2: string,
-  col_adName: string,
-  col_adPath_1: string,
-  col_adPath_2: string,
-  col_srchKeyWord: string,
-  col_switchTarget: string,
-  col_datetime: string,
-  col_week: string,
-  col_season: string,
-  col_month: string,
-  col_income: string,
-  col_trans_time: string,
-  col_trans_cost_once: string,
-  col_trans: string,
-  col_trans_rate: string,
-  col_click: string,
-  col_impression: string,
-  col_ctr: string,
-  col_cpc: string,
-  col_cost: string,
-  col_age: string,
-  col_sex: string,
-  col_region: string,
+  contentId: string,
+  contentName:string,
+  columnId: null,
+  isColAccount: boolean,
+  isColCutomerID: boolean,
+  isColCampaignName: boolean,
+  isColAdGroupName: boolean,
+  isColAdFinalURL: boolean,
+  isColHeadline: boolean,
+  isColShortHeadLine: boolean,
+  isColLongHeadLine: boolean,
+  isColHeadLine_1: boolean,
+  isColHeadLine_2: boolean,
+  isColDirections: boolean,
+  isColDirections_1: boolean,
+  isColDirections_2: boolean,
+  isColAdName: boolean,
+  isColAdPath_1: boolean,
+  isColAdPath_2: boolean,
+  isColSrchKeyWord: boolean,
+  isColSwitchTarget: boolean,
+  isColDateTime: boolean,
+  isColWeek: boolean,
+  isColSeason: boolean,
+  isColMonth: boolean,
+  isColIncome: boolean,
+  isColTransTime: boolean,
+  isColTransCostOnce: boolean,
+  isColTrans: boolean,
+  isColTransRate: boolean,
+  isColClick: boolean,
+  isColImpression: boolean,
+  isColCTR: boolean,
+  isColCPC: boolean,
+  isColCost: boolean,
+  isColAge: boolean,
+  isColSex: boolean,
+  isColRegion: boolean,
+  contentSort: string
 }
 /**目標廣告對照表 */
 export enum targetMapping {
@@ -147,7 +145,7 @@ export enum columnMapping {
   col_headline_2 = "廣告標題 2",
   col_directions = "說明",
   col_directions_1 = "說明 2",
-  col_directions_2 = "說明 3",
+  col_directions_2 = '說明 3',
   col_adName = "廣告名稱",
   col_adPath_1 = "路徑 1",
   col_adPath_2 = "路徑 2",
@@ -171,19 +169,17 @@ export enum columnMapping {
   col_sex = "性別",
   col_region = "範圍",
 }
-export class repColModel{
+export class repColModel {
   /** */
-  public id: string | undefined;
+  public conId!: string;
   /** */
-  public name: any;
+  public conName!: string;
   /** */
-  public List:Array<repColListModel>= [];
+  public List: Array<repColListModel> = [];
 }
-export class repColListModel{
-   /** */
-   public coltype: string | undefined;
-   /** */
-   public name: any;
-   /** */
-   public status: string | undefined;
+export class repColListModel {
+  /** */
+  public colName!: string;
+  /** */
+  public colStatus!: boolean;
 }

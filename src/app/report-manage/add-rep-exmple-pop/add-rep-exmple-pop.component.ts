@@ -50,53 +50,13 @@ export class AddRepExmplePopComponent implements OnInit {
   /**子帳戶名稱(帳戶活動)下拉選單 */
   ChildMccItem!: MccModel;
   ChildMccItemList: MccModel[] = [];
-  ChildMccItemListData:MccModel[] = [];
+  ChildMccItemListData: MccModel[] = [];
   /**報表內容下拉選單 */
   repContent!: repConModel;
   repContentList: repConModel[] = [];
   col: any;
   /**預設欄位狀態 */
-  defaultColumnSta: columnModel[] = [{
-    content_id: '',
-    column_id: '',
-    content_name: "",
-    column_sort: '',
-    col_account: '',
-    col_cutomerID: '',
-    col_campaignID: '',
-    col_adgroupID: '',
-    col_adfinalURL: '',
-    col_headline: '',
-    col_shortheadline: '',
-    col_longheadline: '',
-    col_headline_1: '',
-    col_headline_2: '',
-    col_directions: '',
-    col_directions_1: '',
-    col_directions_2: '',
-    col_adName: '',
-    col_adPath_1: '',
-    col_adPath_2: '',
-    col_srchKeyWord: '',
-    col_switchTarget: '',
-    col_datetime: '',
-    col_week: '',
-    col_season: '',
-    col_month: '',
-    col_income: '',
-    col_trans_time: '',
-    col_trans_cost_once: '',
-    col_trans: '',
-    col_trans_rate: '',
-    col_click: '',
-    col_impression: '',
-    col_ctr: '',
-    col_cpc: '',
-    col_cost: '',
-    col_age: '',
-    col_sex: '',
-    col_region: ''
-  }]
+  defaultColumnSta: columnModel[] = [];
   /**報表全部欄位關鍵搜尋下拉選單 */
   colList = [
     { value: '01', viewValue: '週期', targetM: "" },
@@ -117,6 +77,7 @@ export class AddRepExmplePopComponent implements OnInit {
     await this.getClinetName();
     await this.getChildName();
     await this.getReportContent();
+    await this.getDefaultRepContent();
   }
   changeFormType(value: string) {
     this.mediaType = value;
@@ -125,7 +86,7 @@ export class AddRepExmplePopComponent implements OnInit {
   changeAcc(data: AccModel): void {
     console.log(data);
     const ChildMccItemListTmp = this.ChildMccItemListData;
-    this.ChildMccItemList = ChildMccItemListTmp.filter(x=>x.clientId == data.clientId);
+    this.ChildMccItemList = ChildMccItemListTmp.filter(x => x.clientId == data.clientId);
   }
   /**選帳戶活動名稱 */
   changeMcc(data: MccModel) {
@@ -157,9 +118,15 @@ export class AddRepExmplePopComponent implements OnInit {
     console.log(this.columnList);
   }
   /**預設報表欄位change */
-  onChangeDefauRepCon(data: any) {
+  onChangeDefauRepCon(sta:any,data:any) {
+    if(sta.source._selected){
+
+    }
     console.log(data);
-    return false;
+    console.log(sta.source._selected);
+    // return new Promise(reslove => {
+
+    // });
     // data.forEach(async (x: repConModel) => {
     //   if (x.status == false) {
     //     x.status = true;
@@ -210,59 +177,18 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   /**設定預設欄位 */
   setDefaultCol(id: any, repCol: repColModel[]) {
-    var deFaultTemp = this.defaultColumnSta.find(x => x.content_id == id);
-    repCol.forEach(x => {
-      if (x.id == id) {
-        x.List = [
-          { coltype: "col_campaignID", name: deFaultTemp?.col_campaignID == "1" ? columnMapping.col_campaignID : "", status: deFaultTemp?.col_campaignID },
-          { coltype: "col_adgroupID", name: deFaultTemp?.col_adgroupID == "1" ? columnMapping.col_adgroupID : "", status: deFaultTemp?.col_adgroupID },
-          { coltype: "col_adfinalURL", name: deFaultTemp?.col_adfinalURL == "1" ? columnMapping.col_adfinalURL : "", status: deFaultTemp?.col_adfinalURL },
-          { coltype: "col_headline", name: deFaultTemp?.col_headline == "1" ? columnMapping.col_headline : "", status: deFaultTemp?.col_headline },
-          { coltype: "col_shortheadline", name: deFaultTemp?.col_shortheadline == "1" ? columnMapping.col_shortheadline : "", status: deFaultTemp?.col_shortheadline },
-          { coltype: "col_longheadline", name: deFaultTemp?.col_longheadline == "1" ? columnMapping.col_longheadline : "", status: deFaultTemp?.col_longheadline },
-          { coltype: "col_headline_1", name: deFaultTemp?.col_headline_1 == "1" ? columnMapping.col_headline_1 : "", status: deFaultTemp?.col_headline_1 },
-          { coltype: "col_headline_2", name: deFaultTemp?.col_headline_2 == "1" ? columnMapping.col_headline_2 : "", status: deFaultTemp?.col_headline_2 },
-          { coltype: "col_directions", name: deFaultTemp?.col_directions == "1" ? columnMapping.col_directions : "", status: deFaultTemp?.col_directions },
-          { coltype: "col_directions_1", name: deFaultTemp?.col_directions_1 == "1" ? columnMapping.col_directions_1 : "", status: deFaultTemp?.col_directions_1 },
-          { coltype: "col_directions_2", name: deFaultTemp?.col_directions_2 == "1" ? columnMapping.col_directions_2 : "", status: deFaultTemp?.col_directions_2 },
-          { coltype: "col_adName", name: deFaultTemp?.col_adName == "1" ? columnMapping.col_adName : "", status: deFaultTemp?.col_adName },
-          { coltype: "col_adPath_1", name: deFaultTemp?.col_adPath_1 == "1" ? columnMapping.col_adPath_1 : "", status: deFaultTemp?.col_adPath_1 },
-          { coltype: "col_adPath_2", name: deFaultTemp?.col_adPath_2 == "1" ? columnMapping.col_adPath_2 : "", status: deFaultTemp?.col_adPath_2 },
-          { coltype: "col_srchKeyWord", name: deFaultTemp?.col_srchKeyWord == "1" ? columnMapping.col_srchKeyWord : "", status: deFaultTemp?.col_srchKeyWord },
-          { coltype: "col_switchTarget", name: deFaultTemp?.col_switchTarget == "1" ? columnMapping.col_switchTarget : "", status: deFaultTemp?.col_switchTarget },
-          { coltype: "col_datetime", name: deFaultTemp?.col_datetime == "1" ? columnMapping.col_datetime : "", status: deFaultTemp?.col_datetime },
-          { coltype: "col_week", name: deFaultTemp?.col_week == "1" ? columnMapping.col_week : "", status: deFaultTemp?.col_week },
-          { coltype: "col_season", name: deFaultTemp?.col_season == "1" ? columnMapping.col_season : "", status: deFaultTemp?.col_season },
-          { coltype: "col_month", name: deFaultTemp?.col_month == "1" ? columnMapping.col_month : "", status: deFaultTemp?.col_month },
-          { coltype: "col_income", name: deFaultTemp?.col_income == "1" ? columnMapping.col_income : "", status: deFaultTemp?.col_income },
-          { coltype: "col_trans_time", name: deFaultTemp?.col_trans_time == "1" ? columnMapping.col_trans_time : "", status: deFaultTemp?.col_trans_time },
-          { coltype: "col_trans_cost_once", name: deFaultTemp?.col_trans_cost_once == "1" ? columnMapping.col_trans_cost_once : "", status: deFaultTemp?.col_trans_cost_once },
-          { coltype: "col_trans", name: deFaultTemp?.col_trans == "1" ? columnMapping.col_trans : "", status: deFaultTemp?.col_trans },
-          { coltype: "col_trans_rate", name: deFaultTemp?.col_trans_rate == "1" ? columnMapping.col_trans_rate : "", status: deFaultTemp?.col_trans_rate },
-          { coltype: "col_click", name: deFaultTemp?.col_click == "1" ? columnMapping.col_click : "", status: deFaultTemp?.col_click },
-          { coltype: "col_impression", name: deFaultTemp?.col_impression == "1" ? columnMapping.col_impression : "", status: deFaultTemp?.col_impression },
-          { coltype: "col_ctr", name: deFaultTemp?.col_ctr == "1" ? columnMapping.col_ctr : "", status: deFaultTemp?.col_ctr },
-          { coltype: "col_cpc", name: deFaultTemp?.col_cpc == "1" ? columnMapping.col_cpc : "", status: deFaultTemp?.col_cpc },
-          { coltype: "col_cost", name: deFaultTemp?.col_cost == "1" ? columnMapping.col_cost : "", status: deFaultTemp?.col_cost },
-          { coltype: "col_age", name: deFaultTemp?.col_age == "1" ? columnMapping.col_age : "", status: deFaultTemp?.col_age },
-          { coltype: "col_sedeFaultTemp", name: deFaultTemp?.col_sex == "1" ? columnMapping.col_sex : "", status: deFaultTemp?.col_sex },
-          { coltype: "col_region", name: deFaultTemp?.col_region == "1" ? columnMapping.col_region : "", status: deFaultTemp?.col_region },
-        ]
-      }
-    })
-    console.log(repCol);
-    this.columnArray = repCol;
+
   }
 
   //#region API事件
   /**客戶名稱API */
   async getClinetName() {
     try {
-      const request = {clientId: ""};
+      const request = { clientId: "" };
       let rD = JSON.stringify(request);
       const qryDataUrl = environment.apiServiceHost + `api/CustomerInfo/GetCustomer`;
       console.log(qryDataUrl);
-      this.apiService.CallApi(qryDataUrl, 'POST',rD).subscribe({
+      this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
         next: (res) => {
           var data = res as BaseResponse;
           //console.log(a.data);
@@ -282,13 +208,13 @@ export class AddRepExmplePopComponent implements OnInit {
       this.msgBoxService.msgBoxShow(e.toString());
     }
   }
-  /**客戶子帳戶名稱 */
+  /**客戶子帳戶名稱 API*/
   async getChildName() {
     try {
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/SubClient/GetSubClient`;
       console.log(qryDataUrl);
-      this.apiService.CallApi(qryDataUrl, 'POST',{}).subscribe({
+      this.apiService.CallApi(qryDataUrl, 'POST', {}).subscribe({
         next: (res) => {
           var data = res as BaseResponse;
 
@@ -316,7 +242,7 @@ export class AddRepExmplePopComponent implements OnInit {
   /**報表內容下拉選單api */
   async getReportContent() {
     try {
-      const request = {contentID: ""};
+      const request = { contentID: "" };
       let rD = JSON.stringify(request);
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportContentInfo/GetReportContent`;
@@ -346,42 +272,28 @@ export class AddRepExmplePopComponent implements OnInit {
       this.msgBoxService.msgBoxShow(e.toString());
     }
   }
-  /**取得預設欄位 */
-  async getDefaultRepContent(id: string) {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        this.msgData = new MsgBoxInfo;
-        const qryDataUrl = environment.apiServiceHost + `api/ReportContent/${id}`;
-        console.log(qryDataUrl);
-        this.apiService.CallApi(qryDataUrl, 'GET', { BaseResponse }).subscribe({
-          next: (res) => {
+  /**取得預設欄位 API */
+  getDefaultRepContent() {
+    return new Promise<void>((resolve) => {
+      const path = environment.apiServiceHost + `api/ReportContentInfo/GetReportDefaultFields`;
+      this.apiService.CallApi(path, 'POST').subscribe({
+        next: (res) => {
+          var data = res as BaseResponse;
+          if (data.data) {
+            this.defaultColumnSta = data.data;
+            console.log(this.defaultColumnSta);
+            resolve();
+          } else {
             var data = res as BaseResponse;
-            if (data.data) {
-              //如果第一筆資料是空先清除
-              if (this.defaultColumnSta[0].col_account == "") {
-                this.defaultColumnSta = [];
-              }
-              var colstatusData = data.data as columnModel[];
-              this.defaultColumnSta.push(colstatusData[0]);
-              console.log(this.defaultColumnSta);
-              resolve();
-            } else {
-              var data = res as BaseResponse;
-              this.msgData.title = `回應碼${data.code}`;
-              this.msgData.msg = `訊息${data.msg}`;
-              this.msgBoxService.msgBoxShow(this.msgData);
-              reject();
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error.error);
-            reject(error.error);
-          },
-        });
-      }
-      catch (e: any) {
-        this.msgBoxService.msgBoxShow(e.toString());
-      }
+            this.msgData.title = `回應碼${data.code}`;
+            this.msgData.msg = `訊息${data.msg}`;
+            this.msgBoxService.msgBoxShow(this.msgData);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.error);
+        },
+      });
     })
 
   }
@@ -413,45 +325,45 @@ export class AddRepExmplePopComponent implements OnInit {
       sub_id: subID
     };
     var reqCol: columnModel = {
-      content_id: '0',
-      column_id: '0',
-      content_name: "0",
-      column_sort: '0',
-      col_account: '0',
-      col_cutomerID: '0',
-      col_campaignID: '0',
-      col_adgroupID: '0',
-      col_adfinalURL: '0',
-      col_headline: '0',
-      col_shortheadline: '1',
-      col_longheadline: '1',
-      col_headline_1: '1',
-      col_headline_2: '1',
-      col_directions: '1',
-      col_directions_1: '0',
-      col_directions_2: '0',
-      col_adName: '0',
-      col_adPath_1: '0',
-      col_adPath_2: '0',
-      col_srchKeyWord: '0',
-      col_switchTarget: '0',
-      col_datetime: '0',
-      col_week: '0',
-      col_season: '0',
-      col_month: '0',
-      col_income: '0',
-      col_trans_time: '1',
-      col_trans_cost_once: '1',
-      col_trans: '1',
-      col_trans_rate: '0',
-      col_click: '0',
-      col_impression: '0',
-      col_ctr: '0',
-      col_cpc: '0',
-      col_cost: '0',
-      col_age: '0',
-      col_sex: '0',
-      col_region: '0'
+      contentId: '',
+      columnId: null,
+      isColAccount: false,
+      isColCutomerID: false,
+      isColCampaignName: false,
+      isColAdGroupName: false,
+      isColAdFinalURL: false,
+      isColHeadline: false,
+      isColShortHeadLine: false,
+      isColLongHeadLine: false,
+      isColHeadLine_1: false,
+      isColHeadLine_2: false,
+      isColDirections: false,
+      isColDirections_1: false,
+      isColDirections_2: false,
+      isColAdName: false,
+      isColAdPath_1: false,
+      isColAdPath_2: false,
+      isColSrchKeyWord: false,
+      isColSwitchTarget: false,
+      isColDateTime: false,
+      isColWeek: false,
+      isColSeason: false,
+      isColMonth: false,
+      isColIncome: false,
+      isColTransTime: false,
+      isColTransCostOnce: false,
+      isColTrans: false,
+      isColTransRate: false,
+      isColClick: false,
+      isColImpression: false,
+      isColCTR: false,
+      isColCPC: false,
+      isColCost: false,
+      isColAge: false,
+      isColSex: false,
+      isColRegion: false,
+      contentSort: '',
+      contentName: ''
     };
     /**To Do 欄位修改 先寫固定*/
     //reqCol = this.defaultColumnSta;

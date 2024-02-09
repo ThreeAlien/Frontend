@@ -90,9 +90,8 @@
                 <label>報表內容:</label>
                 <mat-form-field class="tdMarginLeft" style="width: 30em;">
                   <mat-label>廣告類型</mat-label>
-                  <mat-select name="targetMedia" [(ngModel)]="repContent"
-                    (valueChange)="onChangeDefauRepCon($event)" multiple>
-                    <mat-option [value]="d" *ngFor="let d of repContentList">
+                  <mat-select name="targetMedia" [(ngModel)]="repContent" multiple>
+                    <mat-option [value]="d" *ngFor="let d of repContentList" (onSelectionChange)="onChangeDefauRepCon($event,d)">
                       {{d.contentName}}
                     </mat-option>
                   </mat-select>
@@ -124,13 +123,13 @@
                 </div>
                 <ng-container *ngFor="let dArr of columnArray">
                   <div style="display: flex;">
-                    <div>{{dArr.name}}:</div>
+                    <div>{{dArr.conName}}:</div>
                     <div style="margin-left: 10px;margin-top: 5px;">
                       <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
                         (cdkDropListDropped)="drop($event)">
                         <ng-container *ngFor="let d of dArr.List">
-                          <mat-chip class="example-box" cdkDrag *ngIf="d.name !='' ">
-                            {{d.name}}
+                          <mat-chip class="example-box" cdkDrag *ngIf="d.colName !='' ">
+                            {{d.colName}}
                             <button matChipRemove (click)="onRemoveCol(d)">
                               <mat-icon>cancel</mat-icon>
                             </button>

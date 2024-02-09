@@ -1,27 +1,3 @@
-/**最外層*/
-.layout {
-  position: relative;
-  margin-top: 10px;
-  height: auto;
-  width: 93%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 0%);
-  background-color: #EAEEE5;
-}
-
-/**table 內容*/
-.table-container {
-  margin: 10px;
-  position: relative;
-  min-height: 200px;
-  max-height: 500px;
-  overflow: auto;
-  border-radius: 10px;
-  border: 2px solid #808080;
-  box-shadow: 0 5px 5px -3px #0003, 0 3px 14px 2px #0000001f;
-}
-
 table {
   width: 100%;
   margin-top: 10px;
@@ -43,12 +19,14 @@ table {
 .mat-header-row {
   background-color: #AADCB6;
 }
-.titleCss{
+
+.titleCss {
 
   font-size: 18px;
   letter-spacing: 1.2px;
 }
-.top{
+
+.top {
   top: 50%;
   left: 50%;
   transform: translate(-50%, 0%);
@@ -56,23 +34,28 @@ table {
   max-height: 84vh;
   width: 93%;
 }
-.topTitle{
+
+.topTitle {
   font-size: 24px;
   letter-spacing: 1.2px;
   font-weight: bold;
 }
-.pageFooter{
+
+.pageFooter {
   font-size: 14px;
   background-color: #EAEEE5;
 }
-.qryLable1{
+
+.qryLable1 {
   font-size: 14px;
   line-height: 1.43;
 }
-.qryLable2{
+
+.qryLable2 {
   margin-left: 10px;
 }
-.input{
+
+.input {
   width: 100px;
   height: 32px;
   padding: 0px 12px;
@@ -85,19 +68,30 @@ table {
   border-radius: 4px;
   font-size: 12px;
 }
-.addBtn{
-  width: 4.6em;
+
+.addBtn {
+  width: 8.6em;
   height: 2.3em;
   margin-left: 10px;
-  border-radius: 20px;
+  border-radius: 15px;
   font-size: 0.5em;
   color: #676767;
   margin-bottom: 5px;
 }
-.testBtn{
+
+.testBtn {
   background-color: #EAEEE5;
 }
-.isTestBtn{
+
+.isTestBtn {
   background-color: #676767;
 }
 
+.tableList {
+  min-height: 50%;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+tr.dataRow:hover {
+  background: whitesmoke;
+}
