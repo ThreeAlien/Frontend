@@ -66,14 +66,13 @@ export class AddRepExmplePopComponent implements OnInit {
     { value: '05', viewValue: '地區', targetM: "" },
     { value: '06', viewValue: '廣告群組', targetM: "" }
   ];
-  columnArray: repColModel[] = [];
-  columnList = [{ coltype: "", name: "", status: "" },];
+  columnArray: repColModel[] = []
+
   msgData = new MsgBoxInfo;
   //#endregion
 
   async ngOnInit(): Promise<void> {
     this.mediaType = "";
-    console.log(this.columnArray);
     await this.getClinetName();
     await this.getChildName();
     await this.getReportContent();
@@ -101,8 +100,10 @@ export class AddRepExmplePopComponent implements OnInit {
   /**欄位拖移 */
   drop(event: CdkDragDrop<[]>) {
     console.log(event);
-    moveItemInArray(this.columnList, event.previousIndex, event.currentIndex);
-    console.log(this.columnList);
+    this.columnArray.forEach(x => {
+      moveItemInArray(x.List, event.previousIndex, event.currentIndex);
+    });
+    ;
   }
   /**新增報表欄位*/
   addCol(data: any) {
@@ -113,71 +114,10 @@ export class AddRepExmplePopComponent implements OnInit {
   /**刪除報表欄位 */
   onRemoveCol(data: any) {
     console.log(data);
-    var itemIndex = this.columnList.findIndex(x => x.name == data.name);
-    this.columnList.splice(itemIndex, 1);
-    console.log(this.columnList);
   }
   /**預設報表欄位change */
-  onChangeDefauRepCon(sta:any,data:any) {
-    if(sta.source._selected){
-
-    }
-    console.log(data);
-    console.log(sta.source._selected);
-    // return new Promise(reslove => {
-
-    // });
-    // data.forEach(async (x: repConModel) => {
-    //   if (x.status == false) {
-    //     x.status = true;
-    //     var temp = new repColModel();
-    //     temp.id = x.contentID;
-    //     temp.name = x.contentName;
-    //     temp.List = [
-    //       { coltype: "col_campaignID", name: "", status: "" },
-    //       { coltype: "col_adgroupID", name: "", status: "" },
-    //       { coltype: "col_adfinalURL", name: "", status: "" },
-    //       { coltype: "col_headline", name: "", status: "" },
-    //       { coltype: "col_shortheadline", name: "", status: "" },
-    //       { coltype: "col_longheadline", name: "", status: "" },
-    //       { coltype: "col_headline_1", name: "", status: "" },
-    //       { coltype: "col_headline_2", name: "", status: "" },
-    //       { coltype: "col_directions_1", name: "", status: "" },
-    //       { coltype: "col_directions_2", name: "", status: "" },
-    //       { coltype: "col_adName", name: "", status: "" },
-    //       { coltype: "col_adPath_1", name: "", status: "" },
-    //       { coltype: "col_adPath_2", name: "", status: "" },
-    //       { coltype: "col_srchKeyWord", name: "", status: "" },
-    //       { coltype: "col_switchTarget", name: "", status: "" },
-    //       { coltype: "col_datetime", name: "", status: "" },
-    //       { coltype: "col_week", name: "", status: "" },
-    //       { coltype: "col_season", name: "", status: "" },
-    //       { coltype: "col_month", name: "", status: "" },
-    //       { coltype: "col_income", name: "", status: "" },
-    //       { coltype: "col_trans_time", name: "", status: "" },
-    //       { coltype: "col_trans_cost_once", name: "", status: "" },
-    //       { coltype: "col_trans", name: "", status: "" },
-    //       { coltype: "col_trans_rate", name: "", status: "" },
-    //       { coltype: "col_click", name: "", status: "" },
-    //       { coltype: "col_impression", name: "", status: "" },
-    //       { coltype: "col_ctr", name: "", status: "" },
-    //       { coltype: "col_cpc", name: "", status: "" },
-    //       { coltype: "col_cost", name: "", status: "" },
-    //       { coltype: "col_age", name: "", status: "" },
-    //       { coltype: "col_sex", name: "", status: "" },
-    //       { coltype: "col_region", name: "", status: "" },
-    //     ];
-    //     await this.getDefaultRepContent(x.contentID);
-
-    //     this.columnArray.push(temp);
-    //     this.setDefaultCol(x.contentID, this.columnArray);
-    //   }
-    // });
-    // console.log(this.columnArray);
-  }
-  /**設定預設欄位 */
-  setDefaultCol(id: any, repCol: repColModel[]) {
-
+  onChangeDefauRepCon(sta: any, data: repConModel) {
+    this.columnArray.filter(x => x.conId == data.contentID)[0].conStatus = sta.source._selected;
   }
 
   //#region API事件
@@ -279,9 +219,55 @@ export class AddRepExmplePopComponent implements OnInit {
       this.apiService.CallApi(path, 'POST').subscribe({
         next: (res) => {
           var data = res as BaseResponse;
+          let repColList: repColListModel[];
           if (data.data) {
             this.defaultColumnSta = data.data;
-            console.log(this.defaultColumnSta);
+            this.defaultColumnSta.forEach(x => {
+              repColList = [
+                { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+                { colName: columnMapping.colAdgroupName, colStatus: x.isColAdGroupName },
+                { colName: columnMapping.colAdfinalURL, colStatus: x.isColAdFinalURL },
+                { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+                { colName: columnMapping.colShortheadline, colStatus: x.isColShortHeadLine },
+                { colName: columnMapping.colLongheadline, colStatus: x.isColLongHeadLine },
+                { colName: columnMapping.colHeadline_1, colStatus: x.isColHeadLine_1 },
+                { colName: columnMapping.colheadline_2, colStatus: x.isColHeadLine_2 },
+                { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+                { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+                { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+                { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+                { colName: columnMapping.colAdPath_1, colStatus: x.isColAdPath_1 },
+                { colName: columnMapping.colAdPath_2, colStatus: x.isColAdPath_2 },
+                { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+                { colName: columnMapping.colSwitchTarget, colStatus: x.isColSwitchTarget },
+                { colName: columnMapping.colDatetime, colStatus: x.isColDateTime },
+                { colName: columnMapping.colWeek, colStatus: x.isColWeek },
+                { colName: columnMapping.colSeason, colStatus: x.isColSeason },
+                { colName: columnMapping.colMonth, colStatus: x.isColMonth },
+                { colName: columnMapping.colIncome, colStatus: x.isColIncome },
+                { colName: columnMapping.colTransTime, colStatus: x.isColTransTime },
+                { colName: columnMapping.colTransCostOnce, colStatus: x.isColTransCostOnce },
+                { colName: columnMapping.colTrans, colStatus: x.isColTrans },
+                { colName: columnMapping.colTransRate, colStatus: x.isColTransRate },
+                { colName: columnMapping.colClick, colStatus: x.isColClick },
+                { colName: columnMapping.colImpression, colStatus: x.isColImpression },
+                { colName: columnMapping.colCtr, colStatus: x.isColCTR },
+                { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+                { colName: columnMapping.colCost, colStatus: x.isColCost },
+                { colName: columnMapping.colAge, colStatus: x.isColAge },
+                { colName: columnMapping.colSex, colStatus: x.isColSex },
+                { colName: columnMapping.colRegion, colStatus: x.isColRegion },
+              ];
+              this.columnArray.push({
+                conId: x.contentId,
+                conName: x.contentName,
+                conStatus: false,
+                List: repColList
+              });
+            })
+
+
+            console.log(this.columnArray);
             resolve();
           } else {
             var data = res as BaseResponse;

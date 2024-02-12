@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginRoutingGuardService } from './login-routing-guard.service';
 import { LoginComponent } from './login/login.component';
-import { ReportExpotComponent as ReportExportComponent } from './report-manage/report-export/report-expot.component';
 import { ReportManageComponent } from './report-manage/report-manage.component';
 import { ClientSSOService } from './service/client-sso.service';
 
@@ -29,14 +28,6 @@ const routes: Routes = [
           title: "範本管理"
         }
       },
-      {
-        path: "reportExport",
-        component: ReportExportComponent,
-        canActivate: [LoginRoutingGuardService],
-        data: {
-          title: "範本管理"
-        }
-      }
     ]
   },
    // 當路徑是空的時候轉址到 login

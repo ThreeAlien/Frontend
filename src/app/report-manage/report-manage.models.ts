@@ -86,7 +86,7 @@ export interface repConModel {
 /**欄位名稱 */
 export interface columnModel {
   contentId: string,
-  contentName:string,
+  contentName: string,
   columnId: null,
   isColAccount: boolean,
   isColCutomerID: boolean,
@@ -135,39 +135,39 @@ export enum targetMapping {
 }
 /**欄位對照表 */
 export enum columnMapping {
-  col_campaignID = "廣告活動",
-  col_adgroupID = "廣告群組",
-  col_adfinalURL = "最終到達網址",
-  col_headline = "標題",
-  col_shortheadline = "短標題",
-  col_longheadline = "長標題",
-  col_headline_1 = "廣告標題 1",
-  col_headline_2 = "廣告標題 2",
-  col_directions = "說明",
-  col_directions_1 = "說明 2",
-  col_directions_2 = '說明 3',
-  col_adName = "廣告名稱",
-  col_adPath_1 = "路徑 1",
-  col_adPath_2 = "路徑 2",
-  col_srchKeyWord = "搜尋關鍵字",
-  col_switchTarget = "轉換目標",
-  col_datetime = "日期",
-  col_week = "週",
-  col_season = "季",
-  col_month = "月",
-  col_income = "收益",
-  col_trans_time = "轉換 (依轉換時間)",
-  col_trans_cost_once = "單次轉換費用",
-  col_trans = "轉換",
-  col_trans_rate = "轉換率",
-  col_click = "點擊",
-  col_impression = "曝光",
-  col_ctr = "點擊率(CTR)",
-  col_cpc = "點擊成本(CPC)",
-  col_cost = "費用",
-  col_age = "年齡",
-  col_sex = "性別",
-  col_region = "範圍",
+  colCampaignName = "廣告活動",
+  colAdgroupName = "廣告群組",
+  colAdfinalURL = "最終到達網址",
+  colHeadline = "標題",
+  colShortheadline = "短標題",
+  colLongheadline = "長標題",
+  colHeadline_1 = "廣告標題 1",
+  colheadline_2 = "廣告標題 2",
+  colDirections = "說明",
+  colDirections_1 = "說明 2",
+  colDirections_2 = '說明 3',
+  colAdName = "廣告名稱",
+  colAdPath_1 = "路徑 1",
+  colAdPath_2 = "路徑 2",
+  colSrchKeyWord = "搜尋關鍵字",
+  colSwitchTarget = "轉換目標",
+  colDatetime = "日期",
+  colWeek = "週",
+  colSeason = "季",
+  colMonth = "月",
+  colIncome = "收益",
+  colTransTime = "轉換 (依轉換時間)",
+  colTransCostOnce = "單次轉換費用",
+  colTrans = "轉換",
+  colTransRate = "轉換率",
+  colClick = "點擊",
+  colImpression = "曝光",
+  colCtr = "點擊率(CTR)",
+  colCpc = "點擊成本(CPC)",
+  colCost = "費用",
+  colAge = "年齡",
+  colSex = "性別",
+  colRegion = "範圍",
 }
 export class repColModel {
   /** */
@@ -175,11 +175,11 @@ export class repColModel {
   /** */
   public conName!: string;
   /** */
+  public conStatus!: boolean;
+  /** */
   public List: Array<repColListModel> = [];
 }
 export class repColListModel {
-  /** */
   public colName!: string;
-  /** */
   public colStatus!: boolean;
 }

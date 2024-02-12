@@ -31,7 +31,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsgBoxComponent } from './share/msg-box/msg-box.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ReportExpotComponent } from './report-manage/report-export/report-expot.component';
 import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report-expot-pop.component';
 @NgModule({
   declarations: [
@@ -43,7 +42,6 @@ import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report
     AsideComponent,
     TopComponent,
     MsgBoxComponent,
-    ReportExpotComponent,
     ReportExpotPopComponent
   ],
   imports: [

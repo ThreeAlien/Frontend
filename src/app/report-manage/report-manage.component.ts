@@ -126,8 +126,7 @@ export class ReportManageComponent implements AfterViewInit {
     var count = (this.dataCount + 1).toString();
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
       width: "1080px",
-      maxHeight: "760px",
-      height: "auto",
+      maxHeight: "91vh",
       data: count,
       hasBackdrop: true,
       disableClose: true

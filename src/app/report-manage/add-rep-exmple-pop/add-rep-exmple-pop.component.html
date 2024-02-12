@@ -91,7 +91,8 @@
                 <mat-form-field class="tdMarginLeft" style="width: 30em;">
                   <mat-label>廣告類型</mat-label>
                   <mat-select name="targetMedia" [(ngModel)]="repContent" multiple>
-                    <mat-option [value]="d" *ngFor="let d of repContentList" (onSelectionChange)="onChangeDefauRepCon($event,d)">
+                    <mat-option [value]="d" *ngFor="let d of repContentList"
+                      (onSelectionChange)="onChangeDefauRepCon($event,d)">
                       {{d.contentName}}
                     </mat-option>
                   </mat-select>
@@ -111,24 +112,14 @@
             </tr>
             <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
               <td>
-                <div style="display: flex;">
-                  <label class="tdMarginTop">報表欄位:</label>
-                  <!-- <input type="text" style="margin-left: 10px;" id="addcol" list="browsers" [value]="col"
-                    (change)="addCol($event)" name="addcol" class="selection">
-                  <datalist id="browsers">
-                    <ng-container *ngFor="let d of colList">
-                      <option [value]="d.viewValue">{{d.viewValue}}</option>
-                    </ng-container>
-                  </datalist> -->
-                </div>
                 <ng-container *ngFor="let dArr of columnArray">
-                  <div style="display: flex;">
+                  <div style="display: flex;padding-top: 5px;" *ngIf="dArr.conStatus">
                     <div>{{dArr.conName}}:</div>
-                    <div style="margin-left: 10px;margin-top: 5px;">
+                    <div style="margin-left: 10px;margin-bottom: 3%;">
                       <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
                         (cdkDropListDropped)="drop($event)">
                         <ng-container *ngFor="let d of dArr.List">
-                          <mat-chip class="example-box" cdkDrag *ngIf="d.colName !='' ">
+                          <mat-chip class="example-box" cdkDrag *ngIf="d.colStatus">
                             {{d.colName}}
                             <button matChipRemove (click)="onRemoveCol(d)">
                               <mat-icon>cancel</mat-icon>
