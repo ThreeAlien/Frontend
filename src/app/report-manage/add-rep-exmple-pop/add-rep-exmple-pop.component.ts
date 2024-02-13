@@ -98,12 +98,9 @@ export class AddRepExmplePopComponent implements OnInit {
     this.targetMedia = res[0];
   }
   /**欄位拖移 */
-  drop(event: CdkDragDrop<[]>) {
-    console.log(event);
-    this.columnArray.forEach(x => {
-      moveItemInArray(x.List, event.previousIndex, event.currentIndex);
-    });
-    ;
+  drop(event: CdkDragDrop<[]>, data: any) {
+    moveItemInArray(data.TrueList, event.previousIndex, event.currentIndex);
+    console.log(this.columnArray);
   }
   /**新增報表欄位*/
   addCol(data: any) {
@@ -258,14 +255,18 @@ export class AddRepExmplePopComponent implements OnInit {
                 { colName: columnMapping.colSex, colStatus: x.isColSex },
                 { colName: columnMapping.colRegion, colStatus: x.isColRegion },
               ];
+              var tList = repColList.filter(x => x.colStatus == true);
+              var fList = repColList.filter(x => x.colStatus == false);
+              console.log(tList);
+              console.log(fList);
               this.columnArray.push({
                 conId: x.contentId,
                 conName: x.contentName,
                 conStatus: false,
-                List: repColList
+                TrueList: tList,
+                FalseList: fList,
               });
             })
-
 
             console.log(this.columnArray);
             resolve();

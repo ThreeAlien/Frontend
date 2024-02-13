@@ -36,7 +36,7 @@
                     </mat-select>
                   </mat-form-field>
                   <mat-form-field class="tdMarginLeft" style="width:23em;" panelClass="childAcc">
-                    <mat-label>帳戶活動名稱</mat-label>
+                    <mat-label>子帳戶活動名稱</mat-label>
                     <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem"
                       (selectionChange)="changeMcc($event.value)">
                       <mat-option [value]="d" *ngFor="let d of ChildMccItemList" style="overflow: none;">
@@ -117,8 +117,8 @@
                     <div>{{dArr.conName}}:</div>
                     <div style="margin-left: 10px;margin-bottom: 3%;">
                       <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
-                        (cdkDropListDropped)="drop($event)">
-                        <ng-container *ngFor="let d of dArr.List">
+                        (cdkDropListDropped)="drop($event,dArr)">
+                        <ng-container *ngFor="let d of dArr.TrueList">
                           <mat-chip class="example-box" cdkDrag *ngIf="d.colStatus">
                             {{d.colName}}
                             <button matChipRemove (click)="onRemoveCol(d)">

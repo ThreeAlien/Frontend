@@ -176,8 +176,10 @@ export class repColModel {
   public conName!: string;
   /** */
   public conStatus!: boolean;
-  /** */
-  public List: Array<repColListModel> = [];
+  /**有被選到的欄位 */
+  public TrueList: Array<repColListModel> = [];
+  /**未選到的欄位 */
+  public FalseList: Array<repColListModel> = [];
 }
 export class repColListModel {
   public colName!: string;
