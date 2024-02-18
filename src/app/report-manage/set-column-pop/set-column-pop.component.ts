@@ -17,11 +17,15 @@ export class SetColumnPopComponent implements OnInit {
 
   tList: repColListModel[] = [];
   fList: repColListModel[] = [];
-
+  trueChkBox = false;
+  falseChkBox = false;
 
   ngOnInit(): void {
-    this.tList = this.inPutdata.tureList;
-    this.fList = this.inPutdata.falseList;
+    this.tList = JSON.parse(this.inPutdata.tureList);
+    this.tList.forEach(x=>{
+      x.colStatus = false;
+    })
+    this.fList = JSON.parse(this.inPutdata.falseList);
   }
 
   /**欄位拖移 */
@@ -58,9 +62,40 @@ export class SetColumnPopComponent implements OnInit {
     })
   }
   onOk(): void {
-    this.dialogRef.close({ data: false });
+    this.tList.forEach(x=>{
+      x.colStatus = true;
+    });
+    this.fList.forEach(x=>{
+      x.colStatus = false;
+    });
+    this.dialogRef.close({ data: { tureList: JSON.stringify(this.tList), falseList: JSON.stringify(this.fList)} });
   }
   onCancel(): void {
     this.dialogRef.close({ data: false });
   }
+
+  trueChkAll(sta:any){
+    console.log(sta);
+    if(sta.checked){
+      this.tList.forEach(x=>{
+        x.colStatus = true;
+      })
+    }else{
+      this.tList.forEach(x=>{
+        x.colStatus = false;
+      })
+    }
+  }
+  falseChkAll(sta:any){
+    if(sta.checked){
+      this.fList.forEach(x=>{
+        x.colStatus = true;
+      })
+    }else{
+      this.fList.forEach(x=>{
+        x.colStatus = false;
+      })
+    }
+  }
+
 }

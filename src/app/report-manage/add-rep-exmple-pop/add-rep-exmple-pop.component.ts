@@ -111,8 +111,17 @@ export class AddRepExmplePopComponent implements OnInit {
     console.log(a);
   }
   /**刪除報表欄位 */
-  onRemoveCol(data: any) {
-    console.log(data);
+  onRemoveCol(dataList: repColModel, rmData: repColListModel) {
+    console.log(dataList, rmData);
+    dataList.TrueList = dataList.TrueList.filter(x => {
+      if (x.colName == rmData.colName) {
+        dataList.FalseList.push({
+          colName: rmData.colName, colStatus: false
+        });
+        return false;
+      }
+      return true;
+    })
   }
   /**預設報表欄位change */
   onChangeDefauRepCon(sta: any, data: repConModel) {
@@ -123,12 +132,15 @@ export class AddRepExmplePopComponent implements OnInit {
     const dialogRef = this.dialog.open(SetColumnPopComponent, {
       width: "auto",
       maxHeight: "auto",
-      data: { tureList: data.TrueList, falseList: data.FalseList },
+      data: { tureList: JSON.stringify(data.TrueList), falseList: JSON.stringify(data.FalseList) },
       hasBackdrop: true,
       disableClose: true
     })
-    dialogRef.afterClosed().subscribe(async result => {
-      console.log(result);
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if (result.data) {
+        data.TrueList = JSON.parse(result.data.tureList);
+        data.FalseList = JSON.parse(result.data.falseList);
+      }
     });
   }
 
@@ -148,7 +160,11 @@ export class AddRepExmplePopComponent implements OnInit {
             data.data.forEach((x: AccModel) => {
               this.AccItemList.push(x);
             });
-            console.log(this.AccItemList);
+
+            // this.AccItemList = this.AccItemList.filter(x=>{
+
+            // })
+
           }
         },
         error: (error: HttpErrorResponse) => {

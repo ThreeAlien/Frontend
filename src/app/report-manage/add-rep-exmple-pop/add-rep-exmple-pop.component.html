@@ -121,14 +121,18 @@
                         <ng-container *ngFor="let d of dArr.TrueList">
                           <mat-chip class="example-box" cdkDrag *ngIf="d.colStatus">
                             {{d.colName}}
-                            <button matChipRemove (click)="onRemoveCol(d)">
+                            <button matChipRemove (click)="onRemoveCol(dArr,d)">
                               <mat-icon>cancel</mat-icon>
                             </button>
                           </mat-chip>
                         </ng-container>
                       </mat-chip-set>
                     </div>
-                    <div (click)="setColClick(dArr)">+</div>
+                    <div (click)="setColClick(dArr)" style="padding-left: 10px;padding-top: 10px;cursor: pointer;">
+                      <mat-icon>
+                        add_circle
+                      </mat-icon>
+                    </div>
                   </div>
 
                 </ng-container>

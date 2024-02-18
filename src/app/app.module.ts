@@ -33,6 +33,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report-expot-pop.component';
 import { SetColumnPopComponent } from './report-manage/set-column-pop/set-column-pop.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 @NgModule({
   declarations: [
     AppComponent,
@@ -72,6 +73,7 @@ import { SetColumnPopComponent } from './report-manage/set-column-pop/set-column
     CdkDrag,
     CdkDropList,
     HttpClientModule,
+    MatCheckboxModule,
 
   ],
   bootstrap: [AppComponent],

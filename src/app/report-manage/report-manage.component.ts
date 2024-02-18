@@ -126,7 +126,9 @@ export class ReportManageComponent implements AfterViewInit {
     /**data 總數量 */
     var count = (this.dataCount + 1).toString();
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
-      width: "1080px",
+      width: "auto",
+      maxWidth: "91vw",
+      height:"auto",
       maxHeight: "91vh",
       data: count,
       hasBackdrop: true,
@@ -136,9 +138,8 @@ export class ReportManageComponent implements AfterViewInit {
       console.log(result);
     });
   }
-  /**新增範本按鈕 */
+  /**匯出範本按鈕 */
   exportBtn() {
-    /**data 總數量 */
     var count = (this.dataCount + 1).toString();
     const dialogRef = this.dialog.open(ReportExpotPopComponent, {
       width: "1080px",

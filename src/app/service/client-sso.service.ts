@@ -71,6 +71,7 @@ export class ClientSSOService {
 
     localStorage.setItem(TOKEN_KEY, "55688");
     localStorage.setItem(USER_ADSINFO, JSON.stringify(userInfo));
+
     localStorage.setItem(EXPIRATION_KEY, expirationTime.toString());
   }
 
