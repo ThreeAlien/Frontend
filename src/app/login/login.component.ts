@@ -18,9 +18,9 @@ export class LoginComponent implements OnInit{
 
   }
 
-  async onSubmit(): Promise<void>{
-    var sta = await this.clientSSO.onLogin();
-    if(sta == "1"){
+  async onLogin(): Promise<void>{
+    let longinSta = this.clientSSO.onLogin();
+    if(await longinSta){
       console.log("按下登入回傳一")
       this.router.navigate(["/home"]);
     }else{

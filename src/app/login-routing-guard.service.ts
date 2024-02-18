@@ -6,12 +6,18 @@ import { ClientSSOService } from './service/client-sso.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginRoutingGuardService{
+export class LoginRoutingGuardService {
 
-  constructor(private router: Router,private clientSSO : ClientSSOService) { }
+  constructor(private router: Router, private clientSSO: ClientSSOService) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>> {
     console.log("轉頁檢核");
-    return this.clientSSO.checklogInfo(this.router.url,route.routeConfig?.path);
+    let isRouting = this.clientSSO.checklogInfo(this.router.url, route.routeConfig?.path);
+    if (await isRouting) {
+      return true;
+    } else {
+      return this.router.createUrlTree(['/login']);
+    }
   }
+
 }

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ClientSSOService } from 'src/app/service/client-sso.service';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { MsgBoxBtnType, MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
 import { environment } from 'src/environments/environment';
@@ -10,7 +12,8 @@ import { environment } from 'src/environments/environment';
 })
 export class TopComponent implements OnInit {
 
-  constructor(private msgBoxService: MsgBoxService) { }
+  constructor(private clientSSO : ClientSSOService,
+    private router: Router,) { }
 
   data = new MsgBoxInfo;
   title = environment.production ? '' : '測試區';
@@ -23,7 +26,8 @@ export class TopComponent implements OnInit {
     this.data.btnType = MsgBoxBtnType.ok_cancel;
   }
   onLogout(){
-    this.msgBoxService.msgBoxShow(this.data);
+    this.clientSSO.logout();
+    this.router.navigate(["/login"]);
   }
 
 }

@@ -7,7 +7,11 @@ import { ReportManageComponent } from './report-manage/report-manage.component';
 import { ClientSSOService } from './service/client-sso.service';
 
 const routes: Routes = [
-  { path: "login", component: LoginComponent, data: { title: "登入" } },
+  {
+    path: "login",
+    component: LoginComponent,
+    data: { title: "登入" }
+  },
   {
     path: "home",
     component: HomeComponent,
@@ -30,7 +34,7 @@ const routes: Routes = [
       },
     ]
   },
-   // 當路徑是空的時候轉址到 login
+  // 當路徑是空的時候轉址到 login
   {
     path: "**",
     redirectTo: "login",

@@ -36,7 +36,7 @@
                     </mat-select>
                   </mat-form-field>
                   <mat-form-field class="tdMarginLeft" style="width:23em;" panelClass="childAcc">
-                    <mat-label>子帳戶活動名稱</mat-label>
+                    <mat-label>子帳戶名稱</mat-label>
                     <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem"
                       (selectionChange)="changeMcc($event.value)">
                       <mat-option [value]="d" *ngFor="let d of ChildMccItemList" style="overflow: none;">
@@ -128,6 +128,7 @@
                         </ng-container>
                       </mat-chip-set>
                     </div>
+                    <div (click)="setColClick(dArr)">+</div>
                   </div>
 
                 </ng-container>

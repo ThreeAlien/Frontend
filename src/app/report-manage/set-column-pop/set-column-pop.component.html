@@ -1,0 +1,61 @@
+<div class="header">
+  <label class="modal-headerTtitlelabel">設定欄位</label>
+  <div class="CloseBtn" (click)="onCancel()">
+    <ng-container>
+      <mat-icon>clear</mat-icon>
+    </ng-container>
+  </div>
+</div>
+<div class="Windows">
+  <div class="WindwsDiv">
+    <div style="display: flex;justify-content: space-around;">
+      <div class="PickListArea">
+        <div class="headerTtitlelabel">
+          已選擇欄位
+        </div>
+        <div class="TruePickAreaDiv">
+          <mat-chip-set cdkDropList cdkDropListOrientation="horizontal"
+            (cdkDropListDropped)="drop($event)">
+            <ng-container *ngFor="let d of tList">
+              <mat-chip cdkDrag (click)="isClick(d)" [ngClass]="{clickChips: d.colStatus}">
+                {{d.colName}}
+              </mat-chip>
+            </ng-container>
+          </mat-chip-set>
+        </div>
+      </div>
+      <div class="ArrowArea">
+        <div (click)="arrowRight()">
+          右
+        </div>
+        <div (click)="arrowLeft()">
+          左
+        </div>
+      </div>
+      <div class="PickListArea">
+        <div class="headerTtitlelabel">
+          未選擇欄位
+        </div>
+        <div class="FalsePickAreaDiv">
+          <mat-chip-set cdkDropList cdkDropListOrientation="horizontal"
+            (cdkDropListDropped)="drop($event)">
+            <ng-container *ngFor="let d of fList">
+              <mat-chip cdkDrag (click)="isClick(d)" [ngClass]="{clickChips: d.colStatus}">
+                {{d.colName}}
+              </mat-chip>
+            </ng-container>
+          </mat-chip-set>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <button class="Btn" (click)="onOk()">
+        新增
+      </button>
+      <div style="width: 50px;"></div>
+      <button class="Btn" (click)="onCancel()">
+        取消
+      </button>
+    </div>
+  </div>
+</div>

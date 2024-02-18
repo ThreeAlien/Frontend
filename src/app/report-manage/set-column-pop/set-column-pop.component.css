@@ -1,0 +1,110 @@
+.header {
+  width: 100%;
+  display: flex;
+  height: 50px;
+  border-bottom: 1px solid #AADCB6 !important;
+  color: #AADCB6;
+  padding: 14px;
+}
+
+.Windows {
+  width: 100%;
+  height: auto;
+  padding-top: 4px;
+}
+
+.WindwsDiv {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 3%;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 2.45;
+  letter-spacing: 2px;
+  text-align: left;
+  color: #747474;
+}
+
+.dialogBody {
+  padding: 3%;
+}
+
+.headerTtitlelabel {
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
+  font-size: 24px;
+  line-height: 1.4em;
+  color:#414141;
+  letter-spacing:2px;
+}
+
+.footer {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-align: center;
+  border-top: 2px solid #AADCB6;
+  margin: 0px auto;
+}
+
+.Btn {
+  width: 64px;
+  height: 33px;
+  border-radius: 7px;
+  line-height: 29px;
+  font-size: 15px;
+  margin-top: 5px;
+  background-color: #AADCB6;
+  border: 2px #808080 solid;
+}
+
+.CloseBtn {
+  width: auto;
+  height: auto;
+  color: #AADCB6;
+  float: right;
+  margin-left: auto;
+}
+
+.CloseBtn:hover {
+  color: rgba(106, 201, 62, 0.3);
+}
+
+.PickListArea {
+  display: flex;
+  width: 30vw;
+  height: auto;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2%;
+}
+.TruePickAreaDiv {
+  width: 100%;
+  height: 100%;
+  min-height: 350px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 2px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+  padding: 8px;
+}
+
+
+.ArrowArea {
+  display: flex;
+  width: 5vw;
+  height: auto;
+}
+
+.FalsePickAreaDiv {
+  width: 100%;
+  height: 100%;
+  min-height: 350px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 2px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+  padding: 8px;
+}
+.clickChips{
+  background-color: #AADCB6;
+}
+

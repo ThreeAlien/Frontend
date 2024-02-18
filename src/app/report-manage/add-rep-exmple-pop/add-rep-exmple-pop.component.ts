@@ -1,7 +1,7 @@
 import { data } from 'jquery';
 import { ApiService } from './../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MccModel, AccModel, BaseResponse, columnMapping, columnModel, exportSampleManageModels, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
@@ -9,6 +9,7 @@ import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
 
 @Component({
   selector: 'app-add-rep-exmple-pop',
@@ -20,6 +21,7 @@ export class AddRepExmplePopComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<AddRepExmplePopComponent>,
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
     public apiService: ApiService,
     public datePipe: DatePipe,
@@ -115,6 +117,19 @@ export class AddRepExmplePopComponent implements OnInit {
   /**預設報表欄位change */
   onChangeDefauRepCon(sta: any, data: repConModel) {
     this.columnArray.filter(x => x.conId == data.contentID)[0].conStatus = sta.source._selected;
+  }
+  /**設定欄位是否顯示 */
+  setColClick(data: repColModel) {
+    const dialogRef = this.dialog.open(SetColumnPopComponent, {
+      width: "auto",
+      maxHeight: "auto",
+      data: { tureList: data.TrueList, falseList: data.FalseList },
+      hasBackdrop: true,
+      disableClose: true
+    })
+    dialogRef.afterClosed().subscribe(async result => {
+      console.log(result);
+    });
   }
 
   //#region API事件
@@ -257,8 +272,6 @@ export class AddRepExmplePopComponent implements OnInit {
               ];
               var tList = repColList.filter(x => x.colStatus == true);
               var fList = repColList.filter(x => x.colStatus == false);
-              console.log(tList);
-              console.log(fList);
               this.columnArray.push({
                 conId: x.contentId,
                 conName: x.contentName,
