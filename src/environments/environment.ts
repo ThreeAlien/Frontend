@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   apiServiceHost: '/',
   scrumApi:'http://localhost:7015/',
+  clientId:'693585711367-m4889m9h4p8j6r9c3hjcc1t1gspfoq8q.apps.googleusercontent.com'
  // apiServiceHost: 'http://localhost:50610/'
 };
 
