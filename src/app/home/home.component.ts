@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDrawerToggleResult, MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
+import { ClientSSOService } from '../service/client-sso.service';
 
 
 @Component({
@@ -10,18 +11,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute) { }
+  constructor() { }
 
   ngOnInit(): void {
-    // 在這裡獲取路由參數
-    this.route.queryParams.subscribe(params => {
-      const code = params['code'];
-      const scope = params['scope'];
-
-      // 在這裡處理獲取的值
-      console.log('Code:', code);
-      console.log('Scope:', scope);
-    });
   }
 
   toggleSideNav(sideNav: MatSidenav) {

@@ -5,6 +5,7 @@ import { LoginRoutingGuardService } from './login-routing-guard.service';
 import { LoginComponent } from './login/login.component';
 import { ReportManageComponent } from './report-manage/report-manage.component';
 import { ClientSSOService } from './service/client-sso.service';
+import { SSOJumpComponent } from './ssojump/ssojump.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
         }
       },
     ]
+  },
+  {
+    path: "sso",
+    component: SSOJumpComponent,
+    data: { title: "SSO" }
   },
   // 當路徑是空的時候轉址到 login
   {

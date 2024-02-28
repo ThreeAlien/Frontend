@@ -37,28 +37,6 @@ export class ClientSSOService {
       return false;
     }
   }
-  /**登入 取登入者的帳號權限 可以看到有權限的廣告帳號 */
-  onLogin() {
-    const path = "api/AdsData/GetAdsAccount";
-    return new Promise<boolean>((resolve, reject) => {
-      this.apiService.CallApi(path, 'POST', {}).subscribe({
-        next: (res) => {
-          var data = res as BaseResponse;
-          console.log(data);
-          if (data.code == "200") {
-            this.setUserInfo(data.data,1);
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error.message);
-          reject(false);
-        },
-      });
-    })
-  }
 /**
  * 設定localStorage 資料,在登入時將用戶資訊和過期時間存儲到本地存儲
  * @param userInfo 廣告帳號權限
@@ -105,7 +83,53 @@ export class ClientSSOService {
     }
     return false;
   }
-
-
+//#region  API 相關
+  /**登入 取登入者的帳號權限 可以看到有權限的廣告帳號 */
+  getPermissions(refreshToken:any) {
+    const path = "api/AdsData/GetAdsAccount";
+    let req = {
+      RefreshToken: refreshToken
+    }
+    return new Promise<boolean>((resolve, reject) => {
+      this.apiService.CallApi(path, 'POST', req).subscribe({
+        next: (res) => {
+          var data = res as BaseResponse;
+          if (data.code == "200") {
+            resolve(data.data);
+          } else {
+            resolve(false);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.message);
+          reject(false);
+        },
+      });
+    })
+  }
+  /**取得 ReFreshToke */
+  getReFreshToken(code:string) {
+    const path = "api/Sso/AuthorizeCallBack";
+    let req = {
+      code: code
+    }
+    return new Promise<boolean>((resolve, reject) => {
+      this.apiService.CallApi(path, 'POST', req).subscribe({
+        next: (res) => {
+          var data = res as BaseResponse;
+          if (data.code == "200") {
+            resolve(data.data);
+          } else {
+            resolve(false);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error.message);
+          reject(false);
+        },
+      });
+    })
+  }
+//#endregion
 }
 

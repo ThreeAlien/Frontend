@@ -34,6 +34,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report-expot-pop.component';
 import { SetColumnPopComponent } from './report-manage/set-column-pop/set-column-pop.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { SSOJumpComponent } from './ssojump/ssojump.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +46,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     TopComponent,
     MsgBoxComponent,
     ReportExpotPopComponent,
-    SetColumnPopComponent
+    SetColumnPopComponent,
+    SSOJumpComponent
   ],
   imports: [
     ReactiveFormsModule,
