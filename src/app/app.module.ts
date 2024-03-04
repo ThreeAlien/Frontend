@@ -35,20 +35,10 @@ import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report
 import { SetColumnPopComponent } from './report-manage/set-column-pop/set-column-pop.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { SSOJumpComponent } from './ssojump/ssojump.component';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    ReportManageComponent,
-    AddRepExmplePopComponent,
-    HomeComponent,
-    AsideComponent,
-    TopComponent,
-    MsgBoxComponent,
-    ReportExpotPopComponent,
-    SetColumnPopComponent,
-    SSOJumpComponent
-  ],
   imports: [
     ReactiveFormsModule,
     FormsModule,
@@ -74,13 +64,28 @@ import { SSOJumpComponent } from './ssojump/ssojump.component';
     MatChipsModule,
     CdkDrag,
     CdkDropList,
+    ButtonModule,
     HttpClientModule,
     MatCheckboxModule,
-
+    ToastModule
+  ],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    ReportManageComponent,
+    AddRepExmplePopComponent,
+    HomeComponent,
+    AsideComponent,
+    TopComponent,
+    MsgBoxComponent,
+    ReportExpotPopComponent,
+    SetColumnPopComponent,
+    SSOJumpComponent
   ],
   bootstrap: [AppComponent],
   providers: [
     DatePipe,
+    MessageService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

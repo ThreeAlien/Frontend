@@ -52,11 +52,12 @@ table {
 }
 
 .qryLable2 {
+  width: 50%;
   margin-left: 10px;
 }
 
 .input {
-  width: 100px;
+  width: 100%;
   height: 32px;
   padding: 0px 12px;
   font-size: 18px;

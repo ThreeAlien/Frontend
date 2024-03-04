@@ -64,62 +64,6 @@ export class ReportManageComponent implements AfterViewInit {
     this.exportSampleData.paginator = this.paginator;
     this.exportSampleData.sort = this.sort;
   }
-  //#region 關鍵字搜尋 TODO 目前沒辦法多重篩選
-
-
-  /**快速搜尋客戶名稱 */
-  filterAccName() {
-    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.client_subname.toLocaleLowerCase().includes(filter);
-    };
-  }
-  filterAcc(event: Event) {
-    this.filterAccName();
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    console.log(filterValue);
-    //console.log(this.filterAccName());
-    this.exportSampleData.filter = filterValue;
-  }
-  /**快速搜尋範本名稱 */
-  filterExmName() {
-    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.report_name.toLocaleLowerCase().includes(filter);
-    };
-  }
-  filterExm(event: Event) {
-    this.filterExmName();
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    console.log(filterValue);
-    //console.log(this.filterAccName());
-    this.exportSampleData.filter = filterValue;
-  }
-  /**快速搜尋目標廣告 */
-  filterreport_goalads() {
-    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.report_goalads.toLocaleLowerCase().includes(filter);
-    };
-  }
-  filterGoal(event: Event) {
-    this.filterreport_goalads();
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    console.log(filterValue);
-    this.exportSampleData.filter = filterValue;
-  }
-  /**快速搜尋媒體選項 */
-  filterMediaName() {
-    this.exportSampleData.filterPredicate = (data: exportSampleManageModels, filter: string) => {
-      return data.report_media.toLocaleLowerCase().includes(filter);
-    };
-  }
-  filterMedia(event: Event) {
-    this.filterMediaName();
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    console.log(filterValue);
-    //console.log(this.filterAccName());
-    this.exportSampleData.filter = filterValue;
-  }
-
-  //#endregion
 
   /**新增範本按鈕 */
   addExmBtn() {

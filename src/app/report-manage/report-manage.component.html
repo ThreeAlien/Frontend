@@ -4,43 +4,40 @@
       <mat-card-title class="topTitle">範本管理</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div style="display: flex;align-items: center;">
-        <div class="qryLable1">
-          <label>帳戶活動名稱:</label>
-        </div>
-        <div class="qryLable2">
-          <input class="input" matInput (keyup)="filterAcc($event)">
-        </div>
-        <div class="qryLable1" style="margin-left: 20px;">
-          <label>報表範本名稱:</label>
-        </div>
-        <div class="qryLable2">
-          <input class="input" matInput (keyup)="filterExm($event)">
-        </div>
-        <div class="qryLable1" style="margin-left: 20px;">
-          <label>目標廣告:</label>
-        </div>
-        <div class="qryLable2">
-          <input class="input" matInput (keyup)="filterGoal($event)">
-        </div>
-        <div class="qryLable1" style="margin-left: 20px;">
-          <label>媒體選項:</label>
-        </div>
-        <div class="qryLable2">
-          <input class="input" matInput (keyup)="filterMedia($event)">
-        </div>
-        <div class="qryLable1" style="margin-left: 20px;">
-          <label>日期區間:</label>
-        </div>
-        <div class="qryLable2">
-          <input class="input" matInput (keyup)="filterExm($event)">
-        </div>
-        <div style="font-size: 14px;">~</div>
-        <div>
-          <input class="input" matInput (keyup)="filterExm($event)">
-        </div>
-
-      </div>
+      <table>
+        <tr>
+          <td >
+            <label>帳戶活動名稱:</label>
+          </td>
+          <td>
+            <input class="input" matInput>
+          </td>
+          <td>
+            <label>報表範本名稱:</label>
+          </td>
+          <td>
+            <input class="input" matInput>
+          </td>
+          <td>
+            <label>目標廣告:</label>
+          </td>
+          <td>
+            <input class="input" matInput>
+          </td>
+          <td>
+            <label>媒體選項:</label>
+          </td>
+          <td>
+            <input class="input" matInput>
+          </td>
+          <td>
+            <label>日期區間:</label>
+          </td>
+          <td>
+            <input class="input" matInput>
+          </td>
+        </tr>
+      </table>
     </mat-card-content>
     <mat-card-actions style="margin-top: 10px;">
       <button class="addBtn" mat-raised-button color="primary">

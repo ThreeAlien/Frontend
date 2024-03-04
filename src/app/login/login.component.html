@@ -1,31 +1,20 @@
-<div class="container" style="max-width: 550px">
-  <h2 class="text-center mb-5">登入畫面</h2>
-  <div>
-    <!-- <div class="form-group">
-      <label>帳號</label>
-      <input type="text" class="form-control" id="firstname" readonly>
+<div class="layout">
+  <div class="container">
+    <div class="logo"></div>
+    <div class="loginArea">
+      <div class="title">登入系統</div>
+      <div class="buttonArea" (click)="oidcLogin()">
+        <div class="googelIcon"></div>
+        <div class="iconText">Google</div>
+      </div>
+      <div class="buttonArea" (click)="show()">
+        <div class="fbIcon"></div>
+        <div class="iconText">FaceBook</div>
+      </div>
     </div>
-    <div class="form-group">
-      <label>密碼</label>
-      <input type="text" class="form-control" id="lastname" readonly>
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="text" class="form-control" id="email" readonly>
-    </div> -->
-    <div style="display: flex;">
-      <div>
-        <button id="login" type="button" (click)="onLogin()" class="btn btn-danger">從Google登入 </button>
-      </div>
-      <div style="margin-left: 20px;">
-        <button id="login" type="button" (click)="oidcLogin()" class="btn btn-danger">前端呼叫Oauth </button>
-      </div>
-      <!-- <div style="margin-left: 5px;">
-        <button type="button" class="btn btn-primary">登出</button>
-      </div>
-    </div> -->
   </div>
 </div>
-<div class="body">
-  <router-outlet></router-outlet>
-</div>
+<p-toast></p-toast>
+<router-outlet></router-outlet>
+
+
