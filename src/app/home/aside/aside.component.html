@@ -12,12 +12,9 @@
       </mat-menu>
     </div>
     <div style="margin-top: 3px;">
-      <mat-div [matMenuTriggerFor]="beforeMenu">
-        <button  mat-raised-button  class="btnitemOut">客戶管理</button>
+      <mat-div>
+        <button  mat-raised-button routerLink="./clientManage"  class="btnitemOut">客戶管理</button>
       </mat-div>
-      <mat-menu #beforeMenu="matMenu" xPosition="after">
-        <button mat-menu-item class="btnitemIn">廠商設定</button>
-      </mat-menu>
     </div>
   </div>
 </mat-list>

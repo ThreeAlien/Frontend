@@ -13,7 +13,7 @@ export class SSOJumpComponent implements OnInit {
     private activateRoute: ActivatedRoute, private router: Router) {
 
   }
-  show(){
+  show() {
 
   }
   ngOnInit(): void {
@@ -24,12 +24,17 @@ export class SSOJumpComponent implements OnInit {
 
         if (refresh) {
           let PermissionsAds = await this.clientSSO.getPermissions(refresh);
-
+          console.log(PermissionsAds);
           if (PermissionsAds) {
             this.clientSSO.setUserInfo(PermissionsAds, 1);
             this.router.navigate(["/home"]);
+          } else {
+            alert("取得授權失敗，檢查是否擁有權限");
+            this.router.navigate(["/login"]);
           }
-          console.log(PermissionsAds);
+        } else {
+          alert("取得Token失敗，檢查是否擁有權限");
+          this.router.navigate(["/login"]);
         }
       } catch (err) {
         console.log(err);

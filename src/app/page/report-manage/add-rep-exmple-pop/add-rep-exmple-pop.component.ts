@@ -1,5 +1,5 @@
 import { data } from 'jquery';
-import { ApiService } from './../../service/api.service';
+import { ApiService } from './../../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MccModel, AccModel, BaseResponse, columnMapping, columnModel, exportSampleManageModels, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel } from '../report-manage.models';

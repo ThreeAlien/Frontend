@@ -152,7 +152,7 @@
   cursor: pointer;
 }
 .ExcelIcon{
-  background-image: url("../../../assets/icon/ExcelIcon.png");
+  background-image: url("../../../../assets/icon/ExcelIcon.png");
   background-repeat: no-repeat;
   background-position: left top, right bottom, center center;
   background-size: 28.7px 28.7px;
@@ -164,7 +164,7 @@
   margin-right: 10px;
 }
 .PdfIcon{
-  background-image: url("../../../assets/icon/PDFIcon3.png");
+  background-image: url("../../../../assets/icon/PDFIcon3.png");
   background-repeat: no-repeat;
   background-position: left top, right bottom, center center;
   background-size: 30.7px 30.7px;
@@ -175,7 +175,7 @@
   margin-left: 10px;
 }
 .deleteIcon{
-  background-image: url("../../../assets/icon/deleteIcon.png");
+  background-image: url("../../../../assets/icon/deleteIcon.png");
   background-repeat: no-repeat;
   background-position: left top, right bottom, center center;
   background-size: 30.7px 30.7px;

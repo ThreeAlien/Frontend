@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { BaseResponse } from '../report-manage/report-manage.models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { BaseResponse } from '../page/report-manage/report-manage.models';
 
 /**登入存一個TOKEN */
 const TOKEN_KEY = '';
@@ -120,6 +120,7 @@ export class ClientSSOService {
           if (data.code == "200") {
             resolve(data.data);
           } else {
+            console.log(data);
             resolve(false);
           }
         },

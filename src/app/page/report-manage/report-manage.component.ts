@@ -10,11 +10,11 @@ import html2canvas from 'html2canvas';
 import { data } from 'jquery';
 import * as printJS from 'print-js';
 import { environment } from 'src/environments/environment';
-import { ApiService } from '../service/api.service';
-import { MsgBoxService } from '../service/msg-box.service';
-import { MsgBoxInfo } from '../share/msg-box/msg-box.component';
+import { ApiService } from '../../service/api.service';
+import { MsgBoxService } from '../../service/msg-box.service';
+import { MsgBoxInfo } from '../../share/msg-box/msg-box.component';
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
-import { ReportExpotPopComponent } from './report-expot-pop/report-expot-pop.component';
+import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
 import { BaseResponse, exportSampleManageModels, media } from './report-manage.models';
 import { SetColumnPopComponent } from './set-column-pop/set-column-pop.component';
 

@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { ApiService } from 'src/app/service/api.service';
@@ -9,9 +8,9 @@ import { MsgBoxService } from 'src/app/service/msg-box.service';
 import * as XLSX from "xlsx-js-style";
 
 @Component({
-  selector: 'app-report-expot-pop',
-  templateUrl: './report-expot-pop.component.html',
-  styleUrls: ['./report-expot-pop.component.css']
+  selector: 'app-report-export-pop',
+  templateUrl: './report-export-pop.component.html',
+  styleUrls: ['./report-export-pop.component.css']
 })
 //報表匯出
 export class ReportExpotPopComponent implements AfterViewInit {

@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { ReportManageComponent } from './report-manage/report-manage.component';
+import { ReportManageComponent } from './page/report-manage/report-manage.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,7 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { AsideComponent } from './home/aside/aside.component';
-import { AddRepExmplePopComponent } from './report-manage/add-rep-exmple-pop/add-rep-exmple-pop.component';
+
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,13 +31,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MsgBoxComponent } from './share/msg-box/msg-box.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { ReportExpotPopComponent } from './report-manage/report-expot-pop/report-expot-pop.component';
-import { SetColumnPopComponent } from './report-manage/set-column-pop/set-column-pop.component';
+import { ReportExpotPopComponent } from './page/report-manage/report-export-pop/report-export-pop.component';
+import { SetColumnPopComponent } from './page/report-manage/set-column-pop/set-column-pop.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { SSOJumpComponent } from './ssojump/ssojump.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
+import { AddRepExmplePopComponent } from './page/report-manage/add-rep-exmple-pop/add-rep-exmple-pop.component';
+import { ClientManageComponent } from './page/client-manage/client-manage.component';
+import { TableModule } from 'primeng/table';
 @NgModule({
   imports: [
     ReactiveFormsModule,
@@ -67,7 +70,8 @@ import { ButtonModule } from 'primeng/button';
     ButtonModule,
     HttpClientModule,
     MatCheckboxModule,
-    ToastModule
+    ToastModule,
+    TableModule
   ],
   declarations: [
     AppComponent,
@@ -80,7 +84,8 @@ import { ButtonModule } from 'primeng/button';
     MsgBoxComponent,
     ReportExpotPopComponent,
     SetColumnPopComponent,
-    SSOJumpComponent
+    SSOJumpComponent,
+    ClientManageComponent
   ],
   bootstrap: [AppComponent],
   providers: [

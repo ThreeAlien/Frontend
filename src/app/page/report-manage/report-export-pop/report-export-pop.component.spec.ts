@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReportExpotPopComponent } from './report-expot-pop.component';
+import { ReportExpotPopComponent } from './report-export-pop.component';
 
 describe('ReportExpotPopComponent', () => {
   let component: ReportExpotPopComponent;

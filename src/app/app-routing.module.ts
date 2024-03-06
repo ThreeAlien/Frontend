@@ -3,9 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginRoutingGuardService } from './login-routing-guard.service';
 import { LoginComponent } from './login/login.component';
-import { ReportManageComponent } from './report-manage/report-manage.component';
-import { ClientSSOService } from './service/client-sso.service';
 import { SSOJumpComponent } from './ssojump/ssojump.component';
+import { ReportManageComponent } from './page/report-manage/report-manage.component';
+import { ClientManageComponent } from './page/client-manage/client-manage.component';
 
 const routes: Routes = [
   {
@@ -31,6 +31,14 @@ const routes: Routes = [
         canActivate: [LoginRoutingGuardService],
         data: {
           title: "範本管理"
+        }
+      },
+      {
+        path: "clientManage",
+        component: ClientManageComponent,
+        canActivate: [LoginRoutingGuardService],
+        data: {
+          title: "客戶管理"
         }
       },
     ]
