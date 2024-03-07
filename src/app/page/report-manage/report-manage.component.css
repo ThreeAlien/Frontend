@@ -36,9 +36,9 @@ table {
 }
 
 .topTitle {
-  font-size: 24px;
-  letter-spacing: 1.2px;
   font-weight: bold;
+  font-size: 36px;
+  float: left;
 }
 
 .pageFooter {

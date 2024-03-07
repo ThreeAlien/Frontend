@@ -1,33 +1,35 @@
-.layout{
+.layout {
+  width: 400px;
+  height: 50px;
   display: flex;
   font-size: 24px;
   margin: 0;
-  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
   line-height: 1.2em;
-  color:#EAEEE5;
-  letter-spacing:2px;
-  -webkit-text-size-adjust:100%;
+  color: #EAEEE5;
+  letter-spacing: 2px;
+  -webkit-text-size-adjust: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
 }
+
 /**原來的兩倍*/
-.icon{
+.icon {
   transform: scale(1.5);
-  margin-bottom: 8px;
 }
-.loginNameCss{
-  margin-right: 50px;
-  margin-top: 10px;
-}
-.signOut{
+
+.loginNameCss {}
+
+.signOut {
   font-weight: bold;
-  margin-right: 20px;
-  margin-top: 10px;
 }
-.signOut:hover{
+
+.signOut:hover {
   cursor: pointer;
 }
-.status{
+
+.status {
   font-size: 14px;
-  padding-top: 10px;
-  padding-right: 27px;
   color: red;
 }

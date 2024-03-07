@@ -1,5 +1,4 @@
 .divTr{
-  font-size: 18px;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -7,15 +6,19 @@
 }
 .divTd{
   display: flex;
-  align-items: baseline;
 }
 .divTd2{
   display: flex;
-  align-items: baseline;
-  padding-left: 15px;
+  padding-left: 20px;
 }
-
+.divLable{
+  padding-top: 7px;
+}
 .inputOut {
+  margin-left: 10px;
+  width: 100%;
+}
+.timeInputOut{
   margin-left: 10px;
   width: 100%;
 }
@@ -29,6 +32,9 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+}
+.table{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 @media screen and (max-width: 900px){
   .inputOut {

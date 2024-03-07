@@ -1,115 +1,120 @@
-<body>
-  <div style="padding: 0.88em;">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title style="font-weight: bold;font-size: 36px;float: left;">客戶管理</mat-card-title>
-      </mat-card-header>
-      <br>
-      <mat-card-content>
-        <div class="divTr">
-          <div class="divTd">
-            <div class="divLable">客戶名稱</div>
-            <div>
-              <mat-form-field appearance="outline" class="inputOut">
-                <input matInput placeholder="請輸入" />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="divTd2">
-            <div class="divLable">媒體名稱</div>
-            <div>
-              <mat-form-field appearance="outline" class="inputOut">
-                <input matInput placeholder="請輸入" />
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="divTd2">
-            <div class="divLable">時間</div>
-            <div>
-              <mat-form-field appearance="outline" class="inputOut">
-                <input matInput placeholder="請輸入" />
-              </mat-form-field>
-            </div>
+<div class="contentLayout">
+  <mat-card style="background-color: #EAEEE5;font-size: 16px;">
+    <mat-card-header>
+      <mat-card-title style="font-weight: bold;font-size: 36px;float: left;">客戶管理</mat-card-title>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+      <div class="divTr">
+        <div class="divTd">
+          <div class="divLable">客戶名稱</div>
+          <div>
+            <mat-form-field appearance="outline" class="inputOut">
+              <input matInput placeholder="請輸入" />
+            </mat-form-field>
           </div>
         </div>
-      </mat-card-content>
-    </mat-card>
-    <br>
-    <mat-card>
-      <mat-card-content>
-        <p-table class="cub-table" [value]="dataLsit" [paginator]="true" editMode="row" [rows]="5"
-          [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-          [rowsPerPageOptions]="[5, 10, 20]" (sortFunction)="sortChange($event)" [customSort]="true">
-          <ng-template pTemplate="header">
-            <tr style="width: 100%;">
-              <th [pSortableColumn]="'clientName'">
-                客戶名稱 <p-sortIcon [field]="'clientName'"></p-sortIcon>
-              </th>
-              <th pSortableColumn="media">
-                媒體選項<p-sortIcon field="media"></p-sortIcon>
-              </th>
-              <th pSortableColumn="mediaType">
-                媒體種類<p-sortIcon field="mediaType"></p-sortIcon>
-              </th>
-              <th pSortableColumn="profit">
-                利潤%<p-sortIcon field="profit"></p-sortIcon>
-              </th>
-              <th pSortableColumn="sDT">
-                開始日期<p-sortIcon field="sDT"></p-sortIcon>
-              </th>
-              <th pSortableColumn="eDT">
-                結束日期<p-sortIcon field="eDT"></p-sortIcon>
-              </th>
-              <th pSortableColumn="expectCost">
-                總預算<p-sortIcon field="expectCost"></p-sortIcon>
-              </th>
-              <th pSortableColumn="realCost">
-                帳戶實際花費<p-sortIcon field="realCost"></p-sortIcon>
-              </th>
-              <th>
-                功能
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
-            <tr>
-              <td>{{ item.clientName }}</td>
-              <td>{{ item.media }}</td>
-              <td>{{item.mediaType}}</td>
-              <td>
-                <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.profit" style="width: 50px;">
-                <div *ngIf="item.isEdit == false">{{item.profit}}</div>
-              </td>
-              <td>{{ item.sDT }}</td>
-              <td>{{ item.eDT }}</td>
-              <td >
-                <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.expectCost" style="width: 80px;">
-                <div *ngIf="item.isEdit == false">{{ item.expectCost | currency: 'TWD'}}</div>
-              </td>
-              <td>
-                <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.realCost" style="width: 80px;">
-                <div *ngIf="item.isEdit == false">{{ item.realCost | currency: 'TWD'}}</div>
-              </td>
-              <td class="cub-table-actions">
-                <div style="display: flex;">
-                  <div *ngIf="item.isEdit == false">
-                    <button mat-flat-button type="button" color="accent" style="width: 5.5em;"
-                      (click)="onEdit(item)">修改</button>
-                  </div>
-                  <div *ngIf="item.isEdit == true">
-                    <button mat-flat-button type="button" color="accent" style="width: 5.5em;"
-                      (click)="onCancel(item)">V</button>
-                  </div>
-                  <div *ngIf="item.isEdit == true">
-                    <button mat-flat-button type="button" color="accent" style="width: 5.5em;"
-                      (click)="onCancel(item)">X</button>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</body>
+        <div class="divTd2">
+          <div class="divLable">媒體名稱</div>
+          <div>
+            <mat-form-field appearance="outline" class="inputOut">
+              <input matInput placeholder="請輸入" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="divTd2">
+          <div class="divLable">時間</div>
+          <div>
+            <mat-form-field class="timeInputOut">
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="起">
+                <input matEndDate placeholder="迄">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br>
+
+  <p-table [value]="dataLsit" [paginator]="true" editMode="row" [rows]="5" [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[5, 10, 20]"
+    (sortFunction)="sortChange($event)" [customSort]="true" [scrollable]="true" scrollHeight="600px"
+    [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
+    <ng-template pTemplate="header">
+      <tr style="width: 100%;">
+        <th [pSortableColumn]="'clientName'">
+          客戶名稱 <p-sortIcon [field]="'clientName'"></p-sortIcon>
+        </th>
+        <th pSortableColumn="media">
+          媒體選項<p-sortIcon field="media"></p-sortIcon>
+        </th>
+        <th pSortableColumn="mediaType">
+          媒體種類<p-sortIcon field="mediaType"></p-sortIcon>
+        </th>
+        <th pSortableColumn="profit">
+          利潤%<p-sortIcon field="profit"></p-sortIcon>
+        </th>
+        <th pSortableColumn="sDT">
+          開始日期<p-sortIcon field="sDT"></p-sortIcon>
+        </th>
+        <th pSortableColumn="eDT">
+          結束日期<p-sortIcon field="eDT"></p-sortIcon>
+        </th>
+        <th pSortableColumn="expectCost">
+          總預算<p-sortIcon field="expectCost"></p-sortIcon>
+        </th>
+        <th pSortableColumn="realCost">
+          帳戶實際花費<p-sortIcon field="realCost"></p-sortIcon>
+        </th>
+        <th>
+
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
+      <tr>
+        <td>{{ item.clientName }}</td>
+        <td>{{ item.media }}</td>
+        <td>{{item.mediaType}}</td>
+        <td>
+          <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.profit" style="width: 50px;">
+          <div *ngIf="item.isEdit == false">{{item.profit}}</div>
+        </td>
+        <td>{{ item.sDT }}</td>
+        <td>{{ item.eDT }}</td>
+        <td>
+          <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.expectCost" style="width: 80px;">
+          <div *ngIf="item.isEdit == false">{{ item.expectCost | currency: 'TWD'}}</div>
+        </td>
+        <td>
+          <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.realCost" style="width: 80px;">
+          <div *ngIf="item.isEdit == false">{{ item.realCost | currency: 'TWD'}}</div>
+        </td>
+        <td class="cub-table-actions">
+          <div style="display: flex;">
+            <div *ngIf="item.isEdit == false">
+              <button mat-icon-button (click)="onEdit(item)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button>
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <div *ngIf="item.isEdit == true">
+              <button mat-icon-button color="primary" (click)="onCancel(item)">
+                <mat-icon>done</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="onCancel(item)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

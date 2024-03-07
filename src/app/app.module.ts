@@ -1,7 +1,6 @@
 import { TopComponent } from './home/top/top.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,10 +20,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { AsideComponent } from './home/aside/aside.component';
-
 import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -41,6 +37,22 @@ import { ButtonModule } from 'primeng/button';
 import { AddRepExmplePopComponent } from './page/report-manage/add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ClientManageComponent } from './page/client-manage/client-manage.component';
 import { TableModule } from 'primeng/table';
+import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MomentDateModule } from '@angular/material-moment-adapter';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+export const MY_DATE_FORMATS = {
+  parse: {
+    dateInput: "YYYY-MM-DD"//display值出來後轉的值
+  },
+  display: {
+    dateInput: "YYYY/MM/DD",//畫面顯示
+    monthYearLabel: "YYYY MM",//日曆左上角顯示
+    dateA11yLabel: "YYYY/MM/DD",//輔助開發者顯示標記用
+    monthYearA11yLabel: "YYYY/MM/DD"//輔助開發者顯示標記用
+  }
+};
 @NgModule({
   imports: [
     ReactiveFormsModule,
@@ -63,7 +75,6 @@ import { TableModule } from 'primeng/table';
     MatRadioModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatInputModule,
     MatChipsModule,
     CdkDrag,
     CdkDropList,
@@ -71,7 +82,11 @@ import { TableModule } from 'primeng/table';
     HttpClientModule,
     MatCheckboxModule,
     ToastModule,
-    TableModule
+    TableModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MomentDateModule,
+    MatDatepickerModule
   ],
   declarations: [
     AppComponent,
@@ -90,7 +105,8 @@ import { TableModule } from 'primeng/table';
   bootstrap: [AppComponent],
   providers: [
     DatePipe,
-    MessageService
+    MessageService,
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
