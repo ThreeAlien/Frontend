@@ -17,6 +17,7 @@ import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-po
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
 import { BaseResponse, exportSampleManageModels, media } from './report-manage.models';
 import { SetColumnPopComponent } from './set-column-pop/set-column-pop.component';
+import { SortEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-report-manage',
@@ -24,7 +25,6 @@ import { SetColumnPopComponent } from './set-column-pop/set-column-pop.component
   styleUrls: ['./report-manage.component.css']
 })
 export class ReportManageComponent implements AfterViewInit {
-  @ViewChild('tableList') tableList?: ElementRef;
   constructor(private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     public datePipe: DatePipe,
@@ -43,7 +43,6 @@ export class ReportManageComponent implements AfterViewInit {
     { report_id: "123", report_name: "好市多", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
 
   ];
-  exportSampleData = new MatTableDataSource(this.Data);
   totalCount = 0;
   /**資料總比數 */
   dataCount = 0;
@@ -61,10 +60,27 @@ export class ReportManageComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     await this.getRepExm();
-    this.exportSampleData.paginator = this.paginator;
-    this.exportSampleData.sort = this.sort;
   }
+  async sortChange(sort: SortEvent): Promise<void> {
+    sort.data.sort((data1: any, data2: any) => {
+      let value1 = data1[sort.field];
+      let value2 = data2[sort.field];
+      let result = null;
 
+      if (value1 == null && value2 != null)
+        result = -1;
+      else if (value1 != null && value2 == null)
+        result = 1;
+      else if (value1 == null && value2 == null)
+        result = 0;
+      else if (typeof value1 === 'string' && typeof value2 === 'string')
+        result = value1.localeCompare(value2);
+      else
+        result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+
+      return (sort.order * result);
+    });
+  }
   /**新增範本按鈕 */
   addExmBtn() {
     /**data 總數量 */
@@ -72,7 +88,7 @@ export class ReportManageComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
       width: "auto",
       maxWidth: "91vw",
-      height:"auto",
+      height: "auto",
       maxHeight: "91vh",
       data: count,
       hasBackdrop: true,
@@ -123,7 +139,6 @@ export class ReportManageComponent implements AfterViewInit {
               x.report_media = x.report_media == "ADS" ? media.Google : "";
               this.Data.push(x);
             });
-            this.exportSampleData = new MatTableDataSource(this.Data);
             this.dataCount = this.Data.length;
             console.log(this.Data);
           } else {

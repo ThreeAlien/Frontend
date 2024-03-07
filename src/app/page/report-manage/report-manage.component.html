@@ -3,123 +3,116 @@
     <mat-card-header>
       <mat-card-title class="topTitle">範本管理</mat-card-title>
     </mat-card-header>
+    <br>
     <mat-card-content>
-      <table>
-        <tr>
-          <td >
-            <label>帳戶活動名稱:</label>
-          </td>
-          <td>
-            <input class="input" matInput>
-          </td>
-          <td>
-            <label>報表範本名稱:</label>
-          </td>
-          <td>
-            <input class="input" matInput>
-          </td>
-          <td>
-            <label>目標廣告:</label>
-          </td>
-          <td>
-            <input class="input" matInput>
-          </td>
-          <td>
-            <label>媒體選項:</label>
-          </td>
-          <td>
-            <input class="input" matInput>
-          </td>
-          <td>
-            <label>日期區間:</label>
-          </td>
-          <td>
-            <input class="input" matInput>
-          </td>
-        </tr>
-      </table>
+      <div class="divTr">
+        <div class="divTd" style="min-width: 127px;">
+          <div class="divLable">帳戶活動名稱:</div>
+          <div>
+            <mat-form-field appearance="outline" class="inputOut">
+              <input matInput placeholder="請輸入" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="divTd2" style="min-width: 127px;">
+          <div class="divLable">報表範本名稱:</div>
+          <div>
+            <mat-form-field appearance="outline" class="inputOut">
+              <input matInput placeholder="請輸入" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="divTd2">
+          <div class="divLable">目標廣告:</div>
+          <div>
+            <mat-form-field appearance="outline" class="inputOut">
+              <input matInput placeholder="請輸入" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="divTd2">
+          <div class="divLable">媒體選項:</div>
+          <div>
+            <mat-form-field appearance="outline" class="inputOut">
+              <input matInput placeholder="請輸入" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex;width: 100%;">
+        <div class="divLable" style="width: 127px;">日期區間:</div>
+        <div>
+          <mat-form-field class="timeInputOut">
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="起">
+              <input matEndDate placeholder="迄">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+      </div>
     </mat-card-content>
     <mat-card-actions style="margin-top: 10px;">
       <button class="addBtn" mat-raised-button color="accent" style="font-size: 18px;">
         <mat-icon>search</mat-icon>
         查詢
       </button>
-      <button class="addBtn" mat-raised-button style="margin-bottom: 5px;font-size: 18px;" color="accent" (click)="addExmBtn()">
+      <button class="addBtn" mat-raised-button style="margin-bottom: 5px;font-size: 18px;" color="accent"
+        (click)="addExmBtn()">
         <mat-icon>assignment_add</mat-icon>
         新增
       </button>
     </mat-card-actions>
   </mat-card>
-
-  <div class="tableList" id="tableList" style="width: 100%;">
-    <table mat-table [dataSource]="exportSampleData" matSort style="background-color: #EAEEE5;margin-top: 20px;">
-      <!--帳戶活動名稱 -->
-      <ng-container matColumnDef="client_subname">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <div class="titleCss">帳戶活動名稱</div>
+  <br>
+  <p-table class="tableList" id="tableList" [value]="Data" [paginator]="true" [rows]="5"
+    [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+    [rowsPerPageOptions]="[5, 10, 20]" (sortFunction)="sortChange($event)" [customSort]="true" [scrollable]="true"
+    scrollHeight="400px" [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
+    <ng-template pTemplate="header">
+      <tr style="width: 100%;">
+        <th [pSortableColumn]="'client_subname'">
+          帳戶活動名稱 <p-sortIcon [field]="'client_subname'"></p-sortIcon>
         </th>
-        <td mat-cell *matCellDef="let row"> {{row.client_subname}} </td>
-      </ng-container>
-      <!--報表範本名稱 -->
-      <ng-container matColumnDef="report_name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <div class="titleCss">報表範本名稱</div>
+        <th pSortableColumn="report_name">
+          報表範本名稱<p-sortIcon field="report_name"></p-sortIcon>
         </th>
-        <td mat-cell *matCellDef="let row"> {{row.report_name}} </td>
-      </ng-container>
-      <!--目標廣告 -->
-      <ng-container matColumnDef="report_goalads">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <div class="titleCss">目標廣告</div>
+        <th pSortableColumn="report_goalads">
+          目標廣告<p-sortIcon field="report_goalads"></p-sortIcon>
         </th>
-        <td mat-cell *matCellDef="let row"> {{row.report_goalads}} </td>
-      </ng-container>
-      <!--煤鐵選項 -->
-      <ng-container matColumnDef="report_media">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <div class="titleCss">媒體選項</div>
+        <th pSortableColumn="report_media">
+          媒體選項<p-sortIcon field="report_media"></p-sortIcon>
         </th>
-        <td mat-cell *matCellDef="let row"> {{row.report_media}} </td>
-      </ng-container>
-      <!--修改時間 -->
-      <ng-container matColumnDef="edit_date">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          <div class="titleCss">時間</div>
+        <th pSortableColumn="edit_date">
+          時間<p-sortIcon field="edit_date"></p-sortIcon>
         </th>
-        <td mat-cell *matCellDef="let row"> {{row.edit_date}} </td>
-      </ng-container>
-      <!--功能 -->
-      <ng-container matColumnDef="func">
-        <th mat-header-cell *matHeaderCellDef>
-          <div style="display: flex;justify-content: center;" class="titleCss">功能</div>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <div style="display: flex;justify-content: center;">
-            <div><button mat-button (click)="addExmBtn()">
-                <span class="material-icons">
-                  edit
-                </span>
-              </button></div>
-            <div><button mat-button color="warn">
-                <span class="material-icons">
-                  delete
-                </span>
-              </button></div>
-            <div><button mat-button (click)="exportBtn()">
-                <span class="material-icons">
-                  visibility
-                </span>
-              </button></div>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-item let-ri="rowIndex">
+      <tr>
+        <td>{{ item.client_subname }}</td>
+        <td>{{ item.report_name }}</td>
+        <td>{{item.report_goalads}}</td>
+        <td>{{item.report_media}}</td>
+        <td>{{ item.edit_date }}</td>
+        <td>
+          <div style="display: flex;">
+            <div>
+              <button mat-icon-button>
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button>
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button>
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
           </div>
         </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="width: 100%;"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
-    </table>
-    <mat-paginator class="pageFooter" [length]="totalCount" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons aria-label="Select page of periodic elements">
-    </mat-paginator>
-  </div>
-
+      </tr>
+    </ng-template>
+  </p-table>
 </div>

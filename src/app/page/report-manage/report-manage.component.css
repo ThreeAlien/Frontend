@@ -55,7 +55,22 @@ table {
   width: 50%;
   margin-left: 10px;
 }
-
+.divTr{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+.divTd{
+  display: flex;
+}
+.divTd2{
+  display: flex;
+  padding-left: 20px;
+}
+.divLable{
+  padding-top: 7px;
+}
 .input {
   width: 100%;
   height: 32px;
@@ -69,7 +84,9 @@ table {
   border-radius: 4px;
   font-size: 12px;
 }
-
+.timeInputOut{
+  width: 106%;
+}
 .addBtn {
   width: 8.6em;
   height: 2.3em;
@@ -95,4 +112,18 @@ table {
 
 tr.dataRow:hover {
   background: whitesmoke;
+}
+@media screen and (max-width: 900px){
+  .inputOut {
+    width: 166px;
+  }
+  .divTr{
+    flex-direction: column;
+  }
+  .divTd2{
+    padding-left: 0;
+  }
+  .divLable{
+    width: 90px;
+  }
 }
