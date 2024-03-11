@@ -37,11 +37,12 @@ export class AddRepExmplePopComponent implements OnInit {
   /**目標廣告 */
   targetMedia!: targetMediaModel;
   targetMediaList: targetMediaModel[] = [
-    { tMedia_id: "sem", tMedia_name: targetMapping.glg_sem },
-    { tMedia_id: "gdn", tMedia_name: targetMapping.glg_gdn },
-    { tMedia_id: "yt", tMedia_name: targetMapping.glg_yt },
-    { tMedia_id: "shop", tMedia_name: targetMapping.glg_shop },
-    { tMedia_id: "pmas", tMedia_name: targetMapping.glg_pmas },
+    { tMedia_id: "sem", tMedia_name: targetMapping.glgSem },
+    { tMedia_id: "gdn", tMedia_name: targetMapping.glgGdn },
+    { tMedia_id: "yt", tMedia_name: targetMapping.glgYt },
+    { tMedia_id: "shop", tMedia_name: targetMapping.glgShop },
+    { tMedia_id: "pmas", tMedia_name: targetMapping.glgPmas },
+    { tMedia_id: "kw", tMedia_name: targetMapping.glgPmas },
   ];
   /**客戶名稱下拉選單 */
   AccItem!: AccModel;

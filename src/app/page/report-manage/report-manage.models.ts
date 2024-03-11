@@ -127,11 +127,12 @@ export interface columnModel {
 }
 /**目標廣告對照表 */
 export enum targetMapping {
-  glg_sem = "搜尋廣告",
-  glg_gdn = "多媒體廣告",
-  glg_yt = "影音廣告",
-  glg_shop = "購物廣告",
-  glg_pmas = "最高成效廣告"
+  glgSem = "搜尋廣告",
+  glgGdn = "多媒體廣告",
+  glgYt = "影音廣告",
+  glgShop = "購物廣告",
+  glgPmas = "最高成效廣告",
+  glgKw = "關鍵字廣告"
 }
 /**欄位對照表 */
 export enum columnMapping {

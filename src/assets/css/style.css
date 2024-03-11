@@ -33,12 +33,11 @@ body {
   height: 37px !important;
   background-color: #fafafa !important;
 }
-
-.timeInputOut .mdc-text-field {
+.mdc-text-field {
   align-items: center !important;
 }
 
-.timeInputOut .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
   height: 37px;
   background-color: #fafafa !important;
   border: 1px solid #9E9E9E;
@@ -46,11 +45,6 @@ body {
   border-top-right-radius: var(--mdc-shape-small, 4px);
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-}
-
-.mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
-  padding-top: 8px;
-  padding-bottom: 10px;
 }
 
 .mat-mdc-form-field-focus-overlay {

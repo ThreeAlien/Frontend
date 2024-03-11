@@ -51,8 +51,8 @@ export class ReportManageComponent implements AfterViewInit {
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
-  qryMedia: any;
-  qryMediaList = [
+  Media: any;
+  MediaList = [
     { value: '0', viewValue: 'Google' },
     { value: '1', viewValue: 'FB' },
     { value: '2', viewValue: 'IG' },

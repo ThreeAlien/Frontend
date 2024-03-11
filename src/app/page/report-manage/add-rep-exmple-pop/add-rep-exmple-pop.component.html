@@ -25,27 +25,34 @@
             </tr>
             <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
               <td>
-                <div style="display: flex;">
-                  <label class="tdMarginTop">帳戶設定:</label>
-                  <mat-form-field class="tdMarginLeft" style="width: 22em;">
-                    <mat-label>客戶名稱</mat-label>
-                    <mat-select name="AccItem" [(ngModel)]="AccItem" (selectionChange)="changeAcc($event.value)">
+                <div style="display: flex;align-items: baseline;">
+                  <label class="tdMarginTop">客戶名稱:</label>
+                  <mat-form-field>
+                    <mat-select name="AccItem" [(ngModel)]="AccItem" (selectionChange)="changeAcc($event.value)"
+                      placeholder="請選擇">
                       <mat-option [value]="d" *ngFor="let d of AccItemList">
                         {{d.clientName}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <mat-form-field class="tdMarginLeft" style="width:23em;" panelClass="childAcc">
-                    <mat-label>子帳戶名稱</mat-label>
-                    <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem"
+                  <label class="tdMarginTop">子帳戶名稱:</label>
+                  <mat-form-field panelClass="childAcc">
+                    <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem" placeholder="請選擇"
                       (selectionChange)="changeMcc($event.value)">
-                      <mat-option [value]="d" *ngFor="let d of ChildMccItemList" style="overflow: none;">
+                      <mat-option [value]="d" *ngFor="let d of ChildMccItemList">
                         {{d.subName}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
+                  <label class="tdMarginTop">目標廣告:</label>
+                  <mat-form-field>
+                    <mat-select name="targetMedia" [(value)]="targetMedia" [disabled]="true" style="color: black;">
+                      <mat-option [value]="d" *ngFor="let d of targetMediaList">
+                        {{d.tMedia_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
-
               </td>
               <td colspan="5"></td>
               <td></td>
@@ -72,24 +79,8 @@
             </tr>
             <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
               <td>
-                <div style="display: flex;">
-                  <label class="tdMarginTop">目標廣告:</label>
-                  <mat-form-field class="tdMarginLeft">
-                    <mat-label>廣告類型</mat-label>
-                    <mat-select name="targetMedia" [(value)]="targetMedia" [disabled]="true">
-                      <mat-option [value]="d" *ngFor="let d of targetMediaList">
-                        {{d.tMedia_name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </td>
-            </tr>
-            <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
-              <td>
-                <label>報表內容:</label>
-                <mat-form-field class="tdMarginLeft" style="width: 30em;">
-                  <mat-label>廣告類型</mat-label>
+                <label class="tdMarginTop">報表內容:</label>
+                <mat-form-field>
                   <mat-select name="targetMedia" [(ngModel)]="repContent" multiple>
                     <mat-option [value]="d" *ngFor="let d of repContentList"
                       (onSelectionChange)="onChangeDefauRepCon($event,d)">
@@ -101,10 +92,9 @@
             </tr>
             <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
               <td>
-                <div style="display: flex;">
+                <div style="display: flex;align-items: baseline;">
                   <label class="tdMarginTop">範本名稱:</label>
-                  <mat-form-field class="tdMarginLeft">
-                    <mat-label>範本名稱</mat-label>
+                  <mat-form-field>
                     <input matInput name="repExmName" [(ngModel)]="repExmName">
                   </mat-form-field>
                 </div>

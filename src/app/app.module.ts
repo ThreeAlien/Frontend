@@ -37,10 +37,10 @@ import { ButtonModule } from 'primeng/button';
 import { AddRepExmplePopComponent } from './page/report-manage/add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ClientManageComponent } from './page/client-manage/client-manage.component';
 import { TableModule } from 'primeng/table';
-import { MAT_DATE_FORMATS, MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MomentDateModule } from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 export const MY_DATE_FORMATS = {
   parse: {
@@ -106,7 +106,14 @@ export const MY_DATE_FORMATS = {
   providers: [
     DatePipe,
     MessageService,
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
