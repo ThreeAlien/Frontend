@@ -13,7 +13,7 @@ import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-po
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
 import { exportSampleManageModels, media } from './report-manage.models';
 import { SortEvent } from 'primeng/api';
-import { BaseResponse } from 'src/app/share/msg-box/Models/share.model';
+import { BaseResponse } from 'src/app/share/Models/share.model';
 
 @Component({
   selector: 'app-report-manage',

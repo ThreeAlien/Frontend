@@ -10,7 +10,7 @@ import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
-import { BaseResponse } from 'src/app/share/msg-box/Models/share.model';
+import { BaseResponse } from 'src/app/share/Models/share.model';
 
 @Component({
   selector: 'app-add-rep-exmple-pop',
