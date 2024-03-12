@@ -39,7 +39,7 @@
                       </mat-form-field>
                     </div>
                     <div class="td_1">
-                      <label class="tdMarginTop">子帳戶名稱:</label>
+                      <label class="tdMarginTop" style="width: 137px;">子帳戶活動名稱:</label>
                       <mat-form-field class="tdMarginLeft" >
                         <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem" placeholder="請選擇"
                           (selectionChange)="changeMcc($event.value)">
@@ -86,9 +86,9 @@
               </tr>
               <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
                 <td>
-                  <div class="td_1" style="width: 100%;">
+                  <div class="td_1" style="width: 85vw;">
                     <label class="tdMarginTop">報表內容:</label>
-                    <mat-form-field class="tdMarginLeft" style="width: 100%;">
+                    <mat-form-field class="tdMarginLeft" style="width: 90%;">
                       <mat-select name="targetMedia" [(ngModel)]="repContent" multiple>
                         <mat-option [value]="d" *ngFor="let d of repContentList"
                           (onSelectionChange)="onChangeDefauRepCon($event,d)">

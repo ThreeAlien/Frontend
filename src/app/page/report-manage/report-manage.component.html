@@ -76,31 +76,31 @@
     [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
     <ng-template pTemplate="header">
       <tr style="width: 100%;">
-        <th [pSortableColumn]="'client_subname'">
-          帳戶活動名稱 <p-sortIcon [field]="'client_subname'"></p-sortIcon>
+        <th pSortableColumn='reportSubname'>
+          子帳戶活動名稱 <p-sortIcon field='reportSubname'></p-sortIcon>
         </th>
-        <th pSortableColumn="report_name">
-          報表範本名稱<p-sortIcon field="report_name"></p-sortIcon>
+        <th pSortableColumn="reportName">
+          報表範本名稱<p-sortIcon field="reportName"></p-sortIcon>
         </th>
-        <th pSortableColumn="report_goalads">
-          目標廣告<p-sortIcon field="report_goalads"></p-sortIcon>
+        <th pSortableColumn="reportGoalAds">
+          目標廣告<p-sortIcon field="reportGoalAds"></p-sortIcon>
         </th>
-        <th pSortableColumn="report_media">
-          媒體選項<p-sortIcon field="report_media"></p-sortIcon>
+        <th pSortableColumn="reportMedia">
+          媒體選項<p-sortIcon field="reportMedia"></p-sortIcon>
         </th>
-        <th pSortableColumn="edit_date">
-          時間<p-sortIcon field="edit_date"></p-sortIcon>
+        <th pSortableColumn="editDate">
+          時間<p-sortIcon field="editDate"></p-sortIcon>
         </th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item let-ri="rowIndex">
       <tr>
-        <td>{{ item.client_subname }}</td>
-        <td>{{ item.report_name }}</td>
-        <td>{{item.report_goalads}}</td>
-        <td>{{item.report_media}}</td>
-        <td>{{ item.edit_date }}</td>
+        <td>{{ item.reportSubname }}</td>
+        <td>{{ item.reportName }}</td>
+        <td>{{item.reportGoalAds}}</td>
+        <td>{{item.reportMedia}}</td>
+        <td>{{ item.editDate }}</td>
         <td>
           <div style="display: flex;">
             <div>

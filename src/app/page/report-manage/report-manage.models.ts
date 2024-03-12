@@ -1,28 +1,28 @@
-export interface exportSampleManageModels {
+export class exportSampleModels {
   /**範本報表ID */
-  report_id: string;
+  reportID!: string;
   /**報表範本名稱 */
-  report_name: string;
-  /**子帳戶名稱 */
-  client_subname: string;
+  reportName!: string;
+  /**子帳戶名稱 to do*/
+  clientSubname!: string;
   /**目標廣告 */
-  report_goalads: string;
+  reportGoalAds!: string;
   /**媒體類型 */
-  report_media: string;
-  /**欄位ID */
-  column_id: string;
+  reportMedia!: string;
+  /**報表內容ID */
+  columnID!: string;
   /**創建者 */
-  creat_cname: string;
+  creater!: string;
   /**創建時間 */
-  creat_date: string;
+  creatDate!: string;
   /**編輯者 */
-  edit_cname: string;
+  editer!: string;
   /**編輯時間 */
-  edit_date: string;
+  editDate!: string;
   /**報表狀態1/0 */
-  report_status: string;
-  /**子帳戶ID */
-  sub_id: string;
+  reportStatus!: string;
+  /**客戶子帳戶ID */
+  subID!: string;
 }
 export interface exportSampleManageModelsTest {
   /**報表範本名稱 */
@@ -176,4 +176,19 @@ export class repColModel {
 export class repColListModel {
   public colName!: string;
   public colStatus!: boolean;
+}
+/**取得報表範本Request */
+export class GetReportRequest{
+    /**報表範本ID */
+    reportID!:string;
+    /**報表範本名稱 */
+    reportName!:string;
+    /**目標廣告 */
+    reportGoalAds!:string;
+    /**媒體選項 */
+    reportMedia!:string;
+    /**開始時間 */
+    startDate!:string;
+    /**結束時間 */
+    endDate!:string;
 }

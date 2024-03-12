@@ -2,7 +2,7 @@ import { data } from 'jquery';
 import { ApiService } from './../../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { MccModel, AccModel, columnMapping, columnModel, exportSampleManageModels, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel } from '../report-manage.models';
+import { MccModel, AccModel, columnMapping, columnModel, exportSampleModels, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
@@ -328,19 +328,19 @@ export class AddRepExmplePopComponent implements OnInit {
     const cname = "weider"
     const date = this.SDtm;
     var reqData = { report: {}, col: {} };
-    var reqRepot: exportSampleManageModels = {
-      report_id: repid,
-      report_name: this.repExmName,
-      client_subname: subName,
-      report_goalads: goal,
-      report_media: media,
-      column_id: colid,
-      creat_cname: cname,
-      creat_date: "",
-      edit_cname: '',
-      edit_date: "",
-      report_status: '1',
-      sub_id: subID
+    var reqRepot: exportSampleModels = {
+      reportID: repid,
+      reportName: this.repExmName,
+      clientSubname: subName,
+      reportGoalAds: goal,
+      reportMedia: media,
+      columnID: colid,
+      creater: cname,
+      creatDate: "",
+      editer: '',
+      editDate: "",
+      reportStatus: '1',
+      subID: subID
     };
     var reqCol: columnModel = {
       contentId: '',
