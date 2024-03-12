@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BaseResponse } from '../page/report-manage/report-manage.models';
+import { BaseResponse } from '../share/msg-box/Models/share.model';
 
 /**登入存一個TOKEN */
 const TOKEN_KEY = '';

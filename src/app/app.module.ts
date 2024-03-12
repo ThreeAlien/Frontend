@@ -42,6 +42,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatStepperModule} from '@angular/material/stepper';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: "YYYY-MM-DD"//display值出來後轉的值
@@ -86,7 +87,8 @@ export const MY_DATE_FORMATS = {
     MatNativeDateModule,
     MatInputModule,
     MomentDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatStepperModule
   ],
   declarations: [
     AppComponent,

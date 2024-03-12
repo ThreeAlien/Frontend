@@ -42,15 +42,6 @@ export enum media {
   FB = "FB",
   IG = "IG"
 }
-export class BaseResponse {
-  /**回應碼 */
-  public code: string | undefined;
-  /**資料 */
-  public data: any;
-  /**訊息 */
-  public msg: string | undefined;
-
-}
 /**帳戶名稱 */
 export interface AccModel {
   /**客戶ID */

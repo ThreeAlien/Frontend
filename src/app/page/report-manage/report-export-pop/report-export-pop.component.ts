@@ -1,5 +1,7 @@
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -16,32 +18,77 @@ import * as XLSX from "xlsx-js-style";
 export class ReportExpotPopComponent implements AfterViewInit {
   constructor(
     public dialogRef: MatDialogRef<ReportExpotPopComponent>,
-    public datePipe: DatePipe,
-    public apiService: ApiService,
-    private msgBoxService: MsgBoxService) { }
+    public datePipe: DatePipe, private formBuilder: FormBuilder) { }
+  firstFormGroup = this.formBuilder.group({
+    dataList: this.formBuilder.array([
+      this.formBuilder.group({
+        sta: false,
+        Id: "1",
+        reportName: "每日報表",
+        SD: '',
+        ED: ''
+      }),
+      this.formBuilder.group({
+        sta: false,
+        Id: "2",
+        reportName: "每周報表",
+        SD: '',
+        ED: ''
+      })
+    ])
+  });
+  isLinear = true;
   tableContainer = document.querySelector('.table-container');
   isIcon = true;
+  //有勾選到的報表內容要給必填日期
+  onCheckExport(value: any, data: FormGroup) {
+    if (value) {
+      data.controls['SD'].setValidators([Validators.required]);
+      data.controls['ED'].setValidators([Validators.required]);
+    } else {
+      data.controls['SD'].clearValidators();
+      data.controls['SD'].setErrors(null);
+      data.controls['ED'].clearValidators();
+      data.controls['ED'].setErrors(null);
+    }
+  }
+  onCheckAll(value: any, data: any){
+    if (value.checked) {
+      data.controls.forEach((x:FormGroup)=>{
+        x.controls['sta'].setValue(true);
+      })
+    }else{
+      data.controls.forEach((x:FormGroup)=>{
+        x.controls['sta'].setValue(false);
+      })
+    }
+  }
+  selectionChange(data:StepperSelectionEvent ){
+    if(data.selectedIndex == 1){
+
+    }
+  }
   @ViewChild('tableList', { static: true }) tableList?: ElementRef;
-  displayedColumns: string[] = ['accActName', 'exptSampleName', 'goalAds', 'mediaType', 'creatDt'];
   ngAfterViewInit(): void {
     console.log(this.tableContainer);
+
   }
-   /**
-   * 匯出PDF報表
-   */
+  /**
+  * 匯出PDF報表
+  */
   async exportPDF() {
     console.log("印下PDF");
-    try{
+    try {
       const tableElement = this.tableList?.nativeElement;
-    if (tableElement) {
-      await new Promise<void>((resolve) => {
-        this.isIcon = false;
-        setTimeout(() => {
-          this.captureAndPrint(tableElement, resolve);
-        }, 1000);
-      });
-    }
-    }catch(e){
+      if (tableElement) {
+        await new Promise<void>((resolve) => {
+          this.isIcon = false;
+          setTimeout(() => {
+            this.captureAndPrint(tableElement, resolve);
+          }, 1000);
+        });
+      }
+    } catch (e) {
       console.log(e)
     }
 
@@ -125,7 +172,7 @@ export class ReportExpotPopComponent implements AfterViewInit {
     let excelTable;
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     try {
-      this.TestData.forEach(x=>{
+      this.TestData.forEach(x => {
         excelTable = document.getElementById(x.tableID);
       })
       this.TestData.forEach(x => {
@@ -194,8 +241,8 @@ export class ReportExpotPopComponent implements AfterViewInit {
       console.log(e);
     }
   }/**產生假資料*/
-  addReportTestData(count:number) {
-    this.tableCount = count +1;
+  addReportTestData(count: number) {
+    this.tableCount = count + 1;
     this.TestData.push({
       title: "每周報表",
       tableID: "table_" + (this.tableCount).toString(),
@@ -247,7 +294,7 @@ export class ReportExpotPopComponent implements AfterViewInit {
         { data: "總計" }, { data: "400" }, { data: "1040" }, { data: "160%" }, { data: "5548" }, { data: "$578954526" }, { data: "$12246868" },
       ]
     },)
-    this.tableCount = this.tableCount +1;
+    this.tableCount = this.tableCount + 1;
     this.TestData.push({
       title: "每月報表",
       tableID: "table_" + (this.tableCount).toString(),
@@ -357,5 +404,12 @@ export class ReportExpotPopComponent implements AfterViewInit {
       ]
     }
   ]
+}
+export class reportOverviewModel {
+  sta: boolean = false;
+  Id?: string;
+  reportName?: string;
+  SD!: string | null;
+  ED!: string | null;
 }
 

@@ -19,14 +19,7 @@
   height: auto;
   display: flex;
   flex-direction: column;
-  padding: 15px;
-}
-
-.modal-header {
-  border-bottom: 1px solid #AADCB6 !important;
-  color: #AADCB6;
-  width: 100%;
-  line-height: 43px;
+  padding: 5px;
 }
 
 .modal-header_Ttitle_label {
@@ -86,14 +79,6 @@
   margin-bottom: 5px;
 }
 
-/**table 內容*/
-.table-container {
-  border-radius: 10px;
-  border: 2px solid #808080;
-  box-shadow: 0 5px 5px -3px #0003, 0 3px 14px 2px #0000001f;
-  max-height: 1200px;
-}
-
 .table_center90 {
   margin-top: 5px;
   width: 90%;
@@ -102,7 +87,7 @@
 }
 
 /*表格_框*/
-.table_title100 {
+.table {
   /*灰框*/
   background-color: #CDCDCD;
   border: 3px solid #000000;
@@ -133,6 +118,14 @@
 .td_1{
   border: solid 1px #808080;
   height: 35px;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
+  line-height: 1.2em;
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+.td_2{
+  border: solid 1px #808080;
+  height: 80px;
   font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
   line-height: 1.2em;
   letter-spacing: 2px;
@@ -188,4 +181,23 @@
 .addExportBtn{
   cursor: pointer;
   margin-left: 10px;
+}
+.downBtn {
+  background-color: #fafafa;
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  /* padding: 0.625rem 1.5rem; */
+}
+.mat-stepper-vertical {
+  margin-top: 8px;
+}
+
+.mat-mdc-form-field {
+  margin-top: 16px;
+}
+.divTable{
+  display: flex;
+  flex-direction: column;
 }

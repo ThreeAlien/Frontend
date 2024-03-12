@@ -2,7 +2,7 @@ import { data } from 'jquery';
 import { ApiService } from './../../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { MccModel, AccModel, BaseResponse, columnMapping, columnModel, exportSampleManageModels, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel } from '../report-manage.models';
+import { MccModel, AccModel, columnMapping, columnModel, exportSampleManageModels, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
@@ -10,6 +10,7 @@ import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
+import { BaseResponse } from 'src/app/share/msg-box/Models/share.model';
 
 @Component({
   selector: 'app-add-rep-exmple-pop',

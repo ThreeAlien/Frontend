@@ -1,23 +1,19 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import html2canvas from 'html2canvas';
-import { data } from 'jquery';
-import * as printJS from 'print-js';
 import { environment } from 'src/environments/environment';
 import { ApiService } from '../../service/api.service';
 import { MsgBoxService } from '../../service/msg-box.service';
 import { MsgBoxInfo } from '../../share/msg-box/msg-box.component';
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
-import { BaseResponse, exportSampleManageModels, media } from './report-manage.models';
-import { SetColumnPopComponent } from './set-column-pop/set-column-pop.component';
+import { exportSampleManageModels, media } from './report-manage.models';
 import { SortEvent } from 'primeng/api';
+import { BaseResponse } from 'src/app/share/msg-box/Models/share.model';
 
 @Component({
   selector: 'app-report-manage',
@@ -127,7 +123,7 @@ export class ReportManageComponent implements AfterViewInit {
   async getRepExm() {
     try {
       this.msgData = new MsgBoxInfo;
-      const qryDataUrl = environment.apiServiceHost + `api/Report`;
+      const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReport`;
       console.log(qryDataUrl);
       this.apiService.CallApi(qryDataUrl, 'GET', { BaseResponse }).subscribe({
         next: (res) => {
