@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
 import { BaseResponse } from 'src/app/share/Models/share.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-rep-exmple-pop',
@@ -53,7 +54,9 @@ export class AddRepExmplePopComponent implements OnInit {
   // MccItemList: AccChildModel[] = [];
   /**子帳戶名稱(帳戶活動)下拉選單 */
   ChildMccItem!: MccModel;
+  //前端畫面用
   ChildMccItemList: MccModel[] = [];
+  //資料儲存用
   ChildMccItemListData: MccModel[] = [];
   /**報表內容下拉選單 */
   repContent!: repConModel;
@@ -70,6 +73,8 @@ export class AddRepExmplePopComponent implements OnInit {
     { value: '05', viewValue: '地區', targetM: "" },
     { value: '06', viewValue: '廣告群組', targetM: "" }
   ];
+  /**權限帳號 */
+  PermissionsData = [];
   columnArray: repColModel[] = []
 
   msgData = new MsgBoxInfo;
@@ -81,6 +86,48 @@ export class AddRepExmplePopComponent implements OnInit {
     await this.getChildName();
     await this.getReportContent();
     await this.getDefaultRepContent();
+    const pData = localStorage.getItem('USER_ADSINFO');
+    if (pData) {
+      this.PermissionsData = JSON.parse(pData);
+    }
+    if(this.isSetPermission()){
+      await this.setPermission();
+    }
+  }
+  isSetPermission():boolean{
+    /**如果擁有汎古主帳號 權限全開*/
+    for(let i=0;i < this.PermissionsData.length; i++){
+      if(this.PermissionsData[i] == '3255036910'){
+        return false;
+      }else{
+        return true;
+      }
+    }
+    return true;
+  }
+  setPermission() {
+    return new Promise<void>((resolve) => {
+      let tmpPermissionChild: MccModel[] = [];
+      this.PermissionsData.forEach(y => {
+        this.ChildMccItemListData.forEach(x => {
+          if (x.subId == y) {
+            tmpPermissionChild.push(x);
+          }
+        })
+      });
+      let tmpPermissionMain: AccModel[] = [];
+      this.ChildMccItemListData = tmpPermissionChild;
+      this.AccItemList.forEach(x => {
+        this.ChildMccItemListData.forEach(y => {
+          if (x.clientId == y.clientId) {
+            tmpPermissionMain.push(x);
+          }
+        })
+      })
+      this.AccItemList = tmpPermissionMain;
+      resolve();
+      console.log(this.AccItemList);
+    })
   }
   changeFormType(value: string) {
     this.mediaType = value;
@@ -162,11 +209,6 @@ export class AddRepExmplePopComponent implements OnInit {
             data.data.forEach((x: AccModel) => {
               this.AccItemList.push(x);
             });
-
-            // this.AccItemList = this.AccItemList.filter(x=>{
-
-            // })
-
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -184,25 +226,26 @@ export class AddRepExmplePopComponent implements OnInit {
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/SubClient/GetSubClient`;
       console.log(qryDataUrl);
-      this.apiService.CallApi(qryDataUrl, 'POST', {}).subscribe({
-        next: (res) => {
-          var data = res as BaseResponse;
-
-          if (data) {
-            data.data.forEach((x: MccModel) => {
-              this.ChildMccItemListData.push(x);
-            });
-            console.log(this.ChildMccItemListData);
-          } else {
+      return new Promise<void>((resolve) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', {}).subscribe({
+          next: (res) => {
             var data = res as BaseResponse;
-            this.msgData.title = `回應碼${data.code}`;
-            this.msgData.msg = `訊息${data.msg}`;
-            this.msgBoxService.msgBoxShow(this.msgData);
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error.error);
-        },
+            if (data) {
+              data.data.forEach((x: MccModel) => {
+                this.ChildMccItemListData.push(x);
+              });
+            } else {
+              var data = res as BaseResponse;
+              this.msgData.title = `回應碼${data.code}`;
+              this.msgData.msg = `訊息${data.msg}`;
+              this.msgBoxService.msgBoxShow(this.msgData);
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+          },
+        });
       });
     }
     catch (e: any) {

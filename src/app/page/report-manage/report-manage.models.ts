@@ -53,6 +53,8 @@ export interface AccModel {
 export interface MccModel {
   /**客戶ID */
   clientId: string;
+  /**子帳戶ID */
+  subId:string;
   /**子帳戶名稱 */
   subName: string;
 }
