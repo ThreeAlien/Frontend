@@ -1,0 +1,15 @@
+<ng-template [ngIf]="loadingService.isLoading$ | async" [ngIfElse]="loaded">
+  <div class="spinner-container">
+    <figure>
+      <div class="dot white"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+  </figure>
+    <!-- <div style="color: #fafafa;font-size: 44px;letter-spacing: 0.1em;">Loading</div> -->
+  </div>
+</ng-template>
+<ng-template #loaded>
+
+</ng-template>

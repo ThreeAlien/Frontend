@@ -4,7 +4,7 @@ export class exportSampleModels {
   /**報表範本名稱 */
   reportName!: string;
   /**子帳戶名稱 to do*/
-  clientSubname!: string;
+  subClientName!: string;
   /**目標廣告 */
   reportGoalAds!: string;
   /**媒體類型 */
@@ -14,7 +14,7 @@ export class exportSampleModels {
   /**創建者 */
   creater!: string;
   /**創建時間 */
-  creatDate!: string;
+  createDate!: string;
   /**編輯者 */
   editer!: string;
   /**編輯時間 */
@@ -179,8 +179,6 @@ export class repColListModel {
 }
 /**取得報表範本Request */
 export class GetReportRequest{
-    /**報表範本ID */
-    reportID!:string;
     /**報表範本名稱 */
     reportName!:string;
     /**目標廣告 */

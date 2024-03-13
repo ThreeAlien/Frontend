@@ -14,11 +14,8 @@ mat-option {
 body {
   margin: 0;
   font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
-  font-size: 20px;
-  line-height: 1.4em;
-  color:#414141;
+  font-size: 16px;
   letter-spacing:2px;
-  -webkit-text-size-adjust:100%;
 }
 .contentLayout {
   position: relative;
@@ -121,4 +118,8 @@ body {
 
 .p-dropdown-panel .p-dropdown-items {
   padding: 0;
+}
+.mdc-card__actions {
+  display: flex;
+  justify-content: flex-end;
 }

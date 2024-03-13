@@ -21,8 +21,10 @@
           <ng-template matStepLabel>請選擇報表時間</ng-template>
           <table class='table' style="width: 100%;align-items: center;border-collapse: collapse;border-color: #111111;">
             <tr class='tr_th_1 str_center'>
-              <th class="th_1" style="width: 5%;border-right: 3px #000000 solid;" >
-                <mat-checkbox color="primary" (change)="onCheckAll($event,firstFormGroup.controls.dataList)"></mat-checkbox></th>
+              <th class="th_1" style="width: 5%;border-right: 3px #000000 solid;">
+                <mat-checkbox color="primary"
+                  (change)="onCheckAll($event,firstFormGroup.controls.dataList)"></mat-checkbox>
+              </th>
               <th class="th_1" style="width: 25%;">報表內容</th>
               <th class="th_1">時間區間</th>
             </tr>
@@ -31,13 +33,14 @@
                 <ng-container [formGroupName]="index">
                   <tr class="tr_td_2 str_center">
                     <td class="td_2">
-                      <mat-checkbox color="primary" formControlName="sta" (ngModelChange)="onCheckExport($event,d)"></mat-checkbox>
+                      <mat-checkbox color="primary" formControlName="sta"
+                        (ngModelChange)="onCheckExport($event,d)"></mat-checkbox>
                     </td>
                     <td class="td_2">{{d.value.reportName}}</td>
                     <td class="td_2">
                       <mat-form-field class="timeInputOut" *ngIf="d.value.sta == true">
-                        <mat-date-range-input [rangePicker]="picker" >
-                          <input matStartDate placeholder="起"  formControlName="SD">
+                        <mat-date-range-input [rangePicker]="picker">
+                          <input matStartDate placeholder="起" formControlName="SD">
                           <input matEndDate placeholder="迄" formControlName="ED">
                         </mat-date-range-input>
                         <mat-error>請填寫時間</mat-error>
@@ -56,7 +59,6 @@
         </form>
       </mat-step>
       <mat-step>
-        <mat-progress-spinner  mode="indeterminate"></mat-progress-spinner >
         <form>
           <ng-template matStepLabel>報表產生</ng-template>
           <div style="margin:0px auto;">
@@ -95,9 +97,13 @@
               </ng-container>
             </form>
           </div>
+        </form>
+        <div class="step2Area">
           <div>
-            <button mat-button matStepperPrevious>上一步</button>
-            <button mat-button [matMenuTriggerFor]="menu" class="downBtn">
+            <button mat-button matStepperPrevious class="nextBtn">上一步</button>
+          </div>
+          <div style="height: 100%;">
+            <button mat-button [matMenuTriggerFor]="menu" class="downBtn" style="height: 100%;">
               <mat-icon>download</mat-icon>
               下載
             </button>
@@ -112,7 +118,8 @@
               </button>
             </mat-menu>
           </div>
-        </form>
+
+        </div>
       </mat-step>
     </mat-stepper>
     <!--

@@ -1,3 +1,4 @@
+<app-loading></app-loading>
 <div class="contentLayout">
   <mat-card style="background-color: #EAEEE5;font-size: 18px;">
     <mat-card-header>
@@ -6,19 +7,11 @@
     <br>
     <mat-card-content>
       <div class="divTr">
-        <div class="divTd" style="min-width: 127px;">
-          <div class="divLable">帳戶活動名稱:</div>
-          <div>
-            <mat-form-field appearance="outline" class="inputOut">
-              <input matInput placeholder="請輸入" />
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="divTd2" style="min-width: 127px;">
+        <div class="divTd2" style="min-width: 127px;padding: 0px;">
           <div class="divLable">報表範本名稱:</div>
           <div>
             <mat-form-field appearance="outline" class="inputOut">
-              <input matInput placeholder="請輸入" />
+              <input matInput placeholder="請輸入" [(ngModel)]="reportName" />
             </mat-form-field>
           </div>
         </div>
@@ -26,7 +19,7 @@
           <div class="divLable">目標廣告:</div>
           <div>
             <mat-form-field appearance="outline" class="inputOut">
-              <input matInput placeholder="請輸入" />
+              <input matInput placeholder="請輸入" [(ngModel)]="reportGoalAds" />
             </mat-form-field>
           </div>
         </div>
@@ -34,7 +27,7 @@
           <div class="divLable">媒體選項: </div>
           <div>
             <mat-form-field>
-              <mat-select [(ngModel)]="Media" name="food">
+              <mat-select [(ngModel)]="Media" name="food" placeholder="請選擇">
                 <mat-option *ngFor="let media of MediaList" [value]="media.value">
                   {{media.viewValue}}
                 </mat-option>
@@ -42,25 +35,29 @@
             </mat-form-field>
           </div>
         </div>
-      </div>
-      <div style="display: flex;width: 100%;">
-        <div class="divLable" style="width: 127px;">日期區間:</div>
-        <div>
-          <mat-form-field class="timeInputOut">
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate placeholder="起">
-              <input matEndDate placeholder="迄">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          </mat-form-field>
+        <div class="divTd2">
+          <div class="divLable">日期區間:</div>
+          <div>
+            <mat-form-field class="timeInputOut">
+              <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="起" [(ngModel)]="sD">
+                <input matEndDate placeholder="迄" [(ngModel)]="eD">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
         </div>
       </div>
     </mat-card-content>
     <mat-card-actions style="margin-top: 10px;">
-      <button class="addBtn" mat-raised-button color="accent" style="font-size: 18px;">
+      <button class="addBtn" mat-raised-button color="accent" style="font-size: 18px;" (click)="filterQry()">
         <mat-icon>search</mat-icon>
         查詢
+      </button>
+      <button class="addBtn" mat-raised-button color="accent" style="font-size: 18px;" (click)="clean()">
+        <mat-icon>close</mat-icon>
+        清除
       </button>
       <button class="addBtn" mat-raised-button style="margin-bottom: 5px;font-size: 18px;" color="accent"
         (click)="addExmBtn()">
@@ -76,11 +73,11 @@
     [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
     <ng-template pTemplate="header">
       <tr style="width: 100%;">
-        <th pSortableColumn='reportSubname'>
-          子帳戶活動名稱 <p-sortIcon field='reportSubname'></p-sortIcon>
-        </th>
         <th pSortableColumn="reportName">
           報表範本名稱<p-sortIcon field="reportName"></p-sortIcon>
+        </th>
+        <th pSortableColumn='subClientName'>
+          子帳戶活動名稱 <p-sortIcon field='subClientName'></p-sortIcon>
         </th>
         <th pSortableColumn="reportGoalAds">
           目標廣告<p-sortIcon field="reportGoalAds"></p-sortIcon>
@@ -88,19 +85,19 @@
         <th pSortableColumn="reportMedia">
           媒體選項<p-sortIcon field="reportMedia"></p-sortIcon>
         </th>
-        <th pSortableColumn="editDate">
-          時間<p-sortIcon field="editDate"></p-sortIcon>
+        <th pSortableColumn="createDate">
+          時間<p-sortIcon field="createDate"></p-sortIcon>
         </th>
         <th></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-item let-ri="rowIndex">
       <tr>
-        <td>{{ item.reportSubname }}</td>
         <td>{{ item.reportName }}</td>
+        <td>{{ item.subClientName }}</td>
         <td>{{item.reportGoalAds}}</td>
         <td>{{item.reportMedia}}</td>
-        <td>{{ item.editDate }}</td>
+        <td>{{ item.createDate }}</td>
         <td>
           <div style="display: flex;">
             <div>

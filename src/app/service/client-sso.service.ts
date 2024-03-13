@@ -7,7 +7,7 @@ import { BaseResponse } from '../share/Models/share.model';
 /**登入存一個TOKEN */
 const TOKEN_KEY = '';
 /**登入者廣告權限資料 */
-const USER_ADSINFO = '';
+const USER_ADSINFO = 'USER_ADSINFO';
 /**有效期限 */
 const EXPIRATION_KEY = "";
 
@@ -42,7 +42,7 @@ export class ClientSSOService {
  * @param userInfo 廣告帳號權限
  * @param expirationMinutes  有效期限(天)
  */
-  setUserInfo(userInfo: any, expirationMinutes: number): void {
+   setUserInfo(userInfo: any, expirationMinutes: number): void {
 
     const currentTime = new Date().getTime();
     const expirationTime = currentTime + expirationMinutes * 24 * 60 * 60 * 1000;

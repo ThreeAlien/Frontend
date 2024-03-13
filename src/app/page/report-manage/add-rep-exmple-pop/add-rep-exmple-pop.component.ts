@@ -178,7 +178,7 @@ export class AddRepExmplePopComponent implements OnInit {
       this.msgBoxService.msgBoxShow(e.toString());
     }
   }
-  /**客戶子帳戶名稱 API*/
+  /**子帳戶活動名稱 API*/
   async getChildName() {
     try {
       this.msgData = new MsgBoxInfo;
@@ -331,12 +331,12 @@ export class AddRepExmplePopComponent implements OnInit {
     var reqRepot: exportSampleModels = {
       reportID: repid,
       reportName: this.repExmName,
-      clientSubname: subName,
+      subClientName: subName,
       reportGoalAds: goal,
       reportMedia: media,
       columnID: colid,
       creater: cname,
-      creatDate: "",
+      createDate: "",
       editer: '',
       editDate: "",
       reportStatus: '1',
@@ -404,9 +404,6 @@ export class AddRepExmplePopComponent implements OnInit {
         console.log(error.error);
       },
     });
-  }
-  catch(e: any) {
-    this.msgBoxService.msgBoxShow(e.toString());
   }
 
   //#endregion

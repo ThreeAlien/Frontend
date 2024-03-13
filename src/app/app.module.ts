@@ -43,6 +43,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter, MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {MatStepperModule} from '@angular/material/stepper';
+import { LoadingComponent } from './share/loading/loading.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: "YYYY-MM-DD"//display值出來後轉的值
@@ -102,7 +103,8 @@ export const MY_DATE_FORMATS = {
     ReportExpotPopComponent,
     SetColumnPopComponent,
     SSOJumpComponent,
-    ClientManageComponent
+    ClientManageComponent,
+    LoadingComponent
   ],
   bootstrap: [AppComponent],
   providers: [
