@@ -1,34 +1,50 @@
-<div class="dialog-header">
-  <label class="dialog-header-title">{{msgBox.title}}</label>
-  <div class="dialog-header-btn" (click)="onClose()">
-    <ng-container>
-      <mat-icon>clear</mat-icon>
-    </ng-container>
-  </div>
-</div>
-<div class="dialog-body">
-  <div class="dialog-body-content" [ngStyle]="{
-                                                'max-width.px': msgBox.maxWidth  ? msgBox.maxWidth : null,
-                                                'max-height.px': msgBox.maxHeight ? msgBox.maxHeight : null,
-                                                'min-width.px': msgBox.minWidth  ? msgBox.minWidth : null,
-                                                'min-height.px': msgBox.minHeight ? msgBox.minHeight : null
-                                              }">
-    <div style="margin:0px auto;">
-      <pre class="dialog-msg">{{msgBox.msg}}</pre>
+<div style="width: 100%;height: 100%;font-family:Palanquin Dark, Arial, Helvetica, sans-serif,Noto Sans TC">
+  <div class="dialog-header">
+    <div>
+      <label class="dialog-header-title">{{msgBox.title}}</label>
+    </div>
+    <div class="dialog-header-btn" (click)="onClose()">
+      <ng-container>
+        <mat-icon>clear</mat-icon>
+      </ng-container>
     </div>
   </div>
-</div>
-<div flex class="dialog-footer">
-
-  <button *ngIf="msgBox.btnType == 'ok' || msgBox.btnType == 'ok_cancel'" class="msgbtn msgbtn-ok"
-             icon="check" (click)="onOk()">{{msgBox.btnTxtOk}}</button>
-
-  <button *ngIf="msgBox.btnType == 'ok_cancel'" class="msgbtn"
-             icon="close"  (click)="onCancel()">{{msgBox.btnTxtCancel}}</button>
-
-  <button *ngIf="msgBox.btnType == 'yes_no'" class="msgbtn msgbtn-ok"
-             icon="check" (click)="onYes()">{{msgBox.btnTxtYes}}</button>
-
-  <button *ngIf="msgBox.btnType == 'yes_no'" class="msgbtn msgbtn-no"
-             icon="close" (click)="onNo()">{{msgBox.btnTxtNo}}</button>
+  <div class="dialog-body">
+    <div class="dialog-body-content" [ngStyle]="{
+                                                  'max-width.px': msgBox.maxWidth  ? msgBox.maxWidth : null,
+                                                  'max-height.px': msgBox.maxHeight ? msgBox.maxHeight : null,
+                                                  'min-width.px': msgBox.minWidth  ? msgBox.minWidth : null,
+                                                  'min-height.px': msgBox.minHeight ? msgBox.minHeight : null
+                                                }">
+      <div style="margin:0px auto;">
+        <pre wrap class="dialog-msg">{{msgBox.msg}}</pre>
+      </div>
+    </div>
+  </div>
+  <div flex class="dialog-footer">
+    <button mat-raised-button *ngIf="msgBox.btnType == 'ok' || msgBox.btnType == 'ok_cancel'" color="primary"
+      (click)="onOk()">
+      <mat-icon>
+        check
+      </mat-icon>
+      {{msgBox.btnTxtOk}}
+    </button>
+    <button mat-raised-button *ngIf="msgBox.btnType == 'ok_cancel'" color="warn" (click)="onCancel()">
+      <mat-icon>
+        close
+      </mat-icon>
+      {{msgBox.btnTxtCancel}}
+    </button>
+    <button mat-raised-button *ngIf="msgBox.btnType == 'yes_no'" color="primary" icon="check" (click)="onYes()">
+      <mat-icon>
+        close
+      </mat-icon>{{msgBox.btnTxtYes}}
+    </button>
+    <button mat-raised-button *ngIf="msgBox.btnType == 'yes_no'" color="warn" icon="close" (click)="onNo()">
+      <mat-icon>
+        close
+      </mat-icon>
+      {{msgBox.btnTxtNo}}
+    </button>
+  </div>
 </div>

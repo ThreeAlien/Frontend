@@ -1,8 +1,26 @@
 <div class="layout">
   <div class="container">
     <div class="logo"></div>
-    <div class="loginArea">
+    <div class="loginArea" [formGroup]="form">
       <div class="title">I數據登入系統</div>
+      <div class="inputArea">
+        <div class="lable">帳號:</div>
+        <div class="input">
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="請輸入" formControlName="account" />
+            <mat-error>此處為必填</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="inputArea">
+        <div class="lable">密碼:</div>
+        <div class="input">
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="請輸入" formControlName="password" />
+            <mat-error>此處為必填</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
       <div class="buttonArea" (click)="oidcLogin()">
         <div class="googelIcon"></div>
         <div class="iconText">Google</div>
@@ -16,5 +34,3 @@
 </div>
 <p-toast></p-toast>
 <router-outlet></router-outlet>
-
-

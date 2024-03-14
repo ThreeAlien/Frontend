@@ -90,16 +90,16 @@ export class AddRepExmplePopComponent implements OnInit {
     if (pData) {
       this.PermissionsData = JSON.parse(pData);
     }
-    if(this.isSetPermission()){
+    if (this.isSetPermission()) {
       await this.setPermission();
     }
   }
-  isSetPermission():boolean{
+  isSetPermission(): boolean {
     /**如果擁有汎古主帳號 權限全開*/
-    for(let i=0;i < this.PermissionsData.length; i++){
-      if(this.PermissionsData[i] == '3255036910'){
+    for (let i = 0; i < this.PermissionsData.length; i++) {
+      if (this.PermissionsData[i] == '3255036910') {
         return false;
-      }else{
+      } else {
         return true;
       }
     }
@@ -181,7 +181,7 @@ export class AddRepExmplePopComponent implements OnInit {
     const dialogRef = this.dialog.open(SetColumnPopComponent, {
       width: "auto",
       maxHeight: "auto",
-      data: { tureList: JSON.stringify(data.TrueList), falseList: JSON.stringify(data.FalseList) },
+      data: { tureList: JSON.stringify(data.TrueList), falseList: JSON.stringify(data.FalseList),conName: data.conName },
       hasBackdrop: true,
       disableClose: true
     })
@@ -268,7 +268,6 @@ export class AddRepExmplePopComponent implements OnInit {
               x.status = false;
               this.repContentList.push(x);
             });
-            console.log(data.data);
           } else {
             var data = res as BaseResponse;
             this.msgData.title = `回應碼${data.code}`;
@@ -294,42 +293,41 @@ export class AddRepExmplePopComponent implements OnInit {
           var data = res as BaseResponse;
           let repColList: repColListModel[];
           if (data.data) {
+            console.log(data.data);
             this.defaultColumnSta = data.data;
             this.defaultColumnSta.forEach(x => {
               repColList = [
                 { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+                { colName: columnMapping.ColAccount, colStatus: x.isColAccount },
+                { colName: columnMapping.ColCutomerID, colStatus: x.isColCutomerID },
+                { colName: columnMapping.colCPA, colStatus: x.isColCPA },
                 { colName: columnMapping.colAdgroupName, colStatus: x.isColAdGroupName },
                 { colName: columnMapping.colAdfinalURL, colStatus: x.isColAdFinalURL },
                 { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-                { colName: columnMapping.colShortheadline, colStatus: x.isColShortHeadLine },
-                { colName: columnMapping.colLongheadline, colStatus: x.isColLongHeadLine },
                 { colName: columnMapping.colHeadline_1, colStatus: x.isColHeadLine_1 },
                 { colName: columnMapping.colheadline_2, colStatus: x.isColHeadLine_2 },
                 { colName: columnMapping.colDirections, colStatus: x.isColDirections },
                 { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
                 { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
                 { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-                { colName: columnMapping.colAdPath_1, colStatus: x.isColAdPath_1 },
-                { colName: columnMapping.colAdPath_2, colStatus: x.isColAdPath_2 },
                 { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
-                { colName: columnMapping.colSwitchTarget, colStatus: x.isColSwitchTarget },
-                { colName: columnMapping.colDatetime, colStatus: x.isColDateTime },
-                { colName: columnMapping.colWeek, colStatus: x.isColWeek },
-                { colName: columnMapping.colSeason, colStatus: x.isColSeason },
-                { colName: columnMapping.colMonth, colStatus: x.isColMonth },
-                { colName: columnMapping.colIncome, colStatus: x.isColIncome },
-                { colName: columnMapping.colTransTime, colStatus: x.isColTransTime },
-                { colName: columnMapping.colTransCostOnce, colStatus: x.isColTransCostOnce },
-                { colName: columnMapping.colTrans, colStatus: x.isColTrans },
-                { colName: columnMapping.colTransRate, colStatus: x.isColTransRate },
-                { colName: columnMapping.colClick, colStatus: x.isColClick },
-                { colName: columnMapping.colImpression, colStatus: x.isColImpression },
+                { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+                { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
                 { colName: columnMapping.colCtr, colStatus: x.isColCTR },
                 { colName: columnMapping.colCpc, colStatus: x.isColCPC },
                 { colName: columnMapping.colCost, colStatus: x.isColCost },
                 { colName: columnMapping.colAge, colStatus: x.isColAge },
-                { colName: columnMapping.colSex, colStatus: x.isColSex },
-                { colName: columnMapping.colRegion, colStatus: x.isColRegion },
+                { colName: columnMapping.colCon, colStatus: x.isColCon },
+                { colName: columnMapping.colConAction, colStatus: x.isColConAction },
+                { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
+                { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
+                { colName: columnMapping.colGender, colStatus: x.isColGender },
+                { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
+                { colName: columnMapping.colConRate, colStatus: x.isColConRate },
+                { colName: columnMapping.colConValue, colStatus: x.isColConValue },
+                { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+                { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
+                { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
               ];
               var tList = repColList.filter(x => x.colStatus == true);
               var fList = repColList.filter(x => x.colStatus == false);
@@ -387,6 +385,7 @@ export class AddRepExmplePopComponent implements OnInit {
     };
     var reqCol: columnModel = {
       contentId: '',
+      contentName: '',
       columnId: null,
       isColAccount: false,
       isColCutomerID: false,
@@ -394,37 +393,32 @@ export class AddRepExmplePopComponent implements OnInit {
       isColAdGroupName: false,
       isColAdFinalURL: false,
       isColHeadline: false,
-      isColShortHeadLine: false,
-      isColLongHeadLine: false,
       isColHeadLine_1: false,
       isColHeadLine_2: false,
       isColDirections: false,
       isColDirections_1: false,
       isColDirections_2: false,
       isColAdName: false,
-      isColAdPath_1: false,
-      isColAdPath_2: false,
       isColSrchKeyWord: false,
-      isColSwitchTarget: false,
-      isColDateTime: false,
-      isColWeek: false,
-      isColSeason: false,
-      isColMonth: false,
-      isColIncome: false,
-      isColTransTime: false,
-      isColTransCostOnce: false,
-      isColTrans: false,
-      isColTransRate: false,
-      isColClick: false,
-      isColImpression: false,
+      isColClicks: false,
+      isColImpressions: false,
       isColCTR: false,
       isColCPC: false,
       isColCost: false,
       isColAge: false,
-      isColSex: false,
-      isColRegion: false,
-      contentSort: '',
-      contentName: ''
+      isColCPA: false,
+      isColCon: false,
+      isColConAction: false,
+      isColConByDate: false,
+      isColConGoal: false,
+      isColConPerCost: false,
+      isColConRate: false,
+      isColConValue: false,
+      isColConstant: false,
+      isColEndDate: false,
+      isColGender: false,
+      isColStartDate: false,
+      contentSort: ''
     };
     /**To Do 欄位修改 先寫固定*/
     //reqCol = this.defaultColumnSta;

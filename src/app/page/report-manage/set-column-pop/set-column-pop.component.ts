@@ -14,7 +14,7 @@ export class SetColumnPopComponent implements OnInit {
     public dialogRef: MatDialogRef<SetColumnPopComponent>,
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
     private msgBoxService: MsgBoxService) { }
-
+  contentName:string = "";
   tList: repColListModel[] = [];
   fList: repColListModel[] = [];
   trueChkBox = false;
@@ -26,6 +26,7 @@ export class SetColumnPopComponent implements OnInit {
       x.colStatus = false;
     })
     this.fList = JSON.parse(this.inPutdata.falseList);
+    this.contentName = this.inPutdata.conName;
   }
 
   /**欄位拖移 */

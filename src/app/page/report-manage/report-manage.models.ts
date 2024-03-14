@@ -54,7 +54,7 @@ export interface MccModel {
   /**客戶ID */
   clientId: string;
   /**子帳戶ID */
-  subId:string;
+  subId: string;
   /**子帳戶名稱 */
   subName: string;
 }
@@ -87,35 +87,31 @@ export interface columnModel {
   isColAdGroupName: boolean,
   isColAdFinalURL: boolean,
   isColHeadline: boolean,
-  isColShortHeadLine: boolean,
-  isColLongHeadLine: boolean,
   isColHeadLine_1: boolean,
   isColHeadLine_2: boolean,
   isColDirections: boolean,
   isColDirections_1: boolean,
   isColDirections_2: boolean,
   isColAdName: boolean,
-  isColAdPath_1: boolean,
-  isColAdPath_2: boolean,
   isColSrchKeyWord: boolean,
-  isColSwitchTarget: boolean,
-  isColDateTime: boolean,
-  isColWeek: boolean,
-  isColSeason: boolean,
-  isColMonth: boolean,
-  isColIncome: boolean,
-  isColTransTime: boolean,
-  isColTransCostOnce: boolean,
-  isColTrans: boolean,
-  isColTransRate: boolean,
-  isColClick: boolean,
-  isColImpression: boolean,
+  isColClicks: boolean,
+  isColImpressions: boolean,
   isColCTR: boolean,
   isColCPC: boolean,
   isColCost: boolean,
   isColAge: boolean,
-  isColSex: boolean,
-  isColRegion: boolean,
+  isColCPA:boolean;
+  isColCon:boolean;
+  isColConAction:boolean;
+  isColConByDate:boolean;
+  isColConGoal:boolean;
+  isColConPerCost:boolean;
+  isColConRate:boolean;
+  isColConValue:boolean;
+  isColConstant:boolean;
+  isColEndDate:boolean;
+  isColGender:boolean;
+  isColStartDate :boolean;
   contentSort: string
 }
 /**目標廣告對照表 */
@@ -130,38 +126,38 @@ export enum targetMapping {
 /**欄位對照表 */
 export enum columnMapping {
   colCampaignName = "廣告活動",
+  ColCutomerID="客戶ID",
+  ColAccount="帳戶名稱",
   colAdgroupName = "廣告群組",
   colAdfinalURL = "最終到達網址",
   colHeadline = "標題",
-  colShortheadline = "短標題",
-  colLongheadline = "長標題",
   colHeadline_1 = "廣告標題 1",
   colheadline_2 = "廣告標題 2",
   colDirections = "說明",
   colDirections_1 = "說明 2",
   colDirections_2 = '說明 3',
   colAdName = "廣告名稱",
-  colAdPath_1 = "路徑 1",
-  colAdPath_2 = "路徑 2",
   colSrchKeyWord = "搜尋關鍵字",
-  colSwitchTarget = "轉換目標",
-  colDatetime = "日期",
-  colWeek = "週",
-  colSeason = "季",
-  colMonth = "月",
-  colIncome = "收益",
-  colTransTime = "轉換 (依轉換時間)",
-  colTransCostOnce = "單次轉換費用",
-  colTrans = "轉換",
-  colTransRate = "轉換率",
-  colClick = "點擊",
-  colImpression = "曝光",
+  colClicks = "點擊",
+  colImpressions = "曝光",
   colCtr = "點擊率(CTR)",
   colCpc = "點擊成本(CPC)",
   colCost = "費用",
   colAge = "年齡",
-  colSex = "性別",
-  colRegion = "範圍",
+  colCPA = "這是CPA",
+  colCon = "轉換",
+  colConAction ="這是conAction",
+  colConByDate = "轉換 (依轉換時間)",
+  colConGoal = "轉換目標",
+  colConPerCost = "單次轉換費用",
+  colConRate = "轉換率",
+  colConValue = "收益",
+  colConstant = "這是ColConstant",
+  colStartDate = "開始日期",
+  colEndDate = "結束日期",
+  colGender = "性別"
+
+
 }
 export class repColModel {
   /** */
@@ -180,15 +176,15 @@ export class repColListModel {
   public colStatus!: boolean;
 }
 /**取得報表範本Request */
-export class GetReportRequest{
-    /**報表範本名稱 */
-    reportName!:string;
-    /**目標廣告 */
-    reportGoalAds!:string;
-    /**媒體選項 */
-    reportMedia!:string;
-    /**開始時間 */
-    startDate!:string;
-    /**結束時間 */
-    endDate!:string;
+export class GetReportRequest {
+  /**報表範本名稱 */
+  reportName!: string;
+  /**目標廣告 */
+  reportGoalAds!: string;
+  /**媒體選項 */
+  reportMedia!: string;
+  /**開始時間 */
+  startDate!: string;
+  /**結束時間 */
+  endDate!: string;
 }

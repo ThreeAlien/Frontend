@@ -25,6 +25,17 @@
   background-repeat: no-repeat;
   background-position: center
 }
+.inputArea{
+  width: 30%;
+  min-width: 360px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-evenly;
+}
+.lable{
+  font-size: 20px;
+  font-weight: bold;
+}
 
 .loginArea {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
@@ -74,6 +85,7 @@
 }
 
 .title {
+  font-weight: bold;
   line-height: 1.43;
   font-size: 48px;
 }

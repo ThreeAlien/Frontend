@@ -15,13 +15,20 @@ export class LoginComponent implements OnInit {
   constructor(
     private clientSSO: ClientSSOService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private formBuilder: FormBuilder
   ) { }
+  account: string = "";
+  password: string = "";
+  form = this.formBuilder.group({
+    account: ['', Validators.required],
+    password: ['', Validators.required]
+  })
   ngOnInit() {
 
   }
-  show(){
-    this.messageService.add({severity: 'success', summary:  'Heading', detail: 'More details....' });
+  show() {
+    this.messageService.add({ severity: 'success', summary: 'Heading', detail: 'More details....' });
   }
   async onLogin(): Promise<void> {
     let longinSta = this.clientSSO.getPermissions("123");

@@ -147,9 +147,9 @@ export class MsgBoxInfo extends MsgBase {
   /**訊息最大高度 */
   public maxHeight?: number ;
   /**訊息最小寬度 */
-  public minWidth?: number = 200;
+  public minWidth?: number = 400;
   /**訊息最小高度 */
-  public minHeight?: number ;
+  public minHeight?: number;
 
   /**Ok 按鈕名稱 */
   public btnTxtOk?: string = "確認";
