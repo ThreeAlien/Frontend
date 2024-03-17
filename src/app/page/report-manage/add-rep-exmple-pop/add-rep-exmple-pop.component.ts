@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { LoadingService } from 'src/app/service/loading.service';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class AddRepExmplePopComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
     public apiService: ApiService,
     public datePipe: DatePipe,
-    private msgBoxService: MsgBoxService, public loadingService: LoadingService, private formBuilder: FormBuilder) { }
+    private msgBoxService: MsgBoxService, public loadingService: LoadingService, private messageService: MessageService) { }
   //#region 資料宣告
   mediaType = "";
   mediaG = "G";
@@ -46,7 +47,7 @@ export class AddRepExmplePopComponent implements OnInit {
     { tMedia_id: "yt", tMedia_name: targetMapping.glgYt },
     { tMedia_id: "shop", tMedia_name: targetMapping.glgShop },
     { tMedia_id: "pmas", tMedia_name: targetMapping.glgPmas },
-    { tMedia_id: "kw", tMedia_name: targetMapping.glgPmas },
+    { tMedia_id: "kw", tMedia_name: targetMapping.glgKw },
   ];
   /**客戶名稱下拉選單 */
   AccItem!: AccModel;
@@ -74,9 +75,9 @@ export class AddRepExmplePopComponent implements OnInit {
   formType: string = "";
   formEditTitle: string = "";
   editData: exportSampleModels | undefined;
-  reportId!:string;
+  reportId!: string;
   /**暫存原本DB報表內容欄位 */
-  tmpDBReportColumn:repConModel[]=[];
+  tmpDBReportColumn: repConModel[] = [];
 
   myForm = new FormGroup({
     AccItem: new FormControl(this.AccItem, Validators.required),
@@ -102,7 +103,6 @@ export class AddRepExmplePopComponent implements OnInit {
     if (this.isSetPermission()) {
       await this.setPermission();
     }
-    this.loadingService.loadingOff();
     console.log(this.inPutdata);
     /**編輯狀態下塞值 */
     if (this.inPutdata.type == "edit") {
@@ -111,6 +111,7 @@ export class AddRepExmplePopComponent implements OnInit {
       console.log("你進入編輯狀態");
       if (this.editData) {
         let colId = this.editData.columnID;
+        console.log(colId);
         await this.getReportDetail(colId);
         this.reportId = this.editData.reportID;
         this.formEditTitle = this.editData.reportName;
@@ -137,6 +138,7 @@ export class AddRepExmplePopComponent implements OnInit {
       this.dataCount = this.inPutdata.data;
       this.formType = this.inPutdata.type;
     }
+    this.loadingService.loadingOff();
   }
   /**如果擁有汎古主帳號 權限全開*/
   isSetPermission(): boolean {
@@ -213,7 +215,6 @@ export class AddRepExmplePopComponent implements OnInit {
   /**預設報表欄位change */
   onChangeDefauRepCon(sta: any, data: repConModel) {
     this.columnArray.filter(x => x.conId == data.contentID)[0].conStatus = sta.source._selected;
-    console.log(data);
   }
   /**設定欄位是否顯示 */
   setColClick(data: repColModel) {
@@ -226,6 +227,12 @@ export class AddRepExmplePopComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(async (result) => {
       if (result.data) {
+        this.columnArray.forEach(x => {
+          if (x.conId == data.conId) {
+            x.TrueList = JSON.parse(result.data.tureList);
+            x.FalseList = JSON.parse(result.data.falseList);
+          }
+        })
         data.TrueList = JSON.parse(result.data.tureList);
         data.FalseList = JSON.parse(result.data.falseList);
       }
@@ -237,6 +244,7 @@ export class AddRepExmplePopComponent implements OnInit {
       Object.keys(this.myForm.controls).forEach(col => {
         if (this.myForm.get(col)?.value == '' || null) {
           this.myForm.get(col)?.markAsTouched();
+          this.messageService.add({ severity: 'error', summary: '錯誤', detail: '請確認欄位是否已填寫!' })
         }
       })
       return null;
@@ -245,7 +253,7 @@ export class AddRepExmplePopComponent implements OnInit {
       const repid = `RP_${shareid}`;
       const reptName = this.myForm.controls.repExmName.value;
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
-      const tMedia = this.myForm.controls.targetMedia.value?.tMedia_name;
+      const tMedia = this.myForm.controls.targetMedia.value?.tMedia_id;
       const media = this.mediaType == "G" ? "google" : "META";
       const cname = "weider"
       const date = this.SDtm;
@@ -263,7 +271,7 @@ export class AddRepExmplePopComponent implements OnInit {
         columnData: []
       };
       if (this.formType == "edit") {
-          setData.reportId = this.reportId,
+        setData.reportId = this.reportId,
           setData.reportName = reptName ? reptName : '',
           setData.reportGoalAds = tMedia ? tMedia : '',
           setData.reportMedia = media,
@@ -272,7 +280,7 @@ export class AddRepExmplePopComponent implements OnInit {
           setData.editDate = date,
           setData.reportStatus = true
       } else {
-          setData.reportId = repid,
+        setData.reportId = repid,
           setData.reportName = reptName ? reptName : '',
           setData.reportGoalAds = tMedia ? tMedia : '',
           setData.reportMedia = media,
@@ -433,14 +441,13 @@ export class AddRepExmplePopComponent implements OnInit {
                 FalseList: fList,
               });
             })
-
-            console.log(this.columnArray);
             resolve();
           } else {
             var data = res as BaseResponse;
             this.msgData.title = `回應碼${data.code}`;
             this.msgData.msg = `訊息${data.msg}`;
             this.msgBoxService.msgBoxShow(this.msgData);
+            resolve();
           }
         },
         error: (error: HttpErrorResponse) => {
@@ -450,61 +457,163 @@ export class AddRepExmplePopComponent implements OnInit {
     })
 
   }
-  /**新增報表範本 API*/
-  async setReport(type:string) {
+  /**新增或編輯報表範本 API*/
+  async setReport(type: string) {
     let reqData = this.checkReq();
-    let path:string;
-    if(type == "edit"){
+    let path: string;
+    if (type == "edit") {
       path = environment.apiServiceHost + `api/ReportInfo/UpdateReport`;
-    }else{
+    }
+    if (type == "add") {
       path = environment.apiServiceHost + `api/ReportInfo/CreateReport`;
     }
     if (reqData) {
+      console.log(this.columnArray);
       //#region  資料處理
       //先把 有勾的報表內容 紀錄起來
-      this.columnArray.forEach(x => {
-        if (x.conStatus == true) {
-          reqData?.columnData.push({
-            contentId: x.conId,
-            colAccount: false,
-            colCutomerID: false,
-            colCampaignName: false,
-            colAdGroupName: false,
-            colAdFinalURL: false,
-            colHeadline: false,
-            colHeadLine_1: false,
-            colHeadLine_2: false,
-            colDirections: false,
-            colDirections_1: false,
-            colDirections_2: false,
-            colAdName: false,
-            colSrchKeyWord: false,
-            colConGoal: false,
-            colConValue: false,
-            colConByDate: false,
-            colConPerCost: false,
-            colCon: false,
-            colConRate: false,
-            colClicks: false,
-            colImpressions: false,
-            colCTR: false,
-            colCPC: false,
-            colCost: false,
-            colAge: false,
-            colGender: false,
-            colConstant: false,
-            colConAction: false,
-            colCPA: false,
-            colStartDate: false,
-            colEndDate: false,
-            isDelete: false,
+      //編輯狀態下
+      if (this.formType == "edit") {
+        this.columnArray.forEach(x => {
+          if (x.conStatus == true) {
+            reqData?.columnData.push({
+              reportNo: 0,
+              contentId: x.conId,
+              colAccount: false,
+              colCutomerID: false,
+              colCampaignName: false,
+              colAdGroupName: false,
+              colAdFinalURL: false,
+              colHeadline: false,
+              colHeadLine_1: false,
+              colHeadLine_2: false,
+              colDirections: false,
+              colDirections_1: false,
+              colDirections_2: false,
+              colAdName: false,
+              colSrchKeyWord: false,
+              colConGoal: false,
+              colConValue: false,
+              colConByDate: false,
+              colConPerCost: false,
+              colCon: false,
+              colConRate: false,
+              colClicks: false,
+              colImpressions: false,
+              colCTR: false,
+              colCPC: false,
+              colCost: false,
+              colAge: false,
+              colGender: false,
+              colConstant: false,
+              colConAction: false,
+              colCPA: false,
+              colStartDate: false,
+              colEndDate: false,
+              isDelete: false,
+            })
+          }
+        })
+        console.log(this.tmpDBReportColumn);
+        this.columnArray.forEach(x => {
+          this.tmpDBReportColumn.forEach(y => {
+            //如果有檢查到原本DB column 是有的, 可是送出的時候發現沒在裡面，要把DB的砍掉 ，isDelete 是true
+            if (this.formType == "edit" && x.conStatus == false && y.contentID == x.conId) {
+              reqData?.columnData.push({
+                reportNo: y.reportNo,
+                contentId: y.contentID,
+                colAccount: false,
+                colCutomerID: false,
+                colCampaignName: false,
+                colAdGroupName: false,
+                colAdFinalURL: false,
+                colHeadline: false,
+                colHeadLine_1: false,
+                colHeadLine_2: false,
+                colDirections: false,
+                colDirections_1: false,
+                colDirections_2: false,
+                colAdName: false,
+                colSrchKeyWord: false,
+                colConGoal: false,
+                colConValue: false,
+                colConByDate: false,
+                colConPerCost: false,
+                colCon: false,
+                colConRate: false,
+                colClicks: false,
+                colImpressions: false,
+                colCTR: false,
+                colCPC: false,
+                colCost: false,
+                colAge: false,
+                colGender: false,
+                colConstant: false,
+                colConAction: false,
+                colCPA: false,
+                colStartDate: false,
+                colEndDate: false,
+                isDelete: true,
+              })
+            }
           })
-        }
-      });
+        });
+        reqData?.columnData.forEach(x => {
+          this.tmpDBReportColumn.forEach(y => {
+            if (x.contentId == y.contentID) {
+              x.reportNo = y.reportNo;
+            }
+          })
+        })
+      }
+      //新增狀態下
+      if (this.formType == "add") {
+        this.columnArray.forEach(x => {
+          if (x.conStatus == true) {
+            reqData?.columnData.push({
+              reportNo: 0,
+              contentId: x.conId,
+              colAccount: false,
+              colCutomerID: false,
+              colCampaignName: false,
+              colAdGroupName: false,
+              colAdFinalURL: false,
+              colHeadline: false,
+              colHeadLine_1: false,
+              colHeadLine_2: false,
+              colDirections: false,
+              colDirections_1: false,
+              colDirections_2: false,
+              colAdName: false,
+              colSrchKeyWord: false,
+              colConGoal: false,
+              colConValue: false,
+              colConByDate: false,
+              colConPerCost: false,
+              colCon: false,
+              colConRate: false,
+              colClicks: false,
+              colImpressions: false,
+              colCTR: false,
+              colCPC: false,
+              colCost: false,
+              colAge: false,
+              colGender: false,
+              colConstant: false,
+              colConAction: false,
+              colCPA: false,
+              colStartDate: false,
+              colEndDate: false,
+              isDelete: false,
+            })
+          }
+        });
+      }
+
       //再來把屬於trueList 的寫入進去 false 的表示不顯示
       reqData.columnData.forEach(x => {
         this.columnArray.forEach(y => {
           if (x.contentId == y.conId) {
+            console.log(x);
             y.TrueList.forEach(colSta => {
               switch (colSta.colName) {
                 case columnMapping.colAccount:
@@ -606,17 +715,19 @@ export class AddRepExmplePopComponent implements OnInit {
         })
       })
       console.log(reqData);
+
       //#endregion
       return new Promise<void>((resolve) => {
         this.apiService.CallApi(path, 'POST', reqData).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            console.log(data);
             if (data.code == "200") {
-              if(type == "edit"){
+              if (type == "edit") {
                 console.log("編輯成功");
-              }else{
+                this.dialogRef.close({ data: true, type: "edit" });
+              } else {
                 console.log("新增成功");
+                this.dialogRef.close({ data: true, type: "add" });
               }
             }
             resolve();
@@ -642,10 +753,13 @@ export class AddRepExmplePopComponent implements OnInit {
             let repColList: repColListModel[];
             if (data.data) {
               let detailData = data.data as getReportDetailRes[];
+              console.log(detailData);
               let colarray: repConModel[] = [];
               this.repContentList.forEach(x => {
                 detailData.forEach(y => {
                   if (x.contentID == y.contentId) {
+                    x.reportNo = y.reportNo;
+                    x.status = true;
                     colarray.push(x)
                   }
                 })
@@ -688,7 +802,8 @@ export class AddRepExmplePopComponent implements OnInit {
                 var fList = repColList.filter(x => x.colStatus == false);
                 colarray.forEach(y => {
                   this.columnArray.forEach(z => {
-                    if (y.contentID == z.conId) {
+                    if (y.contentID == z.conId && x.contentId == y.contentID) {
+                      z.conStatus = true;
                       z.TrueList = tList;
                       z.FalseList = fList;
                     }
@@ -698,14 +813,20 @@ export class AddRepExmplePopComponent implements OnInit {
               this.tmpDBReportColumn = colarray;
               this.myForm.controls.repContent.setValue(colarray);
             }
+            this.loadingService.loadingOff();
             resolve();
           },
           error: (error: HttpErrorResponse) => {
             console.log(error.error);
+            this.loadingService.loadingOff();
             reject();
           }
         });
-      })
+      }).then(response => {
+        console.log(response);
+      }).catch(e => {
+        console.log(e);
+      });
     }
     catch (e: any) {
       this.msgBoxService.msgBoxShow(e.toString());
@@ -731,52 +852,16 @@ export class AddRepExmplePopComponent implements OnInit {
     return css;
   }
   //#endregion
-  onOk(): void {
+  async onOk(type: string): Promise<void> {
     /**todo 資料審核 */
-    if(this.formType == "edit"){
-      this.setReport('edit');
-    }else{
-      this.setReport('add');
+    if (type == "edit") {
+      await this.setReport('edit');
+    } else if (type == "add") {
+      await this.setReport('add');
     }
-
-    this.dialogRef.close({ data: false });
   }
   onCancel(): void {
-    this.dialogRef.close({ data: false });
+
+    this.dialogRef.close({ data: false, type: this.formType });
   }
 }
-// reqData?.columnData.push({
-//   contentId: x.conId,
-//   colAccount: x.TrueList[0].colName == columnMapping.ColAccount ? true : false,
-//   colCutomerID: x.TrueList[0].colName == columnMapping.ColCutomerID ? true : false,
-//   colCampaignName: x.TrueList[0].colName == columnMapping.colCampaignName ? true : false,
-//   colAdGroupName: x.TrueList[0].colName == columnMapping.colAdgroupName ? true : false,
-//   colAdFinalURL: x.TrueList[0].colName == columnMapping.colAdfinalURL ? true : false,
-//   colHeadline: x.TrueList[0].colName == columnMapping.colHeadline ? true : false,
-//   colHeadLine_1: x.TrueList[0].colName == columnMapping.colHeadline_1 ? true : false,
-//   colHeadLine_2: x.TrueList[0].colName == columnMapping.colheadline_2 ? true : false,
-//   colDirections: x.TrueList[0].colName == columnMapping.colDirections ? true : false,
-//   colDirections_1: x.TrueList[0].colName == columnMapping.colDirections_1 ? true : false,
-//   colDirections_2: x.TrueList[0].colName == columnMapping.colDirections_2 ? true : false,
-//   colAdName: x.TrueList[0].colName == columnMapping.colAdName ? true : false,
-//   colSrchKeyWord: x.TrueList[0].colName == columnMapping.colSrchKeyWord ? true : false,
-//   colConGoal: x.TrueList[0].colName == columnMapping.colConGoal ? true : false,
-//   colConValue: x.TrueList[0].colName == columnMapping.colConValue ? true : false,
-//   colConByDate: x.TrueList[0].colName == columnMapping.colConByDate ? true : false,
-//   colConPerCost: x.TrueList[0].colName == columnMapping.colConPerCost ? true : false,
-//   colCon: x.TrueList[0].colName == columnMapping.colCon ? true : false,
-//   colConRate: x.TrueList[0].colName == columnMapping.colConRate ? true : false,
-//   colClicks: x.TrueList[0].colName == columnMapping.colClicks ? true : false,
-//   colImpressions: x.TrueList[0].colName == columnMapping.colImpressions ? true : false,
-//   colCTR: x.TrueList[0].colName == columnMapping.colCtr ? true : false,
-//   colCPC: x.TrueList[0].colName == columnMapping.colCpc ? true : false,
-//   colCost: x.TrueList[0].colName == columnMapping.colCost ? true : false,
-//   colAge: x.TrueList[0].colName == columnMapping.colAge ? true : false,
-//   colGender: x.TrueList[0].colName == columnMapping.colGender ? true : false,
-//   colConstant: x.TrueList[0].colName == columnMapping.colConstant ? true : false,
-//   colConAction: x.TrueList[0].colName == columnMapping.colConAction ? true : false,
-//   colCPA: x.TrueList[0].colName == columnMapping.colCPA ? true : false,
-//   colStartDate: x.TrueList[0].colName == columnMapping.colStartDate ? true : false,
-//   colEndDate: x.TrueList[0].colName == columnMapping.colEndDate ? true : false,
-//   isDelete: false,
-// })

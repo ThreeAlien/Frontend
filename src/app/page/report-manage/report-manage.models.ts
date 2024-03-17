@@ -73,6 +73,7 @@ export interface targetMediaModel {
 
 /**報表內容 */
 export interface repConModel {
+  reportNo:number;
   /**報表內容ID */
   contentID: string;
   /**報表內容名稱 */
@@ -206,6 +207,7 @@ export class addReportRequest {
   columnData!: columnDataReq[];
 }
 export class columnDataReq {
+  reportNo!:number;
   colAccount!: boolean;
   colCutomerID!: boolean;
   colCampaignName!: boolean;
@@ -241,7 +243,10 @@ export class columnDataReq {
   isDelete!: boolean;
 }
 export class getReportDetailRes{
+  reportNo!: number;
   contentName:string="";
+  contentId:string="";
+  columnId:string="";
   isColAccount: boolean = false;
   isColCutomerID: boolean = false;
   isColCampaignName: boolean = false;
@@ -266,8 +271,6 @@ export class getReportDetailRes{
   isColCTR: boolean = false;
   isColCPC: boolean = false;
   isColCost: boolean = false;
-  contentId:string="";
-  columnId:string="";
   isColAge: boolean = false;
   isColGender: boolean = false;
   isColConstant: boolean = false;

@@ -1,3 +1,4 @@
+import { data } from 'jquery';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -8,13 +9,14 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { environment } from 'src/environments/environment';
 import { ApiService } from '../../service/api.service';
 import { MsgBoxService } from '../../service/msg-box.service';
-import { MsgBoxInfo } from '../../share/msg-box/msg-box.component';
+import { DialogResult, MsgBoxBtnType, MsgBoxInfo } from '../../share/msg-box/msg-box.component';
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
-import { GetReportRequest, exportSampleModels, media } from './report-manage.models';
-import { SortEvent } from 'primeng/api';
+import { GetReportRequest, exportSampleModels, media, targetMapping, targetMediaModel } from './report-manage.models';
+import { MessageService, SortEvent } from 'primeng/api';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { LoadingService } from 'src/app/service/loading.service';
+import { map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-report-manage',
@@ -27,7 +29,8 @@ export class ReportManageComponent implements AfterViewInit {
     public datePipe: DatePipe,
     public apiService: ApiService,
     private msgBoxService: MsgBoxService,
-    public loadingService: LoadingService) { };
+    public loadingService: LoadingService,
+    private messageService: MessageService) { };
   displayedColumns: string[] = ['client_subname', 'report_name', 'report_goalads', 'report_media', 'edit_date', 'func'];
   Data: exportSampleModels[] = [
     // { report_id: "123", report_name: "Nike", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
@@ -63,6 +66,15 @@ export class ReportManageComponent implements AfterViewInit {
     { value: 'fb', viewValue: 'FB' },
     { value: 'ig', viewValue: 'IG' },
   ]
+  /**目標廣告 */
+  targetMediaList: targetMediaModel[] = [
+    { tMedia_id: "sem", tMedia_name: targetMapping.glgSem },
+    { tMedia_id: "gdn", tMedia_name: targetMapping.glgGdn },
+    { tMedia_id: "yt", tMedia_name: targetMapping.glgYt },
+    { tMedia_id: "shop", tMedia_name: targetMapping.glgShop },
+    { tMedia_id: "pmas", tMedia_name: targetMapping.glgPmas },
+    { tMedia_id: "kw", tMedia_name: targetMapping.glgKw },
+  ];
 
   async ngAfterViewInit() {
     await this.getRepExm();
@@ -108,7 +120,7 @@ export class ReportManageComponent implements AfterViewInit {
       maxWidth: "91vw",
       height: "auto",
       maxHeight: "91vh",
-      data: {data: count,type:'add'},
+      data: { data: count, type: 'add' },
       hasBackdrop: true,
       disableClose: true
     })
@@ -116,14 +128,36 @@ export class ReportManageComponent implements AfterViewInit {
       console.log(result);
     });
   }
-   /**編輯範本按鈕 */
-   editReportBtn(data:any) {
+  /**編輯範本按鈕 */
+  editReportBtn(data: any) {
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
       width: "91vw",
       maxWidth: "91vw",
       height: "auto",
       maxHeight: "91vh",
-      data: {data: data,type:'edit'},
+      data: { data: data, type: 'edit' },
+      hasBackdrop: true,
+      disableClose: true
+    })
+    dialogRef.afterClosed().subscribe(async result => {
+      if (result.data && result.type == "add") {
+        this.messageService.add({ severity: 'success', summary: '成功', detail: '新增範本成功!' });
+        await this.getRepExm();
+      } else if (result.data && result.type == "edit") {
+        this.messageService.add({ severity: 'success', summary: '成功', detail: '編輯範本成功!' });
+        await this.getRepExm();
+      }
+      console.log(result);
+    });
+  }
+  /**匯出範本按鈕 */
+  exportBtn(data: any) {
+    console.log(data);
+    const dialogRef = this.dialog.open(ReportExpotPopComponent, {
+      width: "1080px",
+      maxHeight: "760px",
+      height: "auto",
+      data: data,
       hasBackdrop: true,
       disableClose: true
     })
@@ -131,20 +165,23 @@ export class ReportManageComponent implements AfterViewInit {
       console.log(result);
     });
   }
-  /**匯出範本按鈕 */
-  exportBtn() {
-    var count = (this.dataCount + 1).toString();
-    const dialogRef = this.dialog.open(ReportExpotPopComponent, {
-      width: "1080px",
-      maxHeight: "760px",
-      height: "auto",
-      data: count,
-      hasBackdrop: true,
-      disableClose: true
+  /**刪除按鈕 */
+  async deleteReportBtn(data: exportSampleModels) {
+    this.msgData = new MsgBoxInfo;
+    this.msgData.title = "警告";
+    this.msgData.msg = `確定要刪除此【${data.reportName}】?`
+    this.msgData.btnType = MsgBoxBtnType.ok_cancel;
+
+    const msgResult = this.msgBoxService.msgBoxShow(this.msgData);
+    msgResult.then(async x => {
+      if (x?.result == DialogResult.ok) {
+        await this.deleteReport(data.reportID);
+        await this.getRepExm();
+
+      } else {
+        return;
+      }
     })
-    dialogRef.afterClosed().subscribe(async result => {
-      console.log(result);
-    });
   }
   /**清除按鈕 */
   clean() {
@@ -188,6 +225,11 @@ export class ReportManageComponent implements AfterViewInit {
             if (data.data) {
               data.data.forEach((x: exportSampleModels) => {
                 x.createDate = this.datePipe.transform(x.createDate, 'yyyy/MM/dd') || '';
+                this.targetMediaList.forEach(tm => {
+                  if (x.reportGoalAds == tm.tMedia_id) {
+                    x.reportGoalAds = tm.tMedia_name;
+                  }
+                })
                 this.Data.push(x);
               });
               this.dataCount = this.Data.length;
@@ -213,6 +255,44 @@ export class ReportManageComponent implements AfterViewInit {
       this.loadingService.loadingOff();
     }
 
+  }
+
+  /**刪除範本api */
+  deleteReport(id: string) {
+    try {
+      this.loadingService.loadingOn();
+      const request = {
+        reportID: id,
+        reportStatus: true
+      };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/DeleteReport`;
+      console.log(qryDataUrl);
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            var data = res as BaseResponse;
+            console.log(res);
+            if (data.code == "200") {
+              this.messageService.add({ severity: 'success', summary: '成功', detail: '報表範本已刪除!' });
+            }else{
+              this.messageService.add({ severity: 'warn', summary: '失敗', detail: '刪除報表範本失敗!' });
+            }
+            this.loadingService.loadingOff();
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            this.loadingService.loadingOff();
+            reject()
+          },
+        });
+      })
+    }
+    catch (e: any) {
+      this.loadingService.loadingOff();
+      return;
+    }
   }
   //#endregion
 }

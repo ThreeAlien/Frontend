@@ -29,7 +29,7 @@
               <th class="th_1">時間區間</th>
             </tr>
             <ng-container formArrayName="dataList">
-              <ng-container *ngFor="let d of firstFormGroup.controls.dataList.controls; let index = index">
+              <ng-container *ngFor="let d of dataList.controls; let index = index">
                 <ng-container [formGroupName]="index">
                   <tr class="tr_td_2 str_center">
                     <td class="td_2">

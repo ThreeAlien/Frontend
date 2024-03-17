@@ -23,7 +23,7 @@ export class MsgBoxService {
      const msgResult = await this.msgBoxService.msgBoxShow(this.temp);
      if(msgResult.result == DialogResult.xxx) {}
 */
-  private callMsg(data?: any, width?: string, height?: string, hasBackdrop?: boolean, disableClose?: boolean):Observable<MsgBoxResult> {
+  private callMsg(data?: any, width?: string, height?: string, hasBackdrop?: boolean, disableClose?: boolean): Observable<MsgBoxResult> {
     this.dialogRef = this.dialog.open(MsgBoxComponent, {
       width: width,
       height: height,
@@ -35,8 +35,8 @@ export class MsgBoxService {
   }
 
   /**彈出訊息視窗 */
-  msgBoxShow(data?: any, width?: string, height?: string, hasBackdrop?: boolean, disableClose?: boolean){
-    return this.callMsg(data,width,height,hasBackdrop,disableClose);
+  msgBoxShow(data?: any, width?: string, height?: string, hasBackdrop?: boolean, disableClose?: boolean): Promise<MsgBoxResult | undefined> {
+    return this.callMsg(data, width, height, hasBackdrop, disableClose).toPromise();
   }
 }
 

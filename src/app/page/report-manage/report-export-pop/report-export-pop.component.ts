@@ -1,12 +1,18 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from "xlsx-js-style";
 import '../../../../assets/msjh-normal.js';
+import { BaseResponse } from 'src/app/share/Models/share.model.js';
+import { ApiService } from 'src/app/service/api.service';
+import { HttpErrorResponse } from '@angular/common/http/index.js';
+import { environment } from 'src/environments/environment';
+import { getReportDetailRes } from '../report-manage.models.js';
+
 
 @Component({
   selector: 'app-report-export-pop',
@@ -16,31 +22,30 @@ import '../../../../assets/msjh-normal.js';
 //報表匯出
 export class ReportExpotPopComponent implements AfterViewInit {
   constructor(
-    public dialogRef: MatDialogRef<ReportExpotPopComponent>,
-    public datePipe: DatePipe, private formBuilder: FormBuilder) { }
+    public dialogRef: MatDialogRef<ReportExpotPopComponent>, @Inject(MAT_DIALOG_DATA) public inPutdata: any,
+    public datePipe: DatePipe, private formBuilder: FormBuilder, public apiService: ApiService,) { }
+
+
   firstFormGroup = this.formBuilder.group({
-    dataList: this.formBuilder.array([
-      this.formBuilder.group({
-        sta: false,
-        Id: "1",
-        reportName: "每日報表",
-        SD: '',
-        ED: ''
-      }),
-      this.formBuilder.group({
-        sta: false,
-        Id: "2",
-        reportName: "每周報表",
-        SD: '',
-        ED: ''
-      })
-    ])
+    dataList: this.formBuilder.array([])
   });
+  get dataList() {
+    return this.firstFormGroup.get('dataList') as FormArray;
+  }
   isLinear = true;
   tableContainer = document.querySelector('.table-container');
   isIcon = true;
+  //報表內容id
+  colId: string = "";
+  @ViewChild('tableList', { static: true }) tableList?: ElementRef;
+  async ngAfterViewInit(): Promise<void> {
+    this.colId = this.inPutdata.columnID;
+    await this.getReportDetail(this.colId);
+    console.log(this.tableContainer);
+  }
   //有勾選到的報表內容要給必填日期
-  onCheckExport(value: any, data: FormGroup) {
+  onCheckExport(value: any, data: any) {
+    console.log(data);
     if (value) {
       data.controls['SD'].setValidators([Validators.required]);
       data.controls['ED'].setValidators([Validators.required]);
@@ -62,13 +67,16 @@ export class ReportExpotPopComponent implements AfterViewInit {
       })
     }
   }
+  /**步驟切換(案下一步) */
   selectionChange(data: StepperSelectionEvent) {
-    if (data.selectedIndex == 1) {
+    //第一步
+    if (data.selectedIndex == 0) {
+      console.log("11111");
     }
-  }
-  @ViewChild('tableList', { static: true }) tableList?: ElementRef;
-  ngAfterViewInit(): void {
-    console.log(this.tableContainer);
+    //第二步
+    if (data.selectedIndex == 1) {
+      console.log("22222");
+    }
   }
   /**匯出PDF */
   exportPdfNG() {
@@ -284,6 +292,56 @@ export class ReportExpotPopComponent implements AfterViewInit {
   onCancel(): void {
     this.dialogRef.close({ data: false });
   }
+  /**取得報表明細(報表欄位_匯出用)API */
+  async getReportDetail(id?: string) {
+    try {
+      const request = { columnID: `${id}` };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReportDetail`;
+      console.log(qryDataUrl);
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            var data = res as BaseResponse;
+            console.log(data.data);
+            let repColList: getReportDetailRes[];
+            if (data.data) {
+              repColList = data.data;
+              console.log(repColList);
+              this.dataList.setValue([]);
+              repColList.forEach(x => {
+                this.dataList.push(this.formBuilder.group({
+                  sta: false,
+                  Id: x.reportNo,
+                  reportName: x.contentName,
+                  SD: '',
+                  ED: ''
+                }));
+              })
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+    }
+  }
+  /**性別報表匯出API */
+
+  /**年齡報表匯出API */
+
+  /**關鍵字報表匯出 API */
+
+  /**每日或每周報表匯出API */
+
+  /**地區報表匯出 API*/
+
   tableCount = 0;
   TestData = [
     {

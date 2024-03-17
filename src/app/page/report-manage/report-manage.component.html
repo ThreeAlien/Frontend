@@ -1,4 +1,5 @@
 <app-loading></app-loading>
+<p-toast position="bottom-right"></p-toast>
 <div class="contentLayout">
   <mat-card style="background-color: #EAEEE5;font-size: 18px;">
     <mat-card-header>
@@ -104,10 +105,10 @@
               <button mat-icon-button (click)="editReportBtn(item)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button>
+              <button mat-icon-button (click)="deleteReportBtn(item)">
                 <mat-icon>delete</mat-icon>
               </button>
-              <button mat-icon-button (click)="exportBtn()">
+              <button mat-icon-button (click)="exportBtn(item)">
                 <mat-icon>download</mat-icon>
               </button>
             </div>
