@@ -1,6 +1,6 @@
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
-
+@import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 mat-select {
   height: auto !important;
   width: fit-content !important;
