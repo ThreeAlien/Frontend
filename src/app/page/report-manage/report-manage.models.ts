@@ -1,4 +1,6 @@
 export class exportSampleModels {
+  /**客戶ID */
+  clienId!:string;
   /**範本報表ID */
   reportID!: string;
   /**報表範本名稱 */
@@ -48,6 +50,8 @@ export interface AccModel {
   clientId: string;
   /**客戶名稱 */
   clientName: string;
+  /**客戶狀態 */
+  clientStatus: boolean;
 }
 /**帳戶活動名稱 */
 export interface MccModel {
@@ -100,18 +104,18 @@ export interface columnModel {
   isColCPC: boolean,
   isColCost: boolean,
   isColAge: boolean,
-  isColCPA:boolean;
-  isColCon:boolean;
-  isColConAction:boolean;
-  isColConByDate:boolean;
-  isColConGoal:boolean;
-  isColConPerCost:boolean;
-  isColConRate:boolean;
-  isColConValue:boolean;
-  isColConstant:boolean;
-  isColEndDate:boolean;
-  isColGender:boolean;
-  isColStartDate :boolean;
+  isColCPA: boolean;
+  isColCon: boolean;
+  isColConAction: boolean;
+  isColConByDate: boolean;
+  isColConGoal: boolean;
+  isColConPerCost: boolean;
+  isColConRate: boolean;
+  isColConValue: boolean;
+  isColConstant: boolean;
+  isColEndDate: boolean;
+  isColGender: boolean;
+  isColStartDate: boolean;
   contentSort: string
 }
 /**目標廣告對照表 */
@@ -126,41 +130,39 @@ export enum targetMapping {
 /**欄位對照表 */
 export enum columnMapping {
   colCampaignName = "廣告活動",
-  ColCutomerID="客戶ID",
-  ColAccount="帳戶名稱",
-  colAdgroupName = "廣告群組",
-  colAdfinalURL = "最終到達網址",
+  colCutomerID = "客戶ID",
+  colAccount = "帳戶名稱",
+  colAdGroupName = "廣告群組",
+  colAdFinalURL = "最終到達網址",
   colHeadline = "標題",
-  colHeadline_1 = "廣告標題 1",
-  colheadline_2 = "廣告標題 2",
+  colHeadLine_1 = "廣告標題1",
+  colHeadLine_2 = "廣告標題2",
   colDirections = "說明",
-  colDirections_1 = "說明 2",
-  colDirections_2 = '說明 3',
+  colDirections_1 = "說明2",
+  colDirections_2 = '說明3',
   colAdName = "廣告名稱",
   colSrchKeyWord = "搜尋關鍵字",
   colClicks = "點擊",
   colImpressions = "曝光",
-  colCtr = "點擊率(CTR)",
+  colCTR = "點擊率(CTR)",
   colCpc = "點擊成本(CPC)",
   colCost = "費用",
   colAge = "年齡",
-  colCPA = "這是CPA",
+  colCPA = "CPA",
   colCon = "轉換",
-  colConAction ="這是conAction",
+  colConAction = "轉換動作",
   colConByDate = "轉換 (依轉換時間)",
   colConGoal = "轉換目標",
   colConPerCost = "單次轉換費用",
   colConRate = "轉換率",
   colConValue = "收益",
-  colConstant = "這是ColConstant",
+  colConstant = "地區",
   colStartDate = "開始日期",
   colEndDate = "結束日期",
   colGender = "性別"
-
-
 }
 export class repColModel {
-  /** */
+  /**報表ID */
   public conId!: string;
   /** */
   public conName!: string;
@@ -187,4 +189,92 @@ export class GetReportRequest {
   startDate!: string;
   /**結束時間 */
   endDate!: string;
+}
+export class addReportRequest {
+  reportId!: string;
+  reportName!: string;
+  /**目標廣告 */
+  reportGoalAds!: string;
+  /**媒體選項 */
+  reportMedia!: string;
+  editer!:string;
+  editDate!: Date;
+  subID!: string;
+  creater!: string;
+  createDate!: Date;
+  reportStatus!: boolean;
+  columnData!: columnDataReq[];
+}
+export class columnDataReq {
+  colAccount!: boolean;
+  colCutomerID!: boolean;
+  colCampaignName!: boolean;
+  colAdGroupName!: boolean;
+  colAdFinalURL!: boolean;
+  colHeadline!: boolean;
+  colHeadLine_1!: boolean;
+  colHeadLine_2!: boolean;
+  colDirections!: boolean;
+  colDirections_1!: boolean;
+  colDirections_2!: boolean;
+  colAdName!: boolean;
+  colSrchKeyWord!: boolean;
+  colConGoal!: boolean;
+  colConValue!: boolean;
+  colConByDate!: boolean;
+  colConPerCost!: boolean;
+  colCon!: boolean;
+  colConRate!: boolean;
+  colClicks!: boolean;
+  colImpressions!: boolean;
+  colCTR!: boolean;
+  colCPC!: boolean;
+  colCost!: boolean;
+  contentId!: string;
+  colAge!: boolean;
+  colGender!: boolean;
+  colConstant!: boolean;
+  colConAction!: boolean;
+  colCPA!: boolean;
+  colStartDate!: boolean;
+  colEndDate!: boolean;
+  isDelete!: boolean;
+}
+export class getReportDetailRes{
+  contentName:string="";
+  isColAccount: boolean = false;
+  isColCutomerID: boolean = false;
+  isColCampaignName: boolean = false;
+  isColAdGroupName: boolean = false;
+  isColAdFinalURL: boolean = false;
+  isColHeadline: boolean = false;
+  isColHeadLine_1: boolean = false;
+  isColHeadLine_2: boolean = false;
+  isColDirections: boolean = false;
+  isColDirections_1: boolean = false;
+  isColDirections_2: boolean = false;
+  isColAdName: boolean = false;
+  isColSrchKeyWord: boolean = false;
+  isColConGoal: boolean = false;
+  isColConValue: boolean = false;
+  isColConByDate: boolean = false;
+  isColConPerCost: boolean = false;
+  isColCon: boolean = false;
+  isColConRate: boolean = false;
+  isColClicks: boolean = false;
+  isColImpressions: boolean = false;
+  isColCTR: boolean = false;
+  isColCPC: boolean = false;
+  isColCost: boolean = false;
+  contentId:string="";
+  columnId:string="";
+  isColAge: boolean = false;
+  isColGender: boolean = false;
+  isColConstant: boolean = false;
+  isColConAction: boolean = false;
+  isColCPA: boolean = false;
+  isColStartDate: boolean = false;
+  isColEndDate: boolean = false;
+  contentSort!:null;
+  isDefault!:null;
 }

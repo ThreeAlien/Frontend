@@ -123,3 +123,9 @@ body {
   display: flex;
   justify-content: flex-end;
 }
+.mat-mdc-form-field-hint-wrapper, .mat-mdc-form-field-error-wrapper {
+  padding:  0px !important;
+}
+.mat-stepper-header{
+  pointer-events: none !important;
+}

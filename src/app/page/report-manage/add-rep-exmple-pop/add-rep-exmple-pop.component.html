@@ -1,6 +1,8 @@
+<app-loading></app-loading>
 <div style="display: flex;width: 100%;height: 100%;flex-direction: column;">
   <div class="header">
-    <label class="modal-header_Ttitle_label">新增範本</label>
+    <label class="modal-header_Ttitle_label" *ngIf="formType == 'add' ">新增範本</label>
+    <label class="modal-header_Ttitle_label" *ngIf="formType == 'edit' ">編輯範本:{{formEditTitle}}</label>
     <div class="CloseBtn" (click)="onCancel()">
       <ng-container>
         <mat-icon>clear</mat-icon>
@@ -12,13 +14,13 @@
     <div class="WindwsDiv">
       <div class="modal-body" style="font-size: 18px;">
         <div style="margin:0px auto;">
-          <form>
+          <form [formGroup]="myForm">
             <table class="InputTable_S">
               <tr>
                 <td>
-                  <label style="font-size: 16px;">媒體選項:</label>
+                  <label style="font-size: 16px;width: 130px;">媒體選項:</label>
                   <mat-radio-group style="margin-left: 10px;" color="primary">
-                    <mat-radio-button (click)="changeFormType(mediaG)" [value]="mediaG">Google</mat-radio-button>
+                    <mat-radio-button (click)="changeFormType(mediaG)" [value]="mediaG" checked="true">Google</mat-radio-button>
                     <mat-radio-button (click)="changeFormType(mediaM)" style="margin-left: 20px;" [value]="mediaM">Meta
                     </mat-radio-button>
                   </mat-radio-group>
@@ -26,37 +28,42 @@
               </tr>
               <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
                 <td>
-                  <div style="display: flex;justify-content: space-between;">
+                  <div style="display: flex;">
                     <div class="td_1">
                       <label class="tdMarginTop">客戶名稱:</label>
                       <mat-form-field class="tdMarginLeft">
-                        <mat-select name="AccItem" [(ngModel)]="AccItem" (selectionChange)="changeAcc($event.value)"
+                        <mat-select name="AccItem" formControlName="AccItem" (selectionChange)="changeAcc($event.value)"
                           placeholder="請選擇">
                           <mat-option [value]="d" *ngFor="let d of AccItemList">
                             {{d.clientName}}
                           </mat-option>
                         </mat-select>
+                        <mat-error>此處為必填</mat-error>
                       </mat-form-field>
+
                     </div>
-                    <div class="td_1">
+                    <div class="td_1" style="padding-left: 15px;">
                       <label class="tdMarginTop" style="width: 137px;">子帳戶活動名稱:</label>
-                      <mat-form-field class="tdMarginLeft" >
-                        <mat-select name="ChildAccItem" [(ngModel)]="ChildMccItem" placeholder="請選擇"
+                      <mat-form-field class="tdMarginLeft">
+                        <mat-select name="ChildAccItem" formControlName="ChildMccItem" placeholder="請選擇"
                           (selectionChange)="changeMcc($event.value)">
                           <mat-option [value]="d" *ngFor="let d of ChildMccItemList">
                             {{d.subName}}
                           </mat-option>
                         </mat-select>
+                        <mat-error>此處為必填</mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="td_1">
+                    <div class="td_1" style="padding-left: 15px;">
                       <label class="tdMarginTop">目標廣告:</label>
-                      <mat-form-field class="tdMarginLeft">
-                        <mat-select name="targetMedia" [(value)]="targetMedia" [disabled]="true" style="color: black;">
+                      <mat-form-field class="tdMarginLeft" style="width: 166px;">
+                        <mat-select name="targetMedia" formControlName="targetMedia" style="color: black;"
+                          placeholder="請輸入">
                           <mat-option [value]="d" *ngFor="let d of targetMediaList">
                             {{d.tMedia_name}}
                           </mat-option>
                         </mat-select>
+                        <mat-error>此處為必填</mat-error>
                       </mat-form-field>
                     </div>
                   </div>
@@ -89,7 +96,7 @@
                   <div class="td_1" style="width: 85vw;">
                     <label class="tdMarginTop">報表內容:</label>
                     <mat-form-field class="tdMarginLeft" style="width: 90%;">
-                      <mat-select name="targetMedia" [(ngModel)]="repContent" multiple>
+                      <mat-select name="targetMedia" formControlName="repContent" multiple placeholder="請選擇">
                         <mat-option [value]="d" *ngFor="let d of repContentList"
                           (onSelectionChange)="onChangeDefauRepCon($event,d)">
                           {{d.contentName}}
@@ -104,7 +111,8 @@
                   <div style="display: flex;align-items: baseline;">
                     <label class="tdMarginTop">範本名稱:</label>
                     <mat-form-field class="tdMarginLeft">
-                      <input matInput name="repExmName" [(ngModel)]="repExmName">
+                      <input matInput name="repExmName" formControlName="repExmName" placeholder="請輸入">
+                      <mat-error>此處為必填</mat-error>
                     </mat-form-field>
                   </div>
                 </td>
@@ -113,7 +121,7 @@
                 <td>
                   <ng-container *ngFor="let dArr of columnArray">
                     <div style="display: flex;padding-top: 5px;" *ngIf="dArr.conStatus">
-                      <div>{{dArr.conName}}:</div>
+                      <div style="width: 130px;">{{dArr.conName}}:</div>
                       <div style="margin-left: 10px;margin-bottom: 3%;">
                         <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal"
                           (cdkDropListDropped)="drop($event,dArr)">
@@ -136,11 +144,6 @@
 
                   </ng-container>
                 </td>
-                <!-- <td colspan="9" class="Listarea">
-              <div style="margin-left: 11px;margin-bottom: 11px;" *ngFor="let d of colList"
-                [ngClass]="setStatusClass(d)">{{d.name}}
-              </div>
-            </td> -->
               </tr>
 
             </table>
@@ -148,8 +151,11 @@
         </div>
       </div>
       <div class="footer">
-        <button class="Btn" (click)="onOk()">
+        <button *ngIf="formType == 'add' " class="Btn" (click)="onOk()">
           新增
+        </button>
+        <button *ngIf="formType == 'edit' " class="Btn" (click)="onOk()">
+          確定
         </button>
         <div style="width: 50px;"></div>
         <button class="Btn" (click)="onCancel()">

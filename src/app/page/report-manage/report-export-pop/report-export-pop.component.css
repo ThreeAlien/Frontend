@@ -7,6 +7,9 @@
   padding: 14px;
   margin-bottom: 10px;
 }
+.demo{
+  font-size: 100px;
+}
 
 .Windows {
   width: 100%;
@@ -26,6 +29,7 @@
   float: left;
   font-size: 20px;
 }
+
 .Btn {
   width: 64px;
   height: 33px;
@@ -52,6 +56,7 @@
 .CloseBtn:hover {
   color: rgba(106, 201, 62, 0.3);
 }
+
 .footer {
   height: 50px;
   width: 100%;
@@ -63,6 +68,7 @@
   border-top: 2px solid #AADCB6;
   margin: 0px auto;
 }
+
 .topTitle {
   font-size: 24px;
   letter-spacing: 1.2px;
@@ -81,7 +87,7 @@
 
 .table_center90 {
   margin-top: 5px;
-  width: 90%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -93,7 +99,15 @@
   border: 3px solid #000000;
   width: 100%;
 }
-
+.tr_th_title{
+  font-size: 24px ;
+  background-color: #ffffff;
+  height: 35px;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
+  line-height: 1.2em;
+  letter-spacing: 1.2px;
+  font-weight: bold;
+}
 .tr_th_1 {
   background-color: #7ABD87;
   height: 35px;
@@ -102,11 +116,19 @@
   letter-spacing: 2px;
   font-size: 18px;
 }
-.th_1{
+
+.th_1 {
   border-bottom: 3px #000000 solid;
 }
-.th_2{
-  border-top: 3px #000000 solid;
+
+.th_2 {
+  border-bottom: 3px #000000 solid;
+}
+.th_R{
+  border-right: 3px #000000 solid !important;
+}
+.th_L{
+  border-left: 3px #000000 solid !important;
 }
 
 .tr_td_2 {
@@ -115,15 +137,17 @@
   height: 25px;
   font-size: 12px;
 }
-.td_1{
-  border: solid 1px #808080;
+
+.td_1 {
+  /* border: solid 1px #808080; */
   height: 35px;
   font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
   line-height: 1.2em;
   letter-spacing: 2px;
   font-size: 14px;
 }
-.td_2{
+
+.td_2 {
   border: solid 1px #808080;
   height: 80px;
   font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
@@ -131,10 +155,19 @@
   letter-spacing: 2px;
   font-size: 14px;
 }
+.trCss {
+  background-color: #fafafa;
+}
+
+.trCss2 {
+  background-color: #EAEEE5;
+}
+
 .str_center {
   text-align: center;
 }
-.IconBg{
+
+.IconBg {
   border-radius: 15px;
   align-items: center;
   height: 37px;
@@ -144,8 +177,9 @@
   justify-content: center;
   cursor: pointer;
 }
-.ExcelIcon{
-  background-image: url("../../../../assets/icon/ExcelIcon.png");
+
+.ExcelIcon {
+  /* background-image: url("../../../../assets/icon/ExcelIcon.png"); */
   background-repeat: no-repeat;
   background-position: left top, right bottom, center center;
   background-size: 28.7px 28.7px;
@@ -156,8 +190,9 @@
   margin-left: 10px;
   margin-right: 10px;
 }
-.PdfIcon{
-  background-image: url("../../../../assets/icon/PDFIcon3.png");
+
+.PdfIcon {
+  /* background-image: url("../../../../assets/icon/PDFIcon3.png"); */
   background-repeat: no-repeat;
   background-position: left top, right bottom, center center;
   background-size: 30.7px 30.7px;
@@ -167,8 +202,9 @@
   cursor: pointer;
   margin-left: 10px;
 }
-.deleteIcon{
-  background-image: url("../../../../assets/icon/deleteIcon.png");
+
+.deleteIcon {
+  /* background-image: url("../../../../assets/icon/deleteIcon.png"); */
   background-repeat: no-repeat;
   background-position: left top, right bottom, center center;
   background-size: 30.7px 30.7px;
@@ -178,18 +214,19 @@
   cursor: pointer;
   margin-left: 10px;
 }
-.addExportBtn{
+
+.addExportBtn {
   cursor: pointer;
   margin-left: 10px;
 }
+
 .downBtn {
   background-color: #fafafa;
   border: 1px solid #ccc;
-  width: 100%;
-  height: 100%;
-  font-size: 1rem;
+  width: 80px;
   /* padding: 0.625rem 1.5rem; */
 }
+
 .mat-stepper-vertical {
   margin-top: 8px;
 }
@@ -197,10 +234,12 @@
 .mat-mdc-form-field {
   margin-top: 16px;
 }
-.divTable{
+
+.divTable {
   display: flex;
   flex-direction: column;
 }
+
 .step2Area {
   display: flex;
   justify-content: space-between;

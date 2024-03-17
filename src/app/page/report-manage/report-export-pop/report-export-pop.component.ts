@@ -1,13 +1,12 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import html2canvas from 'html2canvas';
+import { MatDialogRef } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
-import { ApiService } from 'src/app/service/api.service';
-import { MsgBoxService } from 'src/app/service/msg-box.service';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from "xlsx-js-style";
+import '../../../../assets/msjh-normal.js';
 
 @Component({
   selector: 'app-report-export-pop',
@@ -52,120 +51,44 @@ export class ReportExpotPopComponent implements AfterViewInit {
       data.controls['ED'].setErrors(null);
     }
   }
-  onCheckAll(value: any, data: any){
+  onCheckAll(value: any, data: any) {
     if (value.checked) {
-      data.controls.forEach((x:FormGroup)=>{
+      data.controls.forEach((x: FormGroup) => {
         x.controls['sta'].setValue(true);
       })
-    }else{
-      data.controls.forEach((x:FormGroup)=>{
+    } else {
+      data.controls.forEach((x: FormGroup) => {
         x.controls['sta'].setValue(false);
       })
     }
   }
-  selectionChange(data:StepperSelectionEvent ){
-    if(data.selectedIndex == 1){
-
+  selectionChange(data: StepperSelectionEvent) {
+    if (data.selectedIndex == 1) {
     }
   }
   @ViewChild('tableList', { static: true }) tableList?: ElementRef;
   ngAfterViewInit(): void {
     console.log(this.tableContainer);
-
   }
-  /**
-  * 匯出PDF報表
-  */
-  async exportPDF() {
-    console.log("印下PDF");
-    try {
-      const tableElement = this.tableList?.nativeElement;
-      if (tableElement) {
-        await new Promise<void>((resolve) => {
-          this.isIcon = false;
-          setTimeout(() => {
-            this.captureAndPrint(tableElement, resolve);
-          }, 1000);
-        });
-      }
-    } catch (e) {
-      console.log(e)
-    }
-
-  }
-  private captureAndPrint(tableElement: HTMLElement, resolve: () => void) {
-    const options = {
-      //background: "white",
-      useCORS: true,
-      scrollY: -window.scrollY,
-      width: tableElement.scrollWidth,
-      height: tableElement.scrollHeight,
-      scale: 3
-    };
-    //未生成pdf的html頁面高度
-
-    html2canvas(tableElement, options)
-      .then(canvas => {
-        //未生成pdf的html頁面高度
-        let leftHeight = canvas.height;
-        //一頁pdf顯示html頁面生成的canvas高度;
-        let pageHeight = canvas.width / 595.28 * 841.89;
-        let img = canvas.toDataURL("image/jpeg", 1.0);
-        let pdf = new jsPDF("p", "pt", "a4");
-        //a4紙的尺寸[595.28,841.89]，html頁面生成的canvas在pdf中圖片的寬高
-        let imgWidth = 595.28;
-        let imgHeight = 555.28 / canvas.width * canvas.height;
-        //pdf頁面偏移
-        let position = 0;
-        if (leftHeight < pageHeight) {
-          pdf.addImage(img, 'JPEG', 0, 0, imgWidth, imgHeight);
-          return pdf;
-        } else {
-          while (leftHeight > 0) {
-            pdf.addImage(img, 'JPEG', 0, position, imgWidth, imgHeight)
-            leftHeight -= pageHeight;
-            position -= 841.89;
-            //避免添加空白頁
-            if (leftHeight > 0) {
-              pdf.addPage();
-            }
-          }
-          return pdf;
+  /**匯出PDF */
+  exportPdfNG() {
+    const doc = new jsPDF("p", "pt", "a4")
+    doc.setFont('msjh');
+    doc.text('XX有限公司', 14, 20)
+    this.TestData.forEach(x => {
+      autoTable(doc, {
+        html: `#${x.tableID}`,
+        tableWidth: 'auto',
+        useCss: true,
+        styles: {
+          font: "msjh"
         }
-        //需要dataUrl格式
-        // pdf.addImage(img, "JPEG", 20, 0, 555.28, (555.28 / canvas.width) * canvas.height
-        // );
-        // console.log(pdf);
-        // return pdf;
       })
-      .then(doc => {
-        doc.save("Test" + ".pdf");
-        this.isIcon = true;
-        // this.pdbOKClick = true; // 下載完畢後開放
-        // this.downloadPDFbtnCss = "btn btn-primary"; //CSS變更回來
-      });
-    // html2canvas(tableElement, {
-    //   useCORS: true,
-    //   scrollY: -window.scrollY,
-    //   width: tableElement.scrollWidth,
-    //   height: tableElement.scrollHeight,
-    //   scale: 2
-    // }).then((canvas) => {
-    //   printJS({
-    //     printable: canvas,
-    //     type: 'html',
-    //     documentTitle: "文件標題",
-    //   });
-    //   resolve();
-    // }).catch((error) => {
-    //   console.error('html2canvas error:', error);
-    //   resolve();
-    // });
+    })
+    doc.save('table.pdf');
   }
   title = 'Excel';
-  /**
-   * 匯出EXCEL報表
-   */
+  /** 匯出EXCEL報表 */
   exportExcel() {
     //TODO 寫Model 測試先直接覆蓋
     let lastRow = -1;
@@ -289,6 +212,17 @@ export class ReportExpotPopComponent implements AfterViewInit {
             { data: "700000" }
           ]
         },
+        {
+          tdList: [
+            { data: "2023-11-06" },
+            { data: "200" },
+            { data: "100" },
+            { data: "10" },
+            { data: "150" },
+            { data: "17000" },
+            { data: "700000" }
+          ]
+        }
       ],
       footerList: [
         { data: "總計" }, { data: "400" }, { data: "1040" }, { data: "160%" }, { data: "5548" }, { data: "$578954526" }, { data: "$12246868" },
@@ -404,12 +338,5 @@ export class ReportExpotPopComponent implements AfterViewInit {
       ]
     }
   ]
-}
-export class reportOverviewModel {
-  sta: boolean = false;
-  Id?: string;
-  reportName?: string;
-  SD!: string | null;
-  ED!: string | null;
 }
 

@@ -53,8 +53,8 @@
               </ng-container>
             </ng-container>
           </table>
-          <div style="float: right;padding-top: 10px;">
-            <button mat-button matStepperNext style="background-color: #fafafa;border: solid 1px #808080;">下一步</button>
+          <div style="float: left;padding-top: 10px;">
+            <button mat-button matStepperNext class="nextBtn">下一步</button>
           </div>
         </form>
       </mat-step>
@@ -62,11 +62,10 @@
         <form>
           <ng-template matStepLabel>報表產生</ng-template>
           <div style="margin:0px auto;">
-            <form #tableList>
+            <form #tableList id="tableList">
               <ng-container *ngFor="let tableList of TestData">
                 <div class="table_center90">
                   <div style="display: flex;justify-content: space-between;">
-                    <div class="topTitle">{{tableList.title}}</div>
                     <div style="display: flex;" *ngIf="isIcon == true">
                       <div class="ExcelIcon"></div>
                       <div class="PdfIcon"></div>
@@ -74,22 +73,30 @@
                     </div>
                   </div>
                   <table id="{{tableList.tableID}}" class='table'
-                    style="width: 100%;align-items: center;border-collapse: collapse;border-color: #111111;">
+                    style="width: 100%;align-items: center;border-collapse: collapse;">
+                    <tr class='tr_th_title str_center'>
+                      <td colspan="7" style="border: 3px #000000 solid;">
+                        {{tableList.title}}
+                      </td>
+                    </tr>
                     <tr class='tr_th_1 str_center'>
-                      <ng-container *ngFor="let thD of tableList.colNameList">
-                        <th [width]="thD.width" class="th_1">{{thD.colName}}</th>
+                      <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
+                        <th [width]="thD.width" [ngClass]="{ th_R : i == tableList.colNameList.length-1,th_L : i==0}">
+                          {{thD.colName}}</th>
                       </ng-container>
                     </tr>
-                    <ng-container *ngFor="let trList of tableList.tableList">
-                      <tr class="tr_td_2 str_center">
-                        <ng-container *ngFor="let td of trList.tdList">
-                          <td class="td_1">{{td.data}}</td>
+                    <ng-container *ngFor="let trList of tableList.tableList;index as index;">
+                      <tr class="tr_td_2 str_center" [ngClass]="{ trCss2 : index %2 == 0,trCss : index%2 !== 0}">
+                        <ng-container *ngFor="let td of trList.tdList;index as i;">
+                          <td class="td_1" [ngClass]="{ th_R : i == trList.tdList.length-1,th_L : i==0}">{{td.data}}
+                          </td>
                         </ng-container>
                       </tr>
                     </ng-container>
                     <tr class='tr_th_1 str_center'>
-                      <ng-container *ngFor="let footD of tableList.footerList">
-                        <th class="th_2">{{footD.data}}</th>
+                      <ng-container *ngFor="let footD of tableList.footerList;index as i;">
+                        <th class="th_2" [ngClass]="{ th_R : i == tableList.footerList.length-1,th_L : i==0}">
+                          {{footD.data}}</th>
                       </ng-container>
                     </tr>
                   </table>
@@ -103,7 +110,7 @@
             <button mat-button matStepperPrevious class="nextBtn">上一步</button>
           </div>
           <div style="height: 100%;">
-            <button mat-button [matMenuTriggerFor]="menu" class="downBtn" style="height: 100%;">
+            <button mat-button [matMenuTriggerFor]="menu" class="downBtn">
               <mat-icon>download</mat-icon>
               下載
             </button>
@@ -112,7 +119,7 @@
                 <mat-icon>save</mat-icon>
                 EXCEL
               </button>
-              <button mat-menu-item (click)="exportPDF()">
+              <button mat-menu-item (click)="exportPdfNG()">
                 <mat-icon>picture_as_pdf</mat-icon>
                 PDF
               </button>

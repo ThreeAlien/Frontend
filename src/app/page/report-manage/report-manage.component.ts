@@ -66,6 +66,7 @@ export class ReportManageComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     await this.getRepExm();
+    //this.loadingService.loadingOn();
   }
   async sortChange(sort: SortEvent): Promise<void> {
     sort.data.sort((data1: any, data2: any) => {
@@ -107,7 +108,22 @@ export class ReportManageComponent implements AfterViewInit {
       maxWidth: "91vw",
       height: "auto",
       maxHeight: "91vh",
-      data: count,
+      data: {data: count,type:'add'},
+      hasBackdrop: true,
+      disableClose: true
+    })
+    dialogRef.afterClosed().subscribe(async result => {
+      console.log(result);
+    });
+  }
+   /**編輯範本按鈕 */
+   editReportBtn(data:any) {
+    const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
+      width: "91vw",
+      maxWidth: "91vw",
+      height: "auto",
+      maxHeight: "91vh",
+      data: {data: data,type:'edit'},
       hasBackdrop: true,
       disableClose: true
     })
