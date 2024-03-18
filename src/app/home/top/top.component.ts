@@ -15,15 +15,11 @@ export class TopComponent implements OnInit {
   constructor(private clientSSO : ClientSSOService,
     private router: Router,) { }
 
-  data = new MsgBoxInfo;
   title = environment.production ? '' : '測試區';
-  loginName = "馮迪索";
+  loginName = "汎古";
 
   ngOnInit(): void {
 
-    this.data.msg = "測試喔";
-    this.data.title ="Test";
-    this.data.btnType = MsgBoxBtnType.ok_cancel;
   }
   onLogout(){
     this.clientSSO.logout();

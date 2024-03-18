@@ -125,6 +125,10 @@ export class ReportManageComponent implements AfterViewInit {
       disableClose: true
     })
     dialogRef.afterClosed().subscribe(async result => {
+      if (result.data && result.type == "add") {
+        this.messageService.add({ severity: 'success', summary: '成功', detail: '新增範本成功!' });
+        await this.getRepExm();
+      }
       console.log(result);
     });
   }
@@ -140,10 +144,7 @@ export class ReportManageComponent implements AfterViewInit {
       disableClose: true
     })
     dialogRef.afterClosed().subscribe(async result => {
-      if (result.data && result.type == "add") {
-        this.messageService.add({ severity: 'success', summary: '成功', detail: '新增範本成功!' });
-        await this.getRepExm();
-      } else if (result.data && result.type == "edit") {
+      if (result.data && result.type == "edit") {
         this.messageService.add({ severity: 'success', summary: '成功', detail: '編輯範本成功!' });
         await this.getRepExm();
       }
@@ -275,7 +276,7 @@ export class ReportManageComponent implements AfterViewInit {
             console.log(res);
             if (data.code == "200") {
               this.messageService.add({ severity: 'success', summary: '成功', detail: '報表範本已刪除!' });
-            }else{
+            } else {
               this.messageService.add({ severity: 'warn', summary: '失敗', detail: '刪除報表範本失敗!' });
             }
             this.loadingService.loadingOff();

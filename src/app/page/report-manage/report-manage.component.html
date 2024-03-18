@@ -86,8 +86,11 @@
         <th pSortableColumn="reportMedia">
           媒體選項<p-sortIcon field="reportMedia"></p-sortIcon>
         </th>
+        <th pSortableColumn="editDate">
+          編輯時間<p-sortIcon field="editDate"></p-sortIcon>
+        </th>
         <th pSortableColumn="createDate">
-          時間<p-sortIcon field="createDate"></p-sortIcon>
+          開始時間<p-sortIcon field="createDate"></p-sortIcon>
         </th>
         <th></th>
       </tr>
@@ -98,6 +101,7 @@
         <td>{{ item.subClientName }}</td>
         <td>{{item.reportGoalAds}}</td>
         <td>{{item.reportMedia}}</td>
+        <td>{{ item.editDate }}</td>
         <td>{{ item.createDate }}</td>
         <td>
           <div style="display: flex;">

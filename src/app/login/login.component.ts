@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClientSSOService } from '../service/client-sso.service';
 import { environment } from 'src/environments/environment';
@@ -24,8 +24,7 @@ export class LoginComponent implements OnInit {
     account: ['', Validators.required],
     password: ['', Validators.required]
   })
-  ngOnInit() {
-
+  async ngOnInit() {
   }
   show() {
     this.messageService.add({ severity: 'success', summary: 'Heading', detail: 'More details....' });

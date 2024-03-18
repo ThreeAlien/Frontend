@@ -263,10 +263,10 @@ export class AddRepExmplePopComponent implements OnInit {
         reportGoalAds: '',
         reportMedia: '',
         editer: '',
-        editDate: date,
+        editDate: undefined,
         subID: '',
         creater: '',
-        createDate: date,
+        createDate: undefined,
         reportStatus: false,
         columnData: []
       };
@@ -279,7 +279,8 @@ export class AddRepExmplePopComponent implements OnInit {
           setData.editer = cname,
           setData.editDate = date,
           setData.reportStatus = true
-      } else {
+      }
+      if (this.formType == "add") {
         setData.reportId = repid,
           setData.reportName = reptName ? reptName : '',
           setData.reportGoalAds = tMedia ? tMedia : '',
@@ -474,6 +475,7 @@ export class AddRepExmplePopComponent implements OnInit {
       //編輯狀態下
       if (this.formType == "edit") {
         this.columnArray.forEach(x => {
+
           if (x.conStatus == true) {
             reqData?.columnData.push({
               reportNo: 0,

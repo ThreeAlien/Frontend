@@ -42,6 +42,7 @@ export class ReportExpotPopComponent implements AfterViewInit {
     this.colId = this.inPutdata.columnID;
     await this.getReportDetail(this.colId);
     console.log(this.tableContainer);
+    this.getExportGender();
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -143,8 +144,8 @@ export class ReportExpotPopComponent implements AfterViewInit {
               fgColor: { rgb: 'EAEEE5' },
             };
           }
-          //第一列跟最後一列(標題)
-          if (cell.r == 0 || cell.r == lastRow) {
+          //第二列跟最後一列(標題)
+          if (cell.r == 1 || cell.r == lastRow) {
             ws[i].s = {
               font: {
                 bold: true,
@@ -333,8 +334,41 @@ export class ReportExpotPopComponent implements AfterViewInit {
     }
   }
   /**性別報表匯出API */
+  getExportGender(id?: string, sd?: Date, ed?: Date) {
+    try {
+      let SD: Date = new Date("2024-02-01");
+      let ED: Date = new Date("2024-03-28");
+      const request = {
+        campaignID: "850410164",
+        startDate: SD,
+        endDate: ED,
+      };
+      let rD = JSON.stringify(request);
 
+      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportGender`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            let data = res as BaseResponse;
+            if (data.data) {
+              console.log(data);
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      return;
+    }
+  }
   /**年齡報表匯出API */
+
 
   /**關鍵字報表匯出 API */
 

@@ -199,10 +199,10 @@ export class addReportRequest {
   /**媒體選項 */
   reportMedia!: string;
   editer!:string;
-  editDate!: Date;
+  editDate: Date | undefined;
   subID!: string;
   creater!: string;
-  createDate!: Date;
+  createDate: Date | undefined;
   reportStatus!: boolean;
   columnData!: columnDataReq[];
 }
