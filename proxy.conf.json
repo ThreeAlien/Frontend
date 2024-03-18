@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "https://localhost:7015",
+    "target": "http://220.132.157.210",
     "secure": false,
     "changeOrigin": true
   }

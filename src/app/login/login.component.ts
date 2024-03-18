@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     password: ['', Validators.required]
   })
   ngOnInit() {
-    alert(environment.scrumApi);
+
   }
   show() {
     this.messageService.add({ severity: 'success', summary: 'Heading', detail: 'More details....' });
