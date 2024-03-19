@@ -15,7 +15,6 @@ export class LoginComponent implements OnInit {
   constructor(
     private clientSSO: ClientSSOService,
     private router: Router,
-    private messageService: MessageService,
     private formBuilder: FormBuilder
   ) { }
   account: string = "";
@@ -25,9 +24,10 @@ export class LoginComponent implements OnInit {
     password: ['', Validators.required]
   })
   async ngOnInit() {
-  }
-  show() {
-    this.messageService.add({ severity: 'success', summary: 'Heading', detail: 'More details....' });
+    let isLogin = this.clientSSO.isLoggedIn();
+    if(isLogin){
+      this.router.navigate(["/home"]);
+    }
   }
   async onLogin(): Promise<void> {
     let longinSta = this.clientSSO.getPermissions("123");

@@ -18,7 +18,7 @@
     <mat-stepper orientation="vertical" [linear]="isLinear" #stepper (selectionChange)="selectionChange($event)">
       <mat-step [stepControl]="firstFormGroup">
         <form [formGroup]="firstFormGroup">
-          <ng-template matStepLabel>請選擇報表時間</ng-template>
+          <ng-template matStepLabel>請選擇要匯出的報表</ng-template>
           <table class='table' style="width: 100%;align-items: center;border-collapse: collapse;border-color: #111111;">
             <tr class='tr_th_1 str_center'>
               <th class="th_1" style="width: 5%;border-right: 3px #000000 solid;">

@@ -60,8 +60,8 @@
                       <mat-form-field class="tdMarginLeft" style="width: 166px;">
                         <mat-select name="targetMedia" formControlName="targetMedia" style="color: black;"
                           placeholder="請輸入">
-                          <mat-option [value]="d" *ngFor="let d of targetMediaList">
-                            {{d.tMedia_name}}
+                          <mat-option [value]="d" *ngFor="let d of reportGoalAdsList">
+                            {{d.goalName}}
                           </mat-option>
                         </mat-select>
                         <mat-error>此處為必填</mat-error>

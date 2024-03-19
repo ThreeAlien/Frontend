@@ -19,8 +19,12 @@
         <div class="divTd2">
           <div class="divLable">目標廣告:</div>
           <div>
-            <mat-form-field appearance="outline" class="inputOut">
-              <input matInput placeholder="請輸入" [(ngModel)]="reportGoalAds" />
+            <mat-form-field>
+              <mat-select [(ngModel)]="reportGoalAds" name="food" placeholder="請選擇">
+                <mat-option *ngFor="let goal of reportGoalAdsList" [value]="goal.goalId">
+                  {{goal.goalName}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </div>
         </div>
@@ -28,7 +32,7 @@
           <div class="divLable">媒體選項: </div>
           <div>
             <mat-form-field>
-              <mat-select [(ngModel)]="Media" name="food" placeholder="請選擇">
+              <mat-select [(ngModel)]="Media" placeholder="請選擇">
                 <mat-option *ngFor="let media of MediaList" [value]="media.value">
                   {{media.viewValue}}
                 </mat-option>
@@ -37,7 +41,7 @@
           </div>
         </div>
         <div class="divTd2">
-          <div class="divLable">日期區間:</div>
+          <div class="divLable">創建日期區間:</div>
           <div>
             <mat-form-field class="timeInputOut">
               <mat-date-range-input [rangePicker]="picker">
@@ -90,7 +94,7 @@
           編輯時間<p-sortIcon field="editDate"></p-sortIcon>
         </th>
         <th pSortableColumn="createDate">
-          開始時間<p-sortIcon field="createDate"></p-sortIcon>
+          創建時間<p-sortIcon field="createDate"></p-sortIcon>
         </th>
         <th></th>
       </tr>

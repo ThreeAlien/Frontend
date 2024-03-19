@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ApiService } from './../../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { MccModel, AccModel, columnMapping, columnModel, repConModel, targetMediaModel, targetMapping, repColModel, repColListModel, addReportRequest as setReportRequest, columnDataReq, exportSampleModels, getReportDetailRes } from '../report-manage.models';
+import { MccModel, AccModel, columnMapping, columnModel, repConModel, reportGoalAdsModel, GoalAdsMapping, repColModel, repColListModel, addReportRequest as setReportRequest, columnDataReq, exportSampleModels, getReportDetailRes } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
@@ -40,14 +40,14 @@ export class AddRepExmplePopComponent implements OnInit {
   /**範本名稱 */
   repExmName: any = "";
   /**目標廣告 */
-  targetMedia!: targetMediaModel;
-  targetMediaList: targetMediaModel[] = [
-    { tMedia_id: "sem", tMedia_name: targetMapping.glgSem },
-    { tMedia_id: "gdn", tMedia_name: targetMapping.glgGdn },
-    { tMedia_id: "yt", tMedia_name: targetMapping.glgYt },
-    { tMedia_id: "shop", tMedia_name: targetMapping.glgShop },
-    { tMedia_id: "pmas", tMedia_name: targetMapping.glgPmas },
-    { tMedia_id: "kw", tMedia_name: targetMapping.glgKw },
+  reportGoalAds!: reportGoalAdsModel;
+  reportGoalAdsList: reportGoalAdsModel[] = [
+    { goalId: "sem", goalName: GoalAdsMapping.glgSem },
+    { goalId: "gdn", goalName: GoalAdsMapping.glgGdn },
+    { goalId: "yt", goalName: GoalAdsMapping.glgYt },
+    { goalId: "shop", goalName: GoalAdsMapping.glgShop },
+    { goalId: "pmas", goalName: GoalAdsMapping.glgPmas },
+    { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
   /**客戶名稱下拉選單 */
   AccItem!: AccModel;
@@ -82,7 +82,7 @@ export class AddRepExmplePopComponent implements OnInit {
   myForm = new FormGroup({
     AccItem: new FormControl(this.AccItem, Validators.required),
     ChildMccItem: new FormControl(this.ChildMccItem, Validators.required),
-    targetMedia: new FormControl(this.targetMedia, Validators.required),
+    targetMedia: new FormControl(this.reportGoalAds, Validators.required),
     repContent: new FormControl(),
     repExmName: new FormControl('', Validators.required),
   });
@@ -128,8 +128,8 @@ export class AddRepExmplePopComponent implements OnInit {
             this.myForm.controls.ChildMccItem.setValue(x);
           }
         })
-        this.targetMediaList.forEach(x => {
-          if (x.tMedia_name == this.editData?.reportGoalAds) {
+        this.reportGoalAdsList.forEach(x => {
+          if (x.goalName == this.editData?.reportGoalAds) {
             this.myForm.controls.targetMedia.setValue(x);
           }
         })
@@ -191,7 +191,7 @@ export class AddRepExmplePopComponent implements OnInit {
     //來確保在 client_subname 為 undefined 時不會拋出異常。
     //如果 pop() 結果為 undefined，則預設為空字串
     const kw: string = data.subName?.split('_').pop() ?? "";
-    var res = this.targetMediaList.filter(x => x.tMedia_id.toLowerCase().includes(kw.toLowerCase()));
+    var res = this.reportGoalAdsList.filter(x => x.goalId.toLowerCase().includes(kw.toLowerCase()));
     this.myForm.controls.targetMedia.setValue(res[0]);
   }
   /**欄位拖移 */
@@ -253,7 +253,7 @@ export class AddRepExmplePopComponent implements OnInit {
       const repid = `RP_${shareid}`;
       const reptName = this.myForm.controls.repExmName.value;
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
-      const tMedia = this.myForm.controls.targetMedia.value?.tMedia_id;
+      const tMedia = this.myForm.controls.targetMedia.value?.goalId;
       const media = this.mediaType == "G" ? "google" : "META";
       const cname = "weider"
       const date = this.SDtm;
@@ -833,9 +833,6 @@ export class AddRepExmplePopComponent implements OnInit {
     catch (e: any) {
       this.msgBoxService.msgBoxShow(e.toString());
     }
-  }
-  editReport() {
-
   }
 
   //#endregion

@@ -4,12 +4,15 @@
       <div style="width: 100px;height: 100px;"></div>
     </div>
     <div style="margin-top: 20px;">
-      <mat-div [matMenuTriggerFor]="afterMenu">
-        <button  mat-raised-button  class="btnitemOut">報表設定</button>
+      <mat-div>
+        <button  mat-raised-button routerLink="./reportManage"  class="btnitemOut">範本管理</button>
+      </mat-div>
+      <!-- <mat-div [matMenuTriggerFor]="afterMenu">
+        <button  mat-raised-button   class="btnitemOut">報表設定</button>
       </mat-div>
       <mat-menu #afterMenu="matMenu">
         <button mat-menu-item routerLink="./reportManage" class="btnitemIn">範本管理</button>
-      </mat-menu>
+      </mat-menu> -->
     </div>
     <div style="margin-top: 3px;">
       <mat-div>

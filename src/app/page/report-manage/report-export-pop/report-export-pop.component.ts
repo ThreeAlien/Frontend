@@ -12,6 +12,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { HttpErrorResponse } from '@angular/common/http/index.js';
 import { environment } from 'src/environments/environment';
 import { getReportDetailRes } from '../report-manage.models.js';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -41,8 +42,7 @@ export class ReportExpotPopComponent implements AfterViewInit {
   async ngAfterViewInit(): Promise<void> {
     this.colId = this.inPutdata.columnID;
     await this.getReportDetail(this.colId);
-    console.log(this.tableContainer);
-    this.getExportGender();
+    //this.getExportReport();
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -315,6 +315,7 @@ export class ReportExpotPopComponent implements AfterViewInit {
                   sta: false,
                   Id: x.reportNo,
                   reportName: x.contentName,
+                  contentId: x.contentId,
                   SD: '',
                   ED: ''
                 }));
@@ -333,13 +334,27 @@ export class ReportExpotPopComponent implements AfterViewInit {
       console.log(e);
     }
   }
+  /**匯出報表方法 */
+  getExportReport() {
+    this.dataList.controls.forEach(x => {
+      switch (x.value.contentId) {
+        case "repCon00005":
+          this.getExportGender();
+          return;
+        case "repCon00006":
+          return;
+        default:
+          break;
+      }
+    })
+  }
   /**性別報表匯出API */
   getExportGender(id?: string, sd?: Date, ed?: Date) {
     try {
-      let SD: Date = new Date("2024-02-01");
-      let ED: Date = new Date("2024-03-28");
+      let SD = '2023-02-01';
+      let ED = '2024-03-29';
       const request = {
-        campaignID: "850410164",
+        campaignID: `${id}`,
         startDate: SD,
         endDate: ED,
       };

@@ -12,7 +12,7 @@ import { MsgBoxService } from '../../service/msg-box.service';
 import { DialogResult, MsgBoxBtnType, MsgBoxInfo } from '../../share/msg-box/msg-box.component';
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
-import { GetReportRequest, exportSampleModels, media, targetMapping, targetMediaModel } from './report-manage.models';
+import { GetReportRequest, exportSampleModels, media, GoalAdsMapping, reportGoalAdsModel as reportGoalAdsModel } from './report-manage.models';
 import { MessageService, SortEvent } from 'primeng/api';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { LoadingService } from 'src/app/service/loading.service';
@@ -45,8 +45,6 @@ export class ReportManageComponent implements AfterViewInit {
   ];
   /**報表範本名稱 */
   reportName = "";
-  /**目標廣告 */
-  reportGoalAds = "";
   /**開始時間 */
   sD = "";
   /**結束時間 */
@@ -63,17 +61,17 @@ export class ReportManageComponent implements AfterViewInit {
   Media: string = "";
   MediaList = [
     { value: 'google', viewValue: 'Google' },
-    { value: 'fb', viewValue: 'FB' },
-    { value: 'ig', viewValue: 'IG' },
+    { value: 'fb', viewValue: 'FB' }
   ]
   /**目標廣告 */
-  targetMediaList: targetMediaModel[] = [
-    { tMedia_id: "sem", tMedia_name: targetMapping.glgSem },
-    { tMedia_id: "gdn", tMedia_name: targetMapping.glgGdn },
-    { tMedia_id: "yt", tMedia_name: targetMapping.glgYt },
-    { tMedia_id: "shop", tMedia_name: targetMapping.glgShop },
-    { tMedia_id: "pmas", tMedia_name: targetMapping.glgPmas },
-    { tMedia_id: "kw", tMedia_name: targetMapping.glgKw },
+  reportGoalAds: string = "";
+  reportGoalAdsList: reportGoalAdsModel[] = [
+    { goalId: "sem", goalName: GoalAdsMapping.glgSem },
+    { goalId: "gdn", goalName: GoalAdsMapping.glgGdn },
+    { goalId: "yt", goalName: GoalAdsMapping.glgYt },
+    { goalId: "shop", goalName: GoalAdsMapping.glgShop },
+    { goalId: "pmas", goalName: GoalAdsMapping.glgPmas },
+    { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
 
   async ngAfterViewInit() {
@@ -102,6 +100,7 @@ export class ReportManageComponent implements AfterViewInit {
   }
   /**查詢按鈕 */
   async filterQry() {
+    console.log(this.reportGoalAds)
     let reqData: GetReportRequest = {
       reportName: this.reportName,
       reportGoalAds: this.reportGoalAds,
@@ -226,9 +225,10 @@ export class ReportManageComponent implements AfterViewInit {
             if (data.data) {
               data.data.forEach((x: exportSampleModels) => {
                 x.createDate = this.datePipe.transform(x.createDate, 'yyyy/MM/dd') || '';
-                this.targetMediaList.forEach(tm => {
-                  if (x.reportGoalAds == tm.tMedia_id) {
-                    x.reportGoalAds = tm.tMedia_name;
+                x.editDate = this.datePipe.transform(x.createDate, 'yyyy/MM/dd') || '';
+                this.reportGoalAdsList.forEach(tm => {
+                  if (x.reportGoalAds == tm.goalId) {
+                    x.reportGoalAds = tm.goalName;
                   }
                 })
                 this.Data.push(x);

@@ -63,11 +63,11 @@ export interface MccModel {
   subName: string;
 }
 /**目標廣告 */
-export interface targetMediaModel {
+export interface reportGoalAdsModel {
   /**代號 */
-  tMedia_id: string;
+  goalId: string;
   /**目標廣告名稱 */
-  tMedia_name: targetMapping;
+  goalName: GoalAdsMapping;
 }
 
 
@@ -120,7 +120,7 @@ export interface columnModel {
   contentSort: string
 }
 /**目標廣告對照表 */
-export enum targetMapping {
+export enum GoalAdsMapping {
   glgSem = "搜尋廣告",
   glgGdn = "多媒體廣告",
   glgYt = "影音廣告",
