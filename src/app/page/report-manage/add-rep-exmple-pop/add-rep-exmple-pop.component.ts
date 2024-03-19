@@ -87,6 +87,7 @@ export class AddRepExmplePopComponent implements OnInit {
     repExmName: new FormControl('', Validators.required),
   });
   dataCount: string = "";
+  selectedCarObj = {};
   //#endregion
 
   async ngOnInit(): Promise<void> {
@@ -242,11 +243,11 @@ export class AddRepExmplePopComponent implements OnInit {
   checkReq() {
     if (!this.myForm.valid) {
       Object.keys(this.myForm.controls).forEach(col => {
-        if (this.myForm.get(col)?.value == '' || null) {
+        if (this.myForm.get(col)?.value == '' || this.myForm.get(col)?.value == null) {
           this.myForm.get(col)?.markAsTouched();
-          this.messageService.add({ severity: 'error', summary: '錯誤', detail: '請確認欄位是否已填寫!' })
         }
       })
+      this.messageService.add({ severity: 'error', summary: '錯誤', detail: '請確認欄位是否已填寫!' })
       return null;
     } else {
       const shareid = this.dataCount.padStart(4, '0');
@@ -834,7 +835,6 @@ export class AddRepExmplePopComponent implements OnInit {
       this.msgBoxService.msgBoxShow(e.toString());
     }
   }
-
   //#endregion
 
 

@@ -11,7 +11,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model.js';
 import { ApiService } from 'src/app/service/api.service';
 import { HttpErrorResponse } from '@angular/common/http/index.js';
 import { environment } from 'src/environments/environment';
-import { getReportDetailRes } from '../report-manage.models.js';
+import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
 import { Observable } from 'rxjs';
 
 
@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
 //報表匯出
 export class ReportExpotPopComponent implements AfterViewInit {
   constructor(
-    public dialogRef: MatDialogRef<ReportExpotPopComponent>, @Inject(MAT_DIALOG_DATA) public inPutdata: any,
+    public dialogRef: MatDialogRef<ReportExpotPopComponent>, @Inject(MAT_DIALOG_DATA) public inPutdata: exportSampleModels,
     public datePipe: DatePipe, private formBuilder: FormBuilder, public apiService: ApiService,) { }
 
 
@@ -38,11 +38,14 @@ export class ReportExpotPopComponent implements AfterViewInit {
   isIcon = true;
   //報表內容id
   colId: string = "";
+  //子帳號ID
+  subId: string = "";
   @ViewChild('tableList', { static: true }) tableList?: ElementRef;
   async ngAfterViewInit(): Promise<void> {
     this.colId = this.inPutdata.columnID;
+    this.subId = this.inPutdata.subID;
     await this.getReportDetail(this.colId);
-    //this.getExportReport();
+    this.getExportReport();
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -338,10 +341,29 @@ export class ReportExpotPopComponent implements AfterViewInit {
   getExportReport() {
     this.dataList.controls.forEach(x => {
       switch (x.value.contentId) {
-        case "repCon00005":
-          this.getExportGender();
+        //每日報表
+        case "repCon00001":
+          this.getExportGender(x.value.SD, x.value.ED);
           return;
+        //每周報表
+        case "repCon00002":
+          this.getExportGender(x.value.SD, x.value.ED);
+          return;
+        //性別報表
+        case "repCon00005":
+          this.getExportGender(x.value.SD, x.value.ED);
+          return;
+        //年齡報表
         case "repCon00006":
+          this.getExportAge(x.value.SD, x.value.ED);
+          return;
+        //地區報表
+        case "repCon00007":
+          this.getExportLocation(x.value.SD, x.value.ED);
+          return;
+        //關鍵字
+        case "repCon00015":
+          this.getExportAge(x.value.SD, x.value.ED);
           return;
         default:
           break;
@@ -349,12 +371,12 @@ export class ReportExpotPopComponent implements AfterViewInit {
     })
   }
   /**性別報表匯出API */
-  getExportGender(id?: string, sd?: Date, ed?: Date) {
+  getExportGender(sd: string, ed: string) {
     try {
-      let SD = '2023-02-01';
-      let ED = '2024-03-29';
+      let SD = sd;
+      let ED = ed;
       const request = {
-        campaignID: `${id}`,
+        subId: this.subId,
         startDate: SD,
         endDate: ED,
       };
@@ -383,13 +405,139 @@ export class ReportExpotPopComponent implements AfterViewInit {
     }
   }
   /**年齡報表匯出API */
-
-
+  getExportAge(sd: string, ed: string) {
+    try {
+      let SD = sd;
+      let ED = ed;
+      const request = {
+        subId: this.subId,
+        startDate: SD,
+        endDate: ED,
+      };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportAge`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            let data = res as BaseResponse;
+            if (data.data) {
+              console.log(data);
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      return;
+    }
+  }
   /**關鍵字報表匯出 API */
-
-  /**每日或每周報表匯出API */
-
+  getExportKeyWord(sd: string, ed: string) {
+    try {
+      let SD = sd;
+      let ED = ed;
+      const request = {
+        subId: this.subId,
+        startDate: SD,
+        endDate: ED,
+      };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportKeyWord`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            let data = res as BaseResponse;
+            if (data.data) {
+              console.log(data);
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      return;
+    }
+  }
   /**地區報表匯出 API*/
+  getExportLocation(sd: string, ed: string) {
+    try {
+      let SD = sd;
+      let ED = ed;
+      const request = {
+        subId: this.subId,
+        startDate: SD,
+        endDate: ED,
+      };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportLocation`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            let data = res as BaseResponse;
+            if (data.data) {
+              console.log(data);
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      return;
+    }
+  }
+  /**每日或每周報表匯出API */
+  getExportDayOrWeek(sd: string, ed: string,type:string) {
+    try {
+      let SD = sd;
+      let ED = ed;
+      const request = {
+        subId: this.subId,
+        status: [""],
+        startDate: SD,
+        endDate: ED,
+      };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportLocation`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            let data = res as BaseResponse;
+            if (data.data) {
+              console.log(data);
+            }
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      return;
+    }
+  }
+
 
   tableCount = 0;
   TestData = [

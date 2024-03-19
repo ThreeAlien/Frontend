@@ -21,7 +21,8 @@
                 <td>
                   <label style="font-size: 16px;width: 130px;">媒體選項:</label>
                   <mat-radio-group style="margin-left: 10px;" color="primary">
-                    <mat-radio-button (click)="changeFormType(mediaG)" [value]="mediaG" checked="true">Google</mat-radio-button>
+                    <mat-radio-button (click)="changeFormType(mediaG)" [value]="mediaG"
+                      checked="true">Google</mat-radio-button>
                     <mat-radio-button (click)="changeFormType(mediaM)" style="margin-left: 20px;" [value]="mediaM">Meta
                     </mat-radio-button>
                   </mat-radio-group>
@@ -41,7 +42,6 @@
                         </mat-select>
                         <mat-error>此處為必填</mat-error>
                       </mat-form-field>
-
                     </div>
                     <div class="td_1" style="padding-left: 15px;">
                       <label class="tdMarginTop" style="width: 137px;">子帳戶活動名稱:</label>

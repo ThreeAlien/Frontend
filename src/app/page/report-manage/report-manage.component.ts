@@ -151,8 +151,7 @@ export class ReportManageComponent implements AfterViewInit {
     });
   }
   /**匯出範本按鈕 */
-  exportBtn(data: any) {
-    console.log(data);
+  exportBtn(data: exportSampleModels) {
     const dialogRef = this.dialog.open(ReportExpotPopComponent, {
       width: "1080px",
       maxHeight: "760px",
