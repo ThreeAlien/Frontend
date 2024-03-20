@@ -167,17 +167,6 @@
   text-align: center;
 }
 
-.IconBg {
-  border-radius: 15px;
-  align-items: center;
-  height: 37px;
-  width: 175px;
-  background-color: #EAEEE5;
-  display: flex;
-  justify-content: center;
-  cursor: pointer;
-}
-
 .ExcelIcon {
    background-image: url("../../../../assets/icon/ExcelIcon.png");
   background-repeat: no-repeat;

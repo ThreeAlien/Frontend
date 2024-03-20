@@ -182,6 +182,10 @@ export class AddRepExmplePopComponent implements OnInit {
   /**選擇客戶名稱 */
   changeAcc(data: AccModel): void {
     console.log(data);
+    let anyData:any;
+    this.myForm.controls.repContent.setValue(anyData);
+    this.myForm.controls.repExmName.setValue('');
+    this.myForm.controls.targetMedia.setValue(anyData);
     const ChildMccItemListTmp = this.ChildMccItemListData;
     this.ChildMccItemList = ChildMccItemListTmp.filter(x => x.clientId == data.clientId);
   }

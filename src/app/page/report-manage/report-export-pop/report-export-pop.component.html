@@ -1,12 +1,7 @@
+<app-loading></app-loading>
+<p-toast position="bottom-right"></p-toast>
 <div class="header">
-  <div style="display: flex;">
-    <div style="display: flex; width: 100%;justify-content: flex-end;">
-      <div class="IconBg" style="margin-left: 15px;" (click)="addReportTestData(tableCount)">
-        <div>產報表</div>
-      </div>
-    </div>
-  </div>
-
+  <label class="modal-header_Ttitle_label" >匯出範本:{{reportName}}</label>
   <div class="CloseBtn" (click)="onCancel()">
     <ng-container>
       <mat-icon>clear</mat-icon>
@@ -63,40 +58,40 @@
           <ng-template matStepLabel>報表產生</ng-template>
           <div style="margin:0px auto;">
             <form #tableList id="tableList">
-              <ng-container *ngFor="let tableList of TestData">
+              <ng-container *ngFor="let tableList of exportDataList">
                 <div class="table_center90">
-                  <div style="display: flex;justify-content: space-between;">
+                  <!-- <div style="display: flex;justify-content: space-between;">
                     <div style="display: flex;" *ngIf="isIcon == true">
                       <div class="ExcelIcon"></div>
                       <div class="PdfIcon"></div>
                       <div class="deleteIcon"></div>
                     </div>
-                  </div>
-                  <table id="{{tableList.tableID}}" class='table'
+                  </div> -->
+                  <table id="{{tableList.tableId}}" class='table'
                     style="width: 100%;align-items: center;border-collapse: collapse;">
                     <tr class='tr_th_title str_center'>
-                      <td colspan="7" style="border: 3px #000000 solid;">
-                        {{tableList.title}}
+                      <td [attr.colspan]="tableList.colNameList.length" style="border: 3px #000000 solid;">
+                        {{tableList.reportName}}
                       </td>
                     </tr>
                     <tr class='tr_th_1 str_center'>
-                      <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
+                      <ng-container *ngFor="let thD of tableList.colNameList;index as i;">
                         <th [width]="thD.width" [ngClass]="{ th_R : i == tableList.colNameList.length-1,th_L : i==0}">
-                          {{thD.colName}}</th>
+                          {{thD.colValue}}</th>
                       </ng-container>
                     </tr>
-                    <ng-container *ngFor="let trList of tableList.tableList;index as index;">
+                    <ng-container *ngFor="let trList of tableList.colValueList;index as index;">
                       <tr class="tr_td_2 str_center" [ngClass]="{ trCss2 : index %2 == 0,trCss : index%2 !== 0}">
                         <ng-container *ngFor="let td of trList.tdList;index as i;">
-                          <td class="td_1" [ngClass]="{ th_R : i == trList.tdList.length-1,th_L : i==0}">{{td.data}}
+                          <td class="td_1" [ngClass]="{ th_R : i == trList.tdList.length-1,th_L : i==0}">{{td.colValue}}
                           </td>
                         </ng-container>
                       </tr>
                     </ng-container>
                     <tr class='tr_th_1 str_center'>
-                      <ng-container *ngFor="let footD of tableList.footerList;index as i;">
-                        <th class="th_2" [ngClass]="{ th_R : i == tableList.footerList.length-1,th_L : i==0}">
-                          {{footD.data}}</th>
+                      <ng-container *ngFor="let footD of tableList.totalList;index as i;">
+                        <th class="th_2" [ngClass]="{ th_R : i == tableList.totalList.length-1,th_L : i==0}">
+                          {{footD.colValue}}</th>
                       </ng-container>
                     </tr>
                   </table>

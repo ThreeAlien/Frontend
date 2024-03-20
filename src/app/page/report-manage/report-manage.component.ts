@@ -183,12 +183,13 @@ export class ReportManageComponent implements AfterViewInit {
     })
   }
   /**清除按鈕 */
-  clean() {
+  async clean() {
     this.reportName = "";
     this.reportGoalAds = "";
     this.sD = "";
     this.eD = "";
     this.Media = "";
+    await this.getRepExm();
   }
   changeSort(sortInfo: Sort) {
     console.log(sortInfo);
@@ -224,7 +225,7 @@ export class ReportManageComponent implements AfterViewInit {
             if (data.data) {
               data.data.forEach((x: exportSampleModels) => {
                 x.createDate = this.datePipe.transform(x.createDate, 'yyyy/MM/dd') || '';
-                x.editDate = this.datePipe.transform(x.createDate, 'yyyy/MM/dd') || '';
+                x.editDate = this.datePipe.transform(x.editDate, 'yyyy/MM/dd') || '';
                 this.reportGoalAdsList.forEach(tm => {
                   if (x.reportGoalAds == tm.goalId) {
                     x.reportGoalAds = tm.goalName;
