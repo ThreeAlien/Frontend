@@ -233,8 +233,8 @@ export class ReportManageComponent implements AfterViewInit {
                 })
                 this.Data.push(x);
               });
-              this.dataCount = this.Data.length;
-              console.log(this.Data);
+              let now  = new Date();
+              this.dataCount = this.Data.filter(x=>x.createDate == this.datePipe.transform(now,"yyyy/MM/dd")).length;
             } else {
               var data = res as BaseResponse;
               this.msgData.title = `回應碼${data.code}`;

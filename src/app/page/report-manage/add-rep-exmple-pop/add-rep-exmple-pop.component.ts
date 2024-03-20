@@ -254,8 +254,10 @@ export class AddRepExmplePopComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: '錯誤', detail: '請確認欄位是否已填寫!' })
       return null;
     } else {
-      const shareid = this.dataCount.padStart(4, '0');
-      const repid = `RP_${shareid}`;
+      let now = new Date();
+      let nowday = this.datePipe.transform(now,"yyyyMMdd")
+      const shareid = Number(this.dataCount)+1;
+      const repid = `RP_${nowday}${shareid}`;
       const reptName = this.myForm.controls.repExmName.value;
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
       const tMedia = this.myForm.controls.targetMedia.value?.goalId;
@@ -434,8 +436,8 @@ export class AddRepExmplePopComponent implements OnInit {
                 { colName: columnMapping.colConRate, colStatus: x.isColConRate },
                 { colName: columnMapping.colConValue, colStatus: x.isColConValue },
                 { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-                { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-                { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
+                // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
+                // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
               ];
               var tList = repColList.filter(x => x.colStatus == true);
               var fList = repColList.filter(x => x.colStatus == false);
@@ -710,12 +712,12 @@ export class AddRepExmplePopComponent implements OnInit {
                 case columnMapping.colCPA:
                   x.colCPA = true;
                   break;
-                case columnMapping.colStartDate:
-                  x.colStartDate = true;
-                  break;
-                case columnMapping.colEndDate:
-                  x.colEndDate = true;
-                  break;
+                // case columnMapping.colStartDate:
+                //   x.colStartDate = true;
+                //   break;
+                // case columnMapping.colEndDate:
+                //   x.colEndDate = true;
+                //   break;
               }
             })
           }
@@ -802,8 +804,8 @@ export class AddRepExmplePopComponent implements OnInit {
                   { colName: columnMapping.colConRate, colStatus: x.isColConRate },
                   { colName: columnMapping.colConValue, colStatus: x.isColConValue },
                   { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-                  { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-                  { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
+                  // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
+                  // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
                 ];
                 var tList = repColList.filter(x => x.colStatus == true);
                 var fList = repColList.filter(x => x.colStatus == false);

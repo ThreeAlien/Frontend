@@ -158,8 +158,8 @@ export enum columnMapping {
   colConRate = "轉換率",
   colConValue = "收益",
   colConstant = "地區",
-  colStartDate = "開始日期",
-  colEndDate = "結束日期",
+  // colStartDate = "開始日期",
+  // colEndDate = "結束日期",
   colGender = "性別"
 }
 export class repColModel {
