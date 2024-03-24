@@ -50,7 +50,9 @@ export class AddRepExmplePopComponent implements OnInit {
     { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
   /**客戶名稱下拉選單 */
+  AccData: string = "";
   AccItem!: AccModel;
+
   AccItemList: AccModel[] = [];
   /**帳戶名稱(MCC)下拉選單 */
   // MccItem: any;
@@ -141,6 +143,12 @@ export class AddRepExmplePopComponent implements OnInit {
     }
     this.loadingService.loadingOff();
   }
+  onChange(data: any) {
+    console.log(data);
+    this.AccItem = data.value;
+    console.log(this.AccItem);
+
+  }
   /**如果擁有汎古主帳號 權限全開*/
   isSetPermission(): boolean {
     for (let i = 0; i < this.PermissionsData.length; i++) {
@@ -180,14 +188,20 @@ export class AddRepExmplePopComponent implements OnInit {
     this.mediaType = value;
   }
   /**選擇客戶名稱 */
-  changeAcc(data: AccModel): void {
-    console.log(data);
-    let anyData:any;
-    this.myForm.controls.repContent.setValue(anyData);
-    this.myForm.controls.repExmName.setValue('');
-    this.myForm.controls.targetMedia.setValue(anyData);
-    const ChildMccItemListTmp = this.ChildMccItemListData;
-    this.ChildMccItemList = ChildMccItemListTmp.filter(x => x.clientId == data.clientId);
+  changeAcc(data: any): void {
+    if (data.value) {
+      this.AccItem = data.value;
+      data = data.value;
+      let anyData: any;
+      this.myForm.controls.repContent.setValue(anyData);
+      this.myForm.controls.repExmName.setValue('');
+      this.myForm.controls.targetMedia.setValue(anyData);
+      const ChildMccItemListTmp = this.ChildMccItemListData;
+      this.ChildMccItemList = ChildMccItemListTmp.filter(x => x.clientId == data.clientId);
+      if(this.ChildMccItemList.length ==0){
+        this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無子帳戶活動名稱!' })
+      }
+    }
   }
   /**選帳戶活動名稱 */
   changeMcc(data: MccModel) {
@@ -255,8 +269,8 @@ export class AddRepExmplePopComponent implements OnInit {
       return null;
     } else {
       let now = new Date();
-      let nowday = this.datePipe.transform(now,"yyyyMMdd")
-      const shareid = Number(this.dataCount)+1;
+      let nowday = this.datePipe.transform(now, "yyyyMMdd")
+      const shareid = Number(this.dataCount) + 1;
       const repid = `RP_${nowday}${shareid}`;
       const reptName = this.myForm.controls.repExmName.value;
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
@@ -374,6 +388,7 @@ export class AddRepExmplePopComponent implements OnInit {
         next: (res) => {
           var data = res as BaseResponse;
           if (data.data) {
+            console.log(data.data)
             data.data.forEach((x: repConModel) => {
               x.status = false;
               this.repContentList.push(x);

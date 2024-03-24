@@ -21,7 +21,6 @@ export class SSOJumpComponent implements OnInit {
       const code = params['code'];
       try {
         let refresh = await this.clientSSO.getReFreshToken(code);
-
         if (refresh) {
           let PermissionsAds = await this.clientSSO.getPermissions(refresh);
           console.log(PermissionsAds);
@@ -33,11 +32,11 @@ export class SSOJumpComponent implements OnInit {
             this.router.navigate(["/login"]);
           }
         } else {
-          alert("取得Token失敗，檢查是否擁有權限");
+          alert("取得Token失敗!!");
           this.router.navigate(["/login"]);
         }
       } catch (err) {
-        console.log(err);
+        alert("取得授權失敗，請聯絡工程師!");
         this.router.navigate(["/login"]);
       }
     });

@@ -10,13 +10,13 @@
 
 .Windows {
   width: 100%;
-  height: auto;
+  height: 100%;
   padding-top: 4px;
 }
 
 .WindwsDiv {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 15px;

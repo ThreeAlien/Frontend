@@ -117,7 +117,7 @@ export class ReportManageComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(AddRepExmplePopComponent, {
       width: "91vw",
       maxWidth: "91vw",
-      height: "auto",
+      height: "75%",
       maxHeight: "91vh",
       data: { data: count, type: 'add' },
       hasBackdrop: true,

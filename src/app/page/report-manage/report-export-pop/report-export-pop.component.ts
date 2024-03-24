@@ -55,7 +55,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   /**總比數 */
   tableCount = 0;
   /**報表名稱 */
-  reportName: string = "";
+  subClientName: string = "";
   /**是否顯示 關鍵字 footer */
   isKwEnable: boolean = false;
 
@@ -63,9 +63,10 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     await this.getReportDetail(this.colId);
   }
   async ngOnInit(): Promise<void> {
+    console.log(this.inPutdata);
     this.colId = this.inPutdata.columnID;
     this.subId = this.inPutdata.subID;
-    this.reportName = this.inPutdata.reportName;
+    this.subClientName = this.inPutdata.subClientName;
 
   }
   //有勾選到的報表內容要給必填日期
@@ -132,7 +133,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   title = 'Excel';
   /** 匯出EXCEL報表 */
   exportExcel() {
-    let lastRow = -1;
+
     let excelTable;
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     try {
@@ -140,6 +141,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         excelTable = document.getElementById(x.tableId);
       })
       this.exportDataList.forEach(x => {
+        let lastRow = -1;
         var excelTable = document.getElementById(x.tableId);
         let ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
         //抓最後一比在第幾行
@@ -210,13 +212,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   }
   //數值轉換台幣
   twFormat(coin: number): string {
+    coin = Math.round(coin / 1000000);
     const twFormat = new Intl.NumberFormat('zh-TW', {
       style: 'currency',
       currency: 'TWD'
     });
     let res = twFormat.format(coin);
-    //去除00
-    res = res.replace(/\.\d{2}$/, '');
+    // //去除00
+    // res = res.replace(/\.\d{2}$/, '');
     return res;
   }
   //點閱率計算
@@ -225,9 +228,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     return Math.round(res).toFixed(1) + '%';
   }
   //cpc計算
-  cpcCount(cost: number, click: number): string {
-    let res = (cost / click) * 100;
-    return res.toFixed(2);
+  cpcCount(cost: number, click: number): number {
+    let res = cost / click;
+    return res;
   }
   //把每張報表設定ID
   setTableId() {
@@ -701,11 +704,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 tmpD.colValueList.push({ tdList: [] });
               });
               data.data.forEach((y: exportData, index: number) => {
-                /**TODO 前端先處理  後端要改DB資料 */
-                y.cost = y.cost / 1000000;
-                y.ctr = this.ctrCount(y.click, y.impressions);
-                y.cpc = Number(this.cpcCount(y.cost, y.click));
-
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
@@ -715,12 +713,13 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions, colSta: true },
                   { colValue: y.click, colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc), colSta: true },
-                  { colValue: this.twFormat(y.cost), colSta: true },
+                  { colValue: y.cpc, colSta: true },
+                  { colValue: y.cost, colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = Number(this.cpcCount(this.costTotal, this.clickTotal));
+              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+              this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
                 { colValue: `${this.impressTotal}`, colSta: true },

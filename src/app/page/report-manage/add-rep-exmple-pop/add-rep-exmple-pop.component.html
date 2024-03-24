@@ -28,24 +28,34 @@
                   </mat-radio-group>
                 </td>
               </tr>
-              <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
+              <tr>
                 <td>
-                  <div style="display: flex;">
-                    <div class="td_1">
-                      <label class="tdMarginTop">客戶名稱:</label>
-                      <mat-form-field class="tdMarginLeft">
-                        <mat-select name="AccItem" formControlName="AccItem" (selectionChange)="changeAcc($event.value)"
-                          placeholder="請選擇">
-                          <mat-option [value]="d" *ngFor="let d of AccItemList">
-                            {{d.clientName}}
-                          </mat-option>
-                        </mat-select>
-                        <mat-error>此處為必填</mat-error>
-                      </mat-form-field>
-                    </div>
-                    <div class="td_1" style="padding-left: 15px;">
+                  <div class="td_1" style="width: 500px;">
+                    <label class="tdMarginTop" style="margin-right: 22px;">客戶名稱:</label>
+                    <p-dropdown [options]="AccItemList" [(ngModel)]="AccItem" optionLabel="clientName" [filter]="true"
+                      [style]="{ maxWidth: '337px', width: '337px' ,height:'37px'}" filterBy="clientName"
+                      [ngModelOptions]="{standalone: true}" [showClear]="true" placeholder="請選擇" autowidth="false"
+                      (onChange)="changeAcc($event)">
+                      <ng-template pTemplate="selectedItem">
+                        <div *ngIf="AccItem" style=" overflow:hidden; white-space: nowrap; text-overflow:ellipsis;">
+                          <div>{{AccItem.clientName}}</div>
+                        </div>
+                      </ng-template>
+                      <ng-template let-acc pTemplate="item" style="height: 450px;">
+                        <div>
+                          <div>{{acc.clientName}}</div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display: flex;padding-top: 23px;">
+                    <div class="td_1" style="width: auto">
                       <label class="tdMarginTop" style="width: 137px;">子帳戶活動名稱:</label>
-                      <mat-form-field class="tdMarginLeft">
+                      <mat-form-field class="tdMarginLeft" style="width: 600px;">
                         <mat-select name="ChildAccItem" formControlName="ChildMccItem" placeholder="請選擇"
                           (selectionChange)="changeMcc($event.value)">
                           <mat-option [value]="d" *ngFor="let d of ChildMccItemList">
@@ -55,8 +65,8 @@
                         <mat-error>此處為必填</mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="td_1" style="padding-left: 15px;">
-                      <label class="tdMarginTop">目標廣告:</label>
+                    <div class="td_1">
+                      <label class="tdMarginTop" style="padding-left: 15px;">目標廣告:</label>
                       <mat-form-field class="tdMarginLeft" style="width: 166px;">
                         <mat-select name="targetMedia" formControlName="targetMedia" style="color: black;"
                           placeholder="請輸入">
@@ -69,32 +79,21 @@
                     </div>
                   </div>
                 </td>
-                <td colspan="5"></td>
-                <td></td>
               </tr>
-              <tr *ngIf="mediaType == mediaM">
+              <tr>
                 <td>
-                  <label>行銷活動(帳戶名稱):</label>
+                  <div style="display: flex;align-items: baseline;">
+                    <label class="tdMarginTop">範本名稱:</label>
+                    <mat-form-field class="tdMarginLeft">
+                      <input matInput name="repExmName" formControlName="repExmName" placeholder="請輸入">
+                      <mat-error>此處為必填</mat-error>
+                    </mat-form-field>
+                  </div>
                 </td>
               </tr>
-              <tr *ngIf="mediaType == mediaM">
+              <tr>
                 <td>
-                  <label>廣告組合:</label>
-                </td>
-              </tr>
-              <tr *ngIf="mediaType == mediaM">
-                <td>
-                  <label>廣告素材:</label>
-                </td>
-              </tr>
-              <tr *ngIf="mediaType == mediaM">
-                <td>
-                  <label>媒體素材:</label>
-                </td>
-              </tr>
-              <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
-                <td>
-                  <div class="td_1" style="width: 85vw;">
+                  <div class="td_1">
                     <label class="tdMarginTop">報表內容:</label>
                     <mat-form-field class="tdMarginLeft" style="width: 90%;">
                       <mat-select name="targetMedia" formControlName="repContent" multiple placeholder="請選擇">
@@ -107,18 +106,7 @@
                   </div>
                 </td>
               </tr>
-              <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
-                <td>
-                  <div style="display: flex;align-items: baseline;">
-                    <label class="tdMarginTop">範本名稱:</label>
-                    <mat-form-field class="tdMarginLeft">
-                      <input matInput name="repExmName" formControlName="repExmName" placeholder="請輸入">
-                      <mat-error>此處為必填</mat-error>
-                    </mat-form-field>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngIf="mediaType == mediaG|| mediaType == mediaM">
+              <tr>
                 <td>
                   <ng-container *ngFor="let dArr of columnArray">
                     <div style="display: flex;padding-top: 5px;" *ngIf="dArr.conStatus">
