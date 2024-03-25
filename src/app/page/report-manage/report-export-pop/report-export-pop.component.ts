@@ -417,9 +417,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               data.data.forEach((x: exportData) => {
                 tmpD.colValueList.push({ tdList: [] });
               });
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
-              });
               data.data.forEach((y: exportData, index: number) => {
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
@@ -505,9 +502,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               data.data.forEach((x: exportData) => {
                 tmpD.colValueList.push({ tdList: [] });
               });
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
-              });
               data.data.forEach((y: exportData, index: number) => {
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
@@ -589,9 +583,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 colValueList: [],
                 totalList: []
               }
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
-              });
               data.data.forEach((x: exportData) => {
                 tmpD.colValueList.push({ tdList: [] });
               });
