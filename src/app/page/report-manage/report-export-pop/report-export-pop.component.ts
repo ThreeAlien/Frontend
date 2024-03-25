@@ -212,7 +212,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   }
   //數值轉換台幣
   twFormat(coin: number): string {
-    coin = Math.round(coin / 1000000);
+    coin = coin / 1000000;
     const twFormat = new Intl.NumberFormat('zh-TW', {
       style: 'currency',
       currency: 'TWD'
@@ -225,7 +225,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   //點閱率計算
   ctrCount(click: number, impression: number): string {
     let res = (click / impression) * 100;
-    return Math.round(res).toFixed(1) + '%';
+    return res.toFixed(2) + '%';
   }
   //cpc計算
   cpcCount(cost: number, click: number): number {
@@ -335,26 +335,22 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                     y.gender = colMapping.genderUnknow
                     break;
                 }
-                /**TODO 前端先處理  後端要改DB資料 */
-                y.cost = y.cost / 1000000;
-                y.ctr = this.ctrCount(y.click, y.impressions);
-                y.cpc = Number(this.cpcCount(y.cost, y.click));
-
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
 
                 tmpD.colValueList[index].tdList.push(
                   { colValue: y.gender, colSta: true },
-                  { colValue: y.impressions, colSta: true },
-                  { colValue: y.click, colSta: true },
+                  { colValue: y.impressions.toLocaleString(), colSta: true },
+                  { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
                   { colValue: this.twFormat(y.cpc), colSta: true },
                   { colValue: this.twFormat(y.cost), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = Number(this.cpcCount(this.costTotal, this.clickTotal));
+              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+              this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
                 { colValue: `${this.impressTotal}`, colSta: true },
@@ -421,27 +417,26 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               data.data.forEach((x: exportData) => {
                 tmpD.colValueList.push({ tdList: [] });
               });
+              data.data.forEach((x: exportData) => {
+                tmpD.colValueList.push({ tdList: [] });
+              });
               data.data.forEach((y: exportData, index: number) => {
-                /**TODO 前端先處理  後端要改DB資料 */
-                y.cost = y.cost / 1000000;
-                y.ctr = this.ctrCount(y.click, y.impressions);
-                y.cpc = Number(this.cpcCount(y.cost, y.click));
-
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
 
                 tmpD.colValueList[index].tdList.push(
                   { colValue: y.age, colSta: true },
-                  { colValue: y.impressions, colSta: true },
-                  { colValue: y.click, colSta: true },
+                  { colValue: y.impressions.toLocaleString(), colSta: true },
+                  { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
                   { colValue: this.twFormat(y.cpc), colSta: true },
                   { colValue: this.twFormat(y.cost), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = Number(this.cpcCount(this.costTotal, this.clickTotal));
+              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+              this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
                 { colValue: `${this.impressTotal}`, colSta: true },
@@ -510,12 +505,10 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               data.data.forEach((x: exportData) => {
                 tmpD.colValueList.push({ tdList: [] });
               });
+              data.data.forEach((x: exportData) => {
+                tmpD.colValueList.push({ tdList: [] });
+              });
               data.data.forEach((y: exportData, index: number) => {
-                /**TODO 前端先處理  後端要改DB資料 */
-                y.cost = y.cost / 1000000;
-                y.ctr = this.ctrCount(y.click, y.impressions);
-                y.cpc = Number(this.cpcCount(y.cost, y.click));
-
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
@@ -524,15 +517,16 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.campaignName, colSta: true },
                   { colValue: y.adGroupName, colSta: true },
                   { colValue: y.colSrchKeyWord, colSta: true },
-                  { colValue: y.impressions, colSta: true },
-                  { colValue: y.click, colSta: true },
+                  { colValue: y.impressions.toLocaleString(), colSta: true },
+                  { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
                   { colValue: this.twFormat(y.cpc), colSta: true },
                   { colValue: this.twFormat(y.cost), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = Number(this.cpcCount(this.costTotal, this.clickTotal));
+              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+              this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: `${this.impressTotal}`, colSta: true },
                 { colValue: `${this.clickTotal}`, colSta: true },
@@ -598,27 +592,26 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               data.data.forEach((x: exportData) => {
                 tmpD.colValueList.push({ tdList: [] });
               });
+              data.data.forEach((x: exportData) => {
+                tmpD.colValueList.push({ tdList: [] });
+              });
               data.data.forEach((y: exportData, index: number) => {
-                /**TODO 前端先處理  後端要改DB資料 */
-                y.cost = y.cost / 1000000;
-                y.ctr = this.ctrCount(y.click, y.impressions);
-                y.cpc = Number(this.cpcCount(y.cost, y.click));
-
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
 
                 tmpD.colValueList[index].tdList.push(
                   { colValue: y.location, colSta: true },
-                  { colValue: y.impressions, colSta: true },
-                  { colValue: y.click, colSta: true },
+                  { colValue: y.impressions.toLocaleString(), colSta: true },
+                  { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
                   { colValue: this.twFormat(y.cpc), colSta: true },
                   { colValue: this.twFormat(y.cost), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = Number(this.cpcCount(this.costTotal, this.clickTotal));
+              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+              this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
                 { colValue: `${this.impressTotal}`, colSta: true },
@@ -710,11 +703,11 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
 
                 tmpD.colValueList[index].tdList.push(
                   { colValue: y.date, colSta: true },
-                  { colValue: y.impressions, colSta: true },
-                  { colValue: y.click, colSta: true },
+                  { colValue: y.impressions.toLocaleString(), colSta: true },
+                  { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: y.cpc, colSta: true },
-                  { colValue: y.cost, colSta: true },
+                  { colValue: this.twFormat(y.cpc), colSta: true },
+                  { colValue: this.twFormat(y.cost), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -722,8 +715,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal}`, colSta: true },
-                { colValue: `${this.clickTotal}`, colSta: true },
+                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
                 { colValue: this.twFormat(this.cpcTotal), colSta: true },
                 { colValue: this.twFormat(this.costTotal), colSta: true },

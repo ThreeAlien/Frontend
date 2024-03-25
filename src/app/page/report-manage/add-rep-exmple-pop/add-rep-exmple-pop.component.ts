@@ -873,12 +873,14 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   //#endregion
   async onOk(type: string): Promise<void> {
+    this.loadingService.loadingOn();
     /**todo 資料審核 */
     if (type == "edit") {
       await this.setReport('edit');
     } else if (type == "add") {
       await this.setReport('add');
     }
+    this.loadingService.loadingOff();
   }
   onCancel(): void {
 
