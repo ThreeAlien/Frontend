@@ -41,6 +41,7 @@ export class SetColumnPopComponent implements OnInit {
     }
   }
   arrowRight(){
+    this.trueChkBox = false;
     this.tList=this.tList.filter(x=> {
       if (x.colStatus) {
         this.fList.push({
@@ -52,6 +53,7 @@ export class SetColumnPopComponent implements OnInit {
     })
   }
   arrowLeft(){
+    this.falseChkBox = false;
     this.fList=this.fList.filter(x=> {
       if (x.colStatus) {
         this.tList.push({

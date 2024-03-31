@@ -129,7 +129,7 @@ body {
 .mat-stepper-header{
   pointer-events: none !important;
 }
-.p-dropdown-panel .p-inputtext{
+.addExmDropdown .p-dropdown-panel .p-inputtext{
   height: 37px;
   border:1px solid #AADCB6;
   transition:none;
@@ -140,15 +140,15 @@ body {
   transition:none !important;
   box-shadow: none;
 }
-.p-inputtext{
+.addExmDropdown .p-inputtext{
   padding: 0px 28px 12px 12px!important;
   font-weight: bold;
 }
-.p-dropdown-items-wrapper{
+.addExmDropdown .p-dropdown-items-wrapper{
   height: 80%;
-  max-height: 500px !important;
+  max-height: 350px !important;
 }
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+.addExmDropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   height: 37px;
   margin: 0;
   padding: 0rem 1rem 1rem 0.88rem;

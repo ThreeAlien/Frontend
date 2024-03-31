@@ -111,16 +111,15 @@ export class AddRepExmplePopComponent implements OnInit {
     if (this.inPutdata.type == "edit") {
       this.formType = this.inPutdata.type;
       this.editData = this.inPutdata.data;
-      console.log("你進入編輯狀態");
       if (this.editData) {
         let colId = this.editData.columnID;
-        console.log(colId);
         await this.getReportDetail(colId);
         this.reportId = this.editData.reportID;
         this.formEditTitle = this.editData.reportName;
         this.myForm.controls.repExmName.setValue(this.editData.reportName);
         this.AccItemList.forEach(x => {
           if (x.clientId == this.editData?.clienId) {
+            this.AccItem = x;
             this.myForm.controls.AccItem.setValue(x);
             const ChildMccItemListTmp = this.ChildMccItemListData;
             this.ChildMccItemList = ChildMccItemListTmp.filter(y => y.clientId == x.clientId);
@@ -874,7 +873,6 @@ export class AddRepExmplePopComponent implements OnInit {
   //#endregion
   async onOk(type: string): Promise<void> {
     this.loadingService.loadingOn();
-    /**todo 資料審核 */
     if (type == "edit") {
       await this.setReport('edit');
     } else if (type == "add") {

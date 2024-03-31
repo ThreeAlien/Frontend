@@ -58,6 +58,7 @@ export const MY_DATE_FORMATS = {
 };
 @NgModule({
   imports: [
+    HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
@@ -82,7 +83,6 @@ export const MY_DATE_FORMATS = {
     CdkDrag,
     CdkDropList,
     ButtonModule,
-    HttpClientModule,
     MatCheckboxModule,
     ToastModule,
     TableModule,

@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ClientSSOService } from '../service/client-sso.service';
 import { environment } from 'src/environments/environment';
 import { MessageService } from 'primeng/api';
+import { ApiService } from '../service/api.service';
+import { BaseResponse } from '../share/Models/share.model';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MsgBoxService } from '../service/msg-box.service';
 
 @Component({
   selector: 'app-login',
@@ -12,32 +16,39 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
+  form!: FormGroup;
   constructor(
     private clientSSO: ClientSSOService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public apiService: ApiService,
+    private msg: MessageService,
   ) { }
   account: string = "";
   password: string = "";
-  form = this.formBuilder.group({
-    account: ['', Validators.required],
-    password: ['', Validators.required]
-  })
+
+
   async ngOnInit() {
+    this.form = this.formBuilder.group({
+      acc: ['Admin', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]],
+      pwd: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]]
+    })
     let isLogin = this.clientSSO.isLoggedIn();
-    if(isLogin){
+    if (isLogin) {
       this.router.navigate(["/home"]);
     }
   }
-  async onLogin(): Promise<void> {
-    let longinSta = this.clientSSO.getPermissions("123");
-    if (await longinSta) {
-      console.log("按下登入回傳一")
-      this.router.navigate(["/home"]);
-    } else {
-      alert("登入認證失敗!!")
+  /**帳號密碼認證 */
+  async onLogin() {
+    if (this.isCheck()) {
+      let sta = await this.getLoginAuth();
+      if(sta){
+        this.oidcLogin();
+        console.log(this.account);
+      }
     }
   }
+  /**取得ADS 權限認證 */
   oidcLogin() {
     try {
       const client: google.accounts.oauth2.CodeClient = google.accounts.oauth2.initCodeClient({
@@ -53,4 +64,56 @@ export class LoginComponent implements OnInit {
       console.log(error)
     }
   }
+
+  isCheck(): boolean {
+    if (!this.form.valid) {
+      Object.keys(this.form.controls).forEach(col => {
+        if (this.form.get(col)?.value == '' || this.form.get(col)?.value == null) {
+          this.form.get(col)?.markAsTouched();
+        }
+      })
+      return false;
+    } else {
+      this.account = this.form.get('acc')?.value;
+      this.password = this.form.get('pwd')?.value
+      return true;
+    }
+  }
+
+  getLoginAuth() {
+    let acc = this.account;
+    let pwd = this.password;
+    try {
+      const request = {
+        account: acc,
+        password: pwd
+      };
+      let rD = JSON.stringify(request);
+      const qryDataUrl = environment.apiServiceHost + `api/Auth/Login`;
+      console.log(qryDataUrl);
+      return new Promise<boolean>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            var data = res as BaseResponse;
+            if(data.code == "200"){
+              console.log(data.msg);
+              resolve(true);
+            }else{
+              this.msg.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' })
+              reject(false);
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            this.msg.add({ severity: 'error', summary: '錯誤', detail: `登入失敗請聯絡工程師` })
+            reject(false)
+          },
+        });
+      })
+    }
+    catch (e: any) {
+      return;
+    }
+  }
+
+
 }

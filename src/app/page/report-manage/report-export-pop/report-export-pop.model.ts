@@ -24,8 +24,8 @@ export interface colThModel{
 }
 export enum colMapping{
   genderTitie = "性別區間",
-  genderMale = "女性",
-  genderFemale = "男性",
+  genderMale = "男性",
+  genderFemale = "女性",
   genderUnknow = "未知",
   ageTitle = "年齡區間",
   locationTitle = "地區成效",

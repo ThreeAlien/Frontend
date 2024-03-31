@@ -12,7 +12,7 @@
       <div class="PickListArea">
         <div class="headerTtitlelabel">
           已選擇欄位
-          <mat-checkbox [checked]="trueChkBox" (change)="trueChkAll($event)">全選</mat-checkbox>
+          <mat-checkbox [checked]="trueChkBox" [(ngModel)]="trueChkBox"  (change)="trueChkAll($event)">全選</mat-checkbox>
         </div>
         <div class="TruePickAreaDiv">
           <mat-chip-set cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
@@ -47,7 +47,7 @@
       <div class="PickListArea">
         <div class="headerTtitlelabel">
           未選擇欄位
-          <mat-checkbox [checked]="falseChkBox" (change)="falseChkAll($event)">全選</mat-checkbox>
+          <mat-checkbox [checked]="falseChkBox" [(ngModel)]="falseChkBox" (change)="falseChkAll($event)">全選</mat-checkbox>
         </div>
         <div class="FalsePickAreaDiv">
           <mat-chip-set cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">

@@ -242,6 +242,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       resolve();
     });
   }
+  setTotalToZero(){
+    this.impressTotal  = 0;
+    this.clickTotal = 0;
+    this.costTotal = 0;
+    this.ctrTotal = '';
+    this.cpcTotal = 0;
+  }
+
   exportReportCalled: boolean = false;
   /**匯出報表方法 */
   getExportReport() {
@@ -249,6 +257,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       for (const x of this.dataList.controls) {
         this.loadingService.loadingOn();
         if (x.value.sta == true) {
+          console.log("123");
+          this.setTotalToZero();
           switch (x.value.contentId) {
             //每日報表
             case "repCon00001":
@@ -286,7 +296,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     })
 
   }
-  /**todo 要把Mapping帶進來  目前寫死欄位 */
   /**性別報表匯出API */
   getExportGender(sd: string, ed: string) {
     try {
@@ -353,8 +362,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal}`, colSta: true },
-                { colValue: `${this.clickTotal}`, colSta: true },
+                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
                 { colValue: this.twFormat(this.cpcTotal), colSta: true },
                 { colValue: this.twFormat(this.costTotal), colSta: true },
@@ -436,8 +445,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal}`, colSta: true },
-                { colValue: `${this.clickTotal}`, colSta: true },
+                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
                 { colValue: this.twFormat(this.cpcTotal), colSta: true },
                 { colValue: this.twFormat(this.costTotal), colSta: true },
@@ -522,8 +531,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
               this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
-                { colValue: `${this.impressTotal}`, colSta: true },
-                { colValue: `${this.clickTotal}`, colSta: true },
+                { colValue: "總計", colSta: true },
+                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
                 { colValue: this.twFormat(this.cpcTotal), colSta: true },
                 { colValue: this.twFormat(this.costTotal), colSta: true },
@@ -605,8 +615,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
                 { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal}`, colSta: true },
-                { colValue: `${this.clickTotal}`, colSta: true },
+                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
                 { colValue: this.twFormat(this.cpcTotal), colSta: true },
                 { colValue: this.twFormat(this.costTotal), colSta: true },
@@ -734,7 +744,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       return;
     }
   }
-
   /**取得報表明細(報表欄位_匯出用)API */
   async getReportDetail(id?: string) {
     try {
@@ -779,5 +788,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       console.log(e);
     }
   }
+
 }
 

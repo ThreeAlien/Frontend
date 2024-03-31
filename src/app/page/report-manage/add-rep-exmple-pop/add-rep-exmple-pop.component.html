@@ -32,16 +32,16 @@
                 <td>
                   <div class="td_1" style="width: 500px;">
                     <label class="tdMarginTop" style="margin-right: 22px;">客戶名稱:</label>
-                    <p-dropdown [options]="AccItemList" [(ngModel)]="AccItem" optionLabel="clientName" [filter]="true"
+                    <p-dropdown class="addExmDropdown" [options]="AccItemList" [(ngModel)]="AccItem" optionLabel="clientName" [filter]="true"
                       [style]="{ maxWidth: '337px', width: '337px' ,height:'37px'}" filterBy="clientName"
                       [ngModelOptions]="{standalone: true}" [showClear]="true" placeholder="請選擇" autowidth="false"
                       (onChange)="changeAcc($event)">
-                      <ng-template pTemplate="selectedItem">
+                      <ng-template pTemplate="selectedItem" class="addExmDropdown">
                         <div *ngIf="AccItem" style=" overflow:hidden; white-space: nowrap; text-overflow:ellipsis;">
                           <div>{{AccItem.clientName}}</div>
                         </div>
                       </ng-template>
-                      <ng-template let-acc pTemplate="item" style="height: 450px;">
+                      <ng-template let-acc pTemplate="item" style="height: 450px;" class="addExmDropdown">
                         <div>
                           <div>{{acc.clientName}}</div>
                         </div>
