@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
 import { ApiService } from '../service/api.service';
 import { BaseResponse } from '../share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MsgBoxService } from '../service/msg-box.service';
+import { LoadingService } from '../service/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -23,12 +23,14 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     public apiService: ApiService,
     private msg: MessageService,
+    public loadingService: LoadingService,
   ) { }
   account: string = "";
   password: string = "";
 
 
   async ngOnInit() {
+    this.loadingService.loadingOff();
     this.form = this.formBuilder.group({
       acc: ['Admin', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]],
       pwd: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]]
@@ -81,6 +83,7 @@ export class LoginComponent implements OnInit {
   }
 
   getLoginAuth() {
+    this.loadingService.loadingOn();
     let acc = this.account;
     let pwd = this.password;
     try {
@@ -99,18 +102,21 @@ export class LoginComponent implements OnInit {
               console.log(data.msg);
               resolve(true);
             }else{
-              this.msg.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' })
+              this.msg.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });
+              this.loadingService.loadingOff();
               reject(false);
             }
           },
           error: (error: HttpErrorResponse) => {
-            this.msg.add({ severity: 'error', summary: '錯誤', detail: `登入失敗請聯絡工程師` })
+            this.msg.add({ severity: 'error', summary: '錯誤', detail: `登入失敗請聯絡工程師` });
+            this.loadingService.loadingOff();
             reject(false)
           },
         });
       })
     }
     catch (e: any) {
+      this.loadingService.loadingOff();
       return;
     }
   }

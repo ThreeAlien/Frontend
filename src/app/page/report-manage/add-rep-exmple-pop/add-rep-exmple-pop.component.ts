@@ -192,6 +192,7 @@ export class AddRepExmplePopComponent implements OnInit {
       this.AccItem = data.value;
       data = data.value;
       let anyData: any;
+      this.myForm.controls.AccItem.setValue(data);
       this.myForm.controls.repContent.setValue(anyData);
       this.myForm.controls.repExmName.setValue('');
       this.myForm.controls.targetMedia.setValue(anyData);
@@ -258,6 +259,7 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   /**檢查要新增或編輯報表Reqest並且塞入值 */
   checkReq() {
+    console.log(this.myForm);
     if (!this.myForm.valid) {
       Object.keys(this.myForm.controls).forEach(col => {
         if (this.myForm.get(col)?.value == '' || this.myForm.get(col)?.value == null) {
