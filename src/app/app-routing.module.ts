@@ -5,7 +5,7 @@ import { LoginRoutingGuardService } from './login-routing-guard.service';
 import { LoginComponent } from './login/login.component';
 import { SSOJumpComponent } from './ssojump/ssojump.component';
 import { ReportManageComponent } from './page/report-manage/report-manage.component';
-import { ClientManageComponent } from './page/client-manage/client-manage.component';
+import { BillManageComponent } from './page/bill-manage/bill-manage.component';
 
 const routes: Routes = [
   {
@@ -35,7 +35,7 @@ const routes: Routes = [
       },
       {
         path: "clientManage",
-        component: ClientManageComponent,
+        component: BillManageComponent,
         canActivate: [LoginRoutingGuardService],
         data: {
           title: "客戶管理"

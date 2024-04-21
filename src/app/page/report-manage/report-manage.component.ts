@@ -1,3 +1,4 @@
+import { LoginInfoService } from './../../service/login-info.service';
 import { data } from 'jquery';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DatePipe } from '@angular/common';
@@ -30,7 +31,8 @@ export class ReportManageComponent implements AfterViewInit {
     public apiService: ApiService,
     private msgBoxService: MsgBoxService,
     public loadingService: LoadingService,
-    private messageService: MessageService) { };
+    private messageService: MessageService,
+  private loginInfoService: LoginInfoService) { };
   displayedColumns: string[] = ['client_subname', 'report_name', 'report_goalads', 'report_media', 'edit_date', 'func'];
   Data: exportSampleModels[] = [
     // { report_id: "123", report_name: "Nike", report_media: media.Google, report_goalads: "目標廣告", report_status: "Y", column_id: "123", creat_cname: "wider", client_subname: "123", creat_date: "2023/11/04", edit_cname: "willy", edit_date: "2023/11/05", sub_id: "123" },
@@ -73,10 +75,8 @@ export class ReportManageComponent implements AfterViewInit {
     { goalId: "pmas", goalName: GoalAdsMapping.glgPmas },
     { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
-
   async ngAfterViewInit() {
     await this.getRepExm();
-    //this.loadingService.loadingOn();
   }
   async sortChange(sort: SortEvent): Promise<void> {
     sort.data.sort((data1: any, data2: any) => {
@@ -106,7 +106,8 @@ export class ReportManageComponent implements AfterViewInit {
       reportGoalAds: this.reportGoalAds,
       reportMedia: this.Media,
       startDate: this.sD,
-      endDate: this.eD
+      endDate: this.eD,
+      userId: ''
     }
     await this.getRepExm(reqData);
   }
@@ -213,6 +214,7 @@ export class ReportManageComponent implements AfterViewInit {
         reportMedia: req ? req.reportMedia : '',
         startDate: sD ? sD : '',
         endDate: eD ? eD : '',
+        userId: this.loginInfoService.userInfo.userId
       }
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReport`;

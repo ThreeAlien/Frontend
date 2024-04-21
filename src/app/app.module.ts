@@ -35,7 +35,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { AddRepExmplePopComponent } from './page/report-manage/add-rep-exmple-pop/add-rep-exmple-pop.component';
-import { ClientManageComponent } from './page/client-manage/client-manage.component';
+import { BillManageComponent } from './page/bill-manage/bill-manage.component';
 import { TableModule } from 'primeng/table';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -105,7 +105,7 @@ export const MY_DATE_FORMATS = {
     ReportExpotPopComponent,
     SetColumnPopComponent,
     SSOJumpComponent,
-    ClientManageComponent,
+    BillManageComponent,
     LoadingComponent
   ],
   bootstrap: [AppComponent],

@@ -8,6 +8,8 @@ import { ApiService } from '../service/api.service';
 import { BaseResponse } from '../share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingService } from '../service/loading.service';
+import { LoginInfoService } from '../service/login-info.service';
+import { LoginInfoModel } from './login.models';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +32,7 @@ export class LoginComponent implements OnInit {
 
 
   async ngOnInit() {
+
     this.loadingService.loadingOff();
     this.form = this.formBuilder.group({
       acc: ['Admin', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]],
@@ -99,7 +102,9 @@ export class LoginComponent implements OnInit {
           next: (res) => {
             var data = res as BaseResponse;
             if(data.code == "200"){
-              console.log(data.msg);
+              console.log(data.data);
+              localStorage.setItem('id',data.data.userId);
+              localStorage.setItem('name',data.data.userName);
               resolve(true);
             }else{
               this.msg.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });

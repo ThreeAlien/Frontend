@@ -1,7 +1,7 @@
 <div class="contentLayout">
   <mat-card style="background-color: #EAEEE5;font-size: 16px;">
     <mat-card-header>
-      <mat-card-title style="font-weight: bold;font-size: 36px;float: left;">客戶管理</mat-card-title>
+      <mat-card-title style="font-weight: bold;font-size: 36px;float: left;">帳單管理</mat-card-title>
     </mat-card-header>
     <br>
     <mat-card-content>
@@ -49,20 +49,23 @@
         <th [pSortableColumn]="'clientName'">
           客戶名稱 <p-sortIcon [field]="'clientName'"></p-sortIcon>
         </th>
+        <th [pSortableColumn]="'clientName'">
+          子帳戶活動名稱 <p-sortIcon [field]="'clientName'"></p-sortIcon>
+        </th>
         <th pSortableColumn="mediaType">
           媒體種類<p-sortIcon field="mediaType"></p-sortIcon>
-        </th>
-        <th pSortableColumn="media">
-          帳戶預算<p-sortIcon field="media"></p-sortIcon>
-        </th>
-        <th pSortableColumn="profit">
-          利潤%<p-sortIcon field="profit"></p-sortIcon>
         </th>
         <th pSortableColumn="sDT">
           開始日期<p-sortIcon field="sDT"></p-sortIcon>
         </th>
         <th pSortableColumn="eDT">
           結束日期<p-sortIcon field="eDT"></p-sortIcon>
+        </th>
+        <th pSortableColumn="media">
+          帳戶預算<p-sortIcon field="media"></p-sortIcon>
+        </th>
+        <th pSortableColumn="profit">
+          利潤%<p-sortIcon field="profit"></p-sortIcon>
         </th>
         <th pSortableColumn="expectCost">
           報表費用<p-sortIcon field="expectCost"></p-sortIcon>
@@ -78,21 +81,20 @@
     <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
       <tr>
         <td>{{ item.clientName }}</td>
-        <td>{{ item.media }}</td>
+        <td>{{ item.subName }}</td>
         <td>{{item.mediaType}}</td>
+        <td>{{ item.sDT }}</td>
+        <td>{{ item.eDT }}</td>
+        <td>{{item.budget}}</td>
         <td>
           <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.profit" style="width: 50px;">
           <div *ngIf="item.isEdit == false">{{item.profit}}</div>
         </td>
-        <td>{{ item.sDT }}</td>
-        <td>{{ item.eDT }}</td>
         <td>
-          <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.expectCost" style="width: 80px;">
-          <div *ngIf="item.isEdit == false">{{ item.expectCost | currency: 'TWD'}}</div>
+          {{ item.reportCost | currency: 'TWD'}}
         </td>
         <td>
-          <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.realCost" style="width: 80px;">
-          <div *ngIf="item.isEdit == false">{{ item.realCost | currency: 'TWD'}}</div>
+          {{ item.realCost | currency: 'TWD'}}
         </td>
         <td class="cub-table-actions">
           <div style="display: flex;">

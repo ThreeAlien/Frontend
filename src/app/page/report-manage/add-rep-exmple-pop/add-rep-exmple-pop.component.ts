@@ -14,6 +14,7 @@ import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.componen
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { LoadingService } from 'src/app/service/loading.service';
 import { MessageService } from 'primeng/api';
+import { LoginInfoService } from 'src/app/service/login-info.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class AddRepExmplePopComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
     public apiService: ApiService,
     public datePipe: DatePipe,
+    private loginInfo : LoginInfoService,
     private msgBoxService: MsgBoxService, public loadingService: LoadingService, private messageService: MessageService) { }
   //#region 資料宣告
   mediaType = "";
@@ -277,7 +279,7 @@ export class AddRepExmplePopComponent implements OnInit {
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
       const tMedia = this.myForm.controls.targetMedia.value?.goalId;
       const media = this.mediaType == "G" ? "google" : "META";
-      const cname = "weider"
+      const id = this.loginInfo.userInfo.userId;
       const date = this.SDtm;
       let setData: setReportRequest = {
         reportId: '',
@@ -298,7 +300,7 @@ export class AddRepExmplePopComponent implements OnInit {
           setData.reportGoalAds = tMedia ? tMedia : '',
           setData.reportMedia = media,
           setData.subID = subID ? subID : '',
-          setData.editer = cname,
+          setData.editer = id,
           setData.editDate = date,
           setData.reportStatus = true
       }
@@ -308,7 +310,7 @@ export class AddRepExmplePopComponent implements OnInit {
           setData.reportGoalAds = tMedia ? tMedia : '',
           setData.reportMedia = media,
           setData.subID = subID ? subID : '',
-          setData.creater = cname,
+          setData.creater = id,
           setData.createDate = date,
           setData.reportStatus = true
       }

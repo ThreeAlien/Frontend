@@ -190,6 +190,8 @@ export class GetReportRequest {
   startDate!: string;
   /**結束時間 */
   endDate!: string;
+  /**使用者ID */
+  userId!:string;
 }
 export class addReportRequest {
   reportId!: string;
