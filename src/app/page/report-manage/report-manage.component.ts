@@ -218,7 +218,6 @@ export class ReportManageComponent implements AfterViewInit {
       }
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReport`;
-      console.log(qryDataUrl);
       return new Promise<void>((resolve) => {
         this.apiService.CallApi(qryDataUrl, 'POST', request).subscribe({
           next: (res) => {

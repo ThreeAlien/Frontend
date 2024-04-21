@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
-import { DataModel } from './bill-manage.models';
+import { BillDataModel, BillRequsetModel } from './bill-manage.models';
+import { ApiService } from 'src/app/service/api.service';
+import { environment } from 'src/environments/environment';
+import { BaseResponse } from 'src/app/share/Models/share.model';
+import { catchError, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-bill-manage',
@@ -8,17 +12,18 @@ import { DataModel } from './bill-manage.models';
   styleUrls: ['./bill-manage.component.css']
 })
 export class BillManageComponent implements OnInit {
-  constructor() { }
-  dataLsit: DataModel[] = [
-    {clientName:"Nike",subName:"Nike_襪子特賣_KW",mediaType:"google",budget:"10000",profit:"5%",sDT:"2024/01/01",eDT:"2024/03/01",reportCost:"10000",realCost:"5000",isEdit:false},
-    {clientName:"Nike",subName:"Nike_鞋子子特賣_KW",mediaType:"google",budget:"20000",profit:"2%",sDT:"2024/01/01",eDT:"2024/03/01",reportCost:"10000",realCost:"5000",isEdit:false},
-    {clientName:"Nike",subName:"Nike_內褲特賣_KW",mediaType:"google",budget:"50000",profit:"3%",sDT:"2024/01/01",eDT:"2024/03/01",reportCost:"10000",realCost:"5000",isEdit:false},
-    {clientName:"Nike",subName:"Nike_衣服特賣_KW",mediaType:"google",budget:"2300",profit:"1%",sDT:"2024/01/01",eDT:"2024/03/01",reportCost:"10000",realCost:"5000",isEdit:false},
-    {clientName:"Nike",subName:"Nike_帽子特賣_KW",mediaType:"google",budget:"45600",profit:"3%",sDT:"2024/01/01",eDT:"2024/03/01",reportCost:"10000",realCost:"5000",isEdit:false},
-    {clientName:"Nike",subName:"Nike_外套特賣_KW",mediaType:"google",budget:"80000",profit:"4%",sDT:"2024/01/01",eDT:"2024/03/01",reportCost:"10000",realCost:"5000",isEdit:false},
+  constructor(private apiSvc: ApiService) { }
+  dataLsit: BillDataModel[] = [
+    { clientName: "Nike", subName: "Nike_襪子特賣_KW", mediaType: "google", budget: "10000", profit: "5%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
+    { clientName: "Nike", subName: "Nike_鞋子子特賣_KW", mediaType: "google", budget: "20000", profit: "2%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
+    { clientName: "Nike", subName: "Nike_內褲特賣_KW", mediaType: "google", budget: "50000", profit: "3%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
+    { clientName: "Nike", subName: "Nike_衣服特賣_KW", mediaType: "google", budget: "2300", profit: "1%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
+    { clientName: "Nike", subName: "Nike_帽子特賣_KW", mediaType: "google", budget: "45600", profit: "3%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
+    { clientName: "Nike", subName: "Nike_外套特賣_KW", mediaType: "google", budget: "80000", profit: "4%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
   ];
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.getBill();
   }
   async sortChange(sort: SortEvent): Promise<void> {
     sort.data.sort((data1: any, data2: any) => {
@@ -40,13 +45,33 @@ export class BillManageComponent implements OnInit {
       return (sort.order * result);
     });
   }
-  onEdit(status: DataModel) {
+  onEdit(status: BillDataModel) {
     status.isEdit = true;
   }
-  onSave(status: DataModel) {
+  onSave(status: BillDataModel) {
     status.isEdit = false;
   }
-  onCancel(status: DataModel) {
+  onCancel(status: BillDataModel) {
     status.isEdit = false;
+  }
+  getBill() {
+    const path = environment.apiServiceHost + `api/BillManagement/GetBillManagement`;
+    let request: BillRequsetModel = {
+      clientName: '',
+      subClientName: '',
+      clientStartDate: '',
+      clientEndDate: ''
+    };
+    this.apiSvc.CallApi(path, "POST", request).pipe(
+      map((res: BaseResponse) => {
+        console.log(res);
+      }),
+      catchError(async (err) => console.log(err))
+    ).subscribe();
+    // return new Promise<void>((resolve) => {
+    //   this.apiSvc.CallApi(path, 'POST', request).subscribe({
+
+    //   })
+    // })
   }
 }

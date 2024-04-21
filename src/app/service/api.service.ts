@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { BaseResponse } from '../share/Models/share.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class ApiService {
         }
       );
      */
-  public CallApi(apiPath: string, methodType: string, sendParams: any = null, responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 'json'): Observable<object> {
+  public CallApi(apiPath: string, methodType: string, sendParams: any = null, responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 'json'): Observable<BaseResponse> {
     var ret = new Observable<any>();
     console.log("進入CallApi");
     switch (methodType.toUpperCase()) {

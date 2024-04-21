@@ -1,4 +1,4 @@
-export interface DataModel {
+export interface BillDataModel {
   /**客戶名稱 */
   clientName?: string;
   /**子帳戶活動名稱 */
@@ -19,4 +19,14 @@ export interface DataModel {
   realCost?: string;
   /**是否編輯 */
   isEdit: boolean;
+}
+export interface BillRequsetModel {
+  /**客戶名稱 */
+  clientName: string;
+  /**子帳戶活動名稱 */
+  subClientName: string;
+  /**開始時間 */
+  clientStartDate: string;
+  /**結束時間 */
+  clientEndDate:string;
 }
