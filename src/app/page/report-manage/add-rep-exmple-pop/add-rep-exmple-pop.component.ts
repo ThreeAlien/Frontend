@@ -750,10 +750,8 @@ export class AddRepExmplePopComponent implements OnInit {
             var data = res as BaseResponse;
             if (data.code == "200") {
               if (type == "edit") {
-                console.log("編輯成功");
                 this.dialogRef.close({ data: true, type: "edit" });
               } else {
-                console.log("新增成功");
                 this.dialogRef.close({ data: true, type: "add" });
               }
             }

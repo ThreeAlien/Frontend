@@ -1,10 +1,12 @@
+import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
-import { SortEvent } from 'primeng/api';
-import { BillDataModel, BillRequsetModel } from './bill-manage.models';
+import { MessageService, SortEvent } from 'primeng/api';
+import { BillDataList, BillDataModel, BillEditRequsetModel, BillRequsetModel } from './bill-manage.models';
 import { ApiService } from 'src/app/service/api.service';
 import { environment } from 'src/environments/environment';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { catchError, map, tap } from 'rxjs';
+import { LoadingService } from 'src/app/service/loading.service';
 
 @Component({
   selector: 'app-bill-manage',
@@ -12,16 +14,15 @@ import { catchError, map, tap } from 'rxjs';
   styleUrls: ['./bill-manage.component.css']
 })
 export class BillManageComponent implements OnInit {
-  constructor(private apiSvc: ApiService) { }
-  dataLsit: BillDataModel[] = [
-    { clientName: "Nike", subName: "Nike_襪子特賣_KW", mediaType: "google", budget: "10000", profit: "5%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
-    { clientName: "Nike", subName: "Nike_鞋子子特賣_KW", mediaType: "google", budget: "20000", profit: "2%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
-    { clientName: "Nike", subName: "Nike_內褲特賣_KW", mediaType: "google", budget: "50000", profit: "3%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
-    { clientName: "Nike", subName: "Nike_衣服特賣_KW", mediaType: "google", budget: "2300", profit: "1%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
-    { clientName: "Nike", subName: "Nike_帽子特賣_KW", mediaType: "google", budget: "45600", profit: "3%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
-    { clientName: "Nike", subName: "Nike_外套特賣_KW", mediaType: "google", budget: "80000", profit: "4%", sDT: "2024/01/01", eDT: "2024/03/01", reportCost: "10000", realCost: "5000", isEdit: false },
-  ];
-
+  constructor(private apiSvc: ApiService, public loadingService: LoadingService,
+    private messageService: MessageService,) { }
+  dataLsit: BillDataModel[] = [];
+  clientName: string = "";
+  subName: string = "";
+  /**開始時間 */
+  sD: string = "";
+  /**結束時間 */
+  eD: string = "";
   async ngOnInit(): Promise<void> {
     this.getBill();
   }
@@ -45,33 +46,97 @@ export class BillManageComponent implements OnInit {
       return (sort.order * result);
     });
   }
-  onEdit(status: BillDataModel) {
-    status.isEdit = true;
+  /**編輯按鈕 */
+  onEdit(data: BillDataList) {
+    data.isEdit = true;
   }
-  onSave(status: BillDataModel) {
-    status.isEdit = false;
+  /**儲存按鈕 */
+  onSave(data: BillDataList) {
+    let req: BillEditRequsetModel = {
+      subNo: data.subNo,
+      profit: parseInt(data.profit)
+    }
+    this.editBill(req);
+    data.isEdit = false;
   }
-  onCancel(status: BillDataModel) {
-    status.isEdit = false;
+  onCancel(data: BillDataList) {
+    data.isEdit = false;
   }
-  getBill() {
+  /**查詢按鈕 */
+  async filterQry() {
+    let reqData: BillRequsetModel = {
+      clientName: this.clientName,
+      subClientName: this.subName,
+      clientStartDate: this.sD,
+      clientEndDate: this.eD
+    }
+    this.getBill(reqData);
+  }
+  /**清除按鈕 */
+  async cleanClick() {
+    this.clientName = "";
+    this.subName = "";
+    this.sD = "";
+    this.eD = "";
+    this.getBill();
+  }
+  /**查詢帳單API */
+  getBill(req?: BillRequsetModel) {
     const path = environment.apiServiceHost + `api/BillManagement/GetBillManagement`;
+    this.loadingService.loadingOn();
     let request: BillRequsetModel = {
-      clientName: '',
-      subClientName: '',
-      clientStartDate: '',
-      clientEndDate: ''
+      clientName: req?.clientName ? req.clientName : "",
+      subClientName: req?.subClientName ? req.subClientName : "",
+      clientStartDate: req?.clientStartDate ? req.clientStartDate : "",
+      clientEndDate: req?.clientEndDate ? req.clientEndDate : ""
     };
     this.apiSvc.CallApi(path, "POST", request).pipe(
       map((res: BaseResponse) => {
-        console.log(res);
+        let data = res.data as BillDataModel[];
+        let i = 0;
+        data.forEach(x => {
+          x.index = `${i++}`
+        })
+        this.dataLsit = data;
+        console.log(this.dataLsit);
       }),
-      catchError(async (err) => console.log(err))
+      map(() => {
+        this.dataLsit.forEach(x => {
+          x.data.forEach(y => {
+            y.accountBuget = (parseInt(y.accountBuget) / 1000000).toString();
+            y.realCost = (parseInt(y.realCost) / 1000000).toString();
+            y.isEdit = false;
+          })
+        })
+        this.loadingService.loadingOff();
+      }),
+      catchError(async (err) => {
+        this.messageService.add({ severity: 'warn', summary: '失敗', detail: '修改帳單失敗!!' })
+        this.loadingService.loadingOff();
+      })
     ).subscribe();
-    // return new Promise<void>((resolve) => {
-    //   this.apiSvc.CallApi(path, 'POST', request).subscribe({
+  }
 
-    //   })
-    // })
+  /**編輯帳單API */
+  editBill(req: BillEditRequsetModel) {
+    console.log(req);
+    const path = environment.apiServiceHost + `api/BillManagement/UpdateBillManagement`;
+    let request: BillEditRequsetModel = {
+      subNo: req.subNo,
+      profit: req.profit
+    };
+    this.apiSvc.CallApi(path, "POST", request).pipe(
+      map((res: BaseResponse) => {
+        if (res.code == "200") {
+          this.messageService.add({ severity: 'success', summary: '成功', detail: '修改帳單成功!!' });
+        } else {
+          this.messageService.add({ severity: 'warn', summary: '失敗', detail: `修改帳單失敗!!` });
+        }
+      }),
+      catchError(async (err) => {
+        this.messageService.add({ severity: 'warn', summary: '失敗', detail: '修改帳單失敗!!' })
+        this.loadingService.loadingOff();
+      })
+    ).subscribe();
   }
 }

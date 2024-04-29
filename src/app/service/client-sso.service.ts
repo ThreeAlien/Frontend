@@ -10,6 +10,8 @@ const TOKEN_KEY = '';
 const USER_ADSINFO = 'USER_ADSINFO';
 /**有效期限 */
 const EXPIRATION_KEY = "";
+const NAME ="name";
+const ID ="id";
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +60,8 @@ export class ClientSSOService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ADSINFO);
     localStorage.removeItem(EXPIRATION_KEY);
+    localStorage.removeItem(NAME);
+    localStorage.removeItem(ID);
   }
 
   /**檢查是否有登入過 */

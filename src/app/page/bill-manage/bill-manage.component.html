@@ -10,25 +10,25 @@
           <div class="divLable">客戶名稱</div>
           <div>
             <mat-form-field appearance="outline" class="inputOut">
-              <input matInput placeholder="請輸入" />
+              <input matInput placeholder="請輸入" [(ngModel)]="clientName" />
             </mat-form-field>
           </div>
         </div>
         <div class="divTd2">
-          <div class="divLable">媒體名稱</div>
+          <div class="divLable">子帳戶活動名稱</div>
           <div>
             <mat-form-field appearance="outline" class="inputOut">
-              <input matInput placeholder="請輸入" />
+              <input matInput placeholder="請輸入" [(ngModel)]="subName"/>
             </mat-form-field>
           </div>
         </div>
         <div class="divTd2">
-          <div class="divLable">時間</div>
+          <div class="divLable">創建日期區間:</div>
           <div>
             <mat-form-field class="timeInputOut">
               <mat-date-range-input [rangePicker]="picker">
-                <input matStartDate placeholder="起">
-                <input matEndDate placeholder="迄">
+                <input matStartDate placeholder="起" [(ngModel)]="sD">
+                <input matEndDate placeholder="迄" [(ngModel)]="eD">
               </mat-date-range-input>
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-date-range-picker #picker></mat-date-range-picker>
@@ -37,20 +37,30 @@
         </div>
       </div>
     </mat-card-content>
+    <mat-card-actions style="margin-top: 10px;">
+      <button class="addBtn" mat-raised-button color="accent" style="font-size: 18px;" (click)="filterQry()">
+        <mat-icon>search</mat-icon>
+        查詢
+      </button>
+      <button class="addBtn" mat-raised-button color="accent" style="font-size: 18px;" (click)="cleanClick()">
+        <mat-icon>close</mat-icon>
+        清除
+      </button>
+    </mat-card-actions>
   </mat-card>
   <br>
 
-  <p-table [value]="dataLsit" [paginator]="true" editMode="row" [rows]="5" [showCurrentPageReport]="true"
-    currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[5, 10, 20]"
-    (sortFunction)="sortChange($event)" [customSort]="true" [scrollable]="true" scrollHeight="600px"
-    [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
+  <p-table [value]="dataLsit" dataKey="index" [paginator]="true" editMode="row" [rows]="5"
+    [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+    [rowsPerPageOptions]="[5, 10, 20]" (sortFunction)="sortChange($event)" [customSort]="true" [scrollable]="true"
+    scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
     <ng-template pTemplate="header">
       <tr style="width: 100%;">
         <th [pSortableColumn]="'clientName'">
           客戶名稱 <p-sortIcon [field]="'clientName'"></p-sortIcon>
         </th>
-        <th [pSortableColumn]="'clientName'">
-          子帳戶活動名稱 <p-sortIcon [field]="'clientName'"></p-sortIcon>
+        <th [pSortableColumn]="'subName'">
+          子帳戶活動名稱 <p-sortIcon [field]="'subName'"></p-sortIcon>
         </th>
         <th pSortableColumn="mediaType">
           媒體種類<p-sortIcon field="mediaType"></p-sortIcon>
@@ -61,56 +71,73 @@
         <th pSortableColumn="eDT">
           結束日期<p-sortIcon field="eDT"></p-sortIcon>
         </th>
-        <th pSortableColumn="media">
-          帳戶預算<p-sortIcon field="media"></p-sortIcon>
+        <th pSortableColumn="budget">
+          帳戶預算<p-sortIcon field="budget"></p-sortIcon>
         </th>
         <th pSortableColumn="profit">
           利潤%<p-sortIcon field="profit"></p-sortIcon>
         </th>
-        <th pSortableColumn="expectCost">
-          報表費用<p-sortIcon field="expectCost"></p-sortIcon>
+        <th pSortableColumn="reportCost">
+          報表費用<p-sortIcon field="reportCost"></p-sortIcon>
         </th>
         <th pSortableColumn="realCost">
           帳戶實際花費<p-sortIcon field="realCost"></p-sortIcon>
         </th>
-        <th>
-
-        </th>
+        <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-item let-editing="editing" let-ri="rowIndex">
+    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex" let-expanded="expanded">
       <tr>
-        <td>{{ item.clientName }}</td>
-        <td>{{ item.subName }}</td>
-        <td>{{item.mediaType}}</td>
-        <td>{{ item.sDT }}</td>
-        <td>{{ item.eDT }}</td>
-        <td>{{item.budget}}</td>
         <td>
-          <input class="inputEdit" *ngIf="item.isEdit == true" [ngModel]="item.profit" style="width: 50px;">
-          <div *ngIf="item.isEdit == false">{{item.profit}}</div>
+          <div style="display: flex;align-items: center;">
+            <button mat-icon-button [pRowToggler]="item">
+              <mat-icon *ngIf="expanded">
+                chevron_right
+              </mat-icon>
+              <mat-icon *ngIf="!expanded">
+                expand_more
+              </mat-icon>
+            </button>
+            <span>{{ item.clientName }}</span>
+          </div>
+
         </td>
+        <td colspan="9"></td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-item>
+      <tr *ngFor="let detail of item.data">
+        <td></td>
+        <td>{{ detail.subClientName }}</td>
+        <td>{{detail.mediaType}}</td>
+        <td>{{ detail.budgetStartDate | date: 'yyyy/MM/dd'}}</td>
+        <td>{{ detail.budgetEndDate | date: 'yyyy/MM/dd'}}</td>
+        <td>{{detail.accountBuget | currency: 'TWD'}}</td>
         <td>
-          {{ item.reportCost | currency: 'TWD'}}
+          <div style="display: flex;align-items: center;">
+            <input class="inputEdit" *ngIf="detail.isEdit == true" type="number" [(ngModel)]="detail.profit" style="width: 65px;">
+            <div *ngIf="detail.isEdit == false">{{detail.profit}}</div>
+            <div style="padding-left: 3px;">%</div>
+          </div>
+
         </td>
+        <td>{{detail.reportCost | currency: 'TWD'}}</td>
+        <td>{{detail.realCost | currency: 'TWD'}}</td>
         <td>
-          {{ item.realCost | currency: 'TWD'}}
-        </td>
-        <td class="cub-table-actions">
           <div style="display: flex;">
-            <div *ngIf="item.isEdit == false">
-              <button mat-icon-button (click)="onEdit(item)">
+            <div *ngIf="detail.isEdit == false">
+              <button mat-icon-button (click)="onEdit(detail)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button>
+              <!-- <button mat-icon-button>
                 <mat-icon>delete</mat-icon>
-              </button>
+              </button> -->
             </div>
-            <div *ngIf="item.isEdit == true">
-              <button mat-icon-button color="primary" (click)="onCancel(item)">
+            <div *ngIf="detail.isEdit == true">
+              <button mat-icon-button color="primary" (click)="onSave(detail)">
                 <mat-icon>done</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="onCancel(item)">
+              <button mat-icon-button color="warn" (click)="onCancel(detail)">
                 <mat-icon>close</mat-icon>
               </button>
             </div>
@@ -120,3 +147,5 @@
     </ng-template>
   </p-table>
 </div>
+<app-loading></app-loading>
+<p-toast position="bottom-right"></p-toast>
