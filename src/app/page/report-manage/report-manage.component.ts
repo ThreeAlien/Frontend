@@ -3,7 +3,7 @@ import { data } from 'jquery';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -24,8 +24,8 @@ import { map, tap } from 'rxjs';
   templateUrl: './report-manage.component.html',
   styleUrls: ['./report-manage.component.css']
 })
-export class ReportManageComponent implements AfterViewInit {
-  constructor(private _liveAnnouncer: LiveAnnouncer,
+export class ReportManageComponent implements OnInit {
+  constructor(private _liveAnnouncer: LiveAnnouncer,private cdr: ChangeDetectorRef,
     public dialog: MatDialog,
     public datePipe: DatePipe,
     public apiService: ApiService,
@@ -65,8 +65,9 @@ export class ReportManageComponent implements AfterViewInit {
     { goalId: "pmas", goalName: GoalAdsMapping.glgPmas },
     { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
-  async ngAfterViewInit() {
+  async ngOnInit() {
     await this.getRepExm();
+    this.cdr.detectChanges(); // 手動觸發變更偵測
   }
   async sortChange(sort: SortEvent): Promise<void> {
     sort.data.sort((data1: any, data2: any) => {

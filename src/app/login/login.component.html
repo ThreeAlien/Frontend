@@ -25,13 +25,10 @@
           </div>
         </div>
       </form>
-      <div class="buttonArea" (click)="onLogin()">
-        <div class="googelIcon"></div>
-        <div class="iconText">Google</div>
-      </div>
-      <div class="buttonArea" style="background-color:rgba(0,0,0,0.3);">
-        <div class="fbIcon"></div>
-        <div class="iconText">FaceBook</div>
+      <div class="buttonArea">
+        <button class="addBtnRes" mat-raised-button (click)="onRegisterClick()">註冊</button>
+        <div style="height: 20px;"></div>
+        <button class="addBtnLogin" mat-raised-button  (click)="onLogin()">登入</button>
       </div>
     </div>
   </div>

@@ -25,20 +25,21 @@
   background-repeat: no-repeat;
   background-position: center
 }
-.inputArea{
+
+.inputArea {
   width: 30%;
   min-width: 360px;
   display: flex;
   align-items: baseline;
   justify-content: space-evenly;
 }
-.lable{
+
+.lable {
   font-size: 20px;
   font-weight: bold;
 }
 
 .loginArea {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
   width: 30%;
   min-width: 360px;
   height: 100%;
@@ -50,24 +51,12 @@
 
 .buttonArea {
   width: 90%;
+  font-size: 1.2em;
   height: auto;
-  cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
-}
-
-.buttonArea:hover {
-  /* :hover 代表滑鼠移到元素上時的狀態 */
-  transform: scale(1.05);
-}
-
-.buttonArea:active {
-  /* :active是滑鼠點擊元素的狀態 */
-  transform: scale(1.02);
-  box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, .2);
 }
 
 .googelIcon {
@@ -89,7 +78,8 @@
   line-height: 1.43;
   font-size: 48px;
 }
-.iconText{
+
+.iconText {
   line-height: 1.43;
   font-size: 32px;
 }
@@ -98,4 +88,32 @@
   display: flex;
   width: 100%;
   justify-content: space-around;
+}
+
+.addBtnRes {
+  width: 100%;
+  height: 2.8em;
+  border-radius: 8px;
+  line-height: 1.5em;
+  border: 2px #000000 solid;
+  color: #f0f0f0 !important;
+  background-color: #3E7E55 !important;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
+  font-weight: bold;
+  line-height: 1.4em;
+  letter-spacing:10px;
+  -webkit-text-size-adjust:100%;
+}
+.addBtnLogin{
+  width: 100%;
+  height: 2.8em;
+  border-radius: 8px;
+  border: 2px #000000 solid;
+  color: #808080 !important;
+  background-color: #EAEEE5 !important;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
+  font-weight: bold;
+  line-height: 1.4em;
+  letter-spacing:10px;
+  -webkit-text-size-adjust:100%;
 }

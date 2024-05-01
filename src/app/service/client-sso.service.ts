@@ -30,8 +30,6 @@ export class ClientSSOService {
     console.log("確認伺服器認證登入");
     this.nowPageUrl = NowUrl;
     this.nextPageUrl = NextUrl;
-    console.log(NowUrl);
-    console.log(NextUrl);
     if (this.isLoggedIn()) {
       return true;
     } else {

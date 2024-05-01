@@ -10,6 +10,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingService } from '../service/loading.service';
 import { LoginInfoService } from '../service/login-info.service';
 import { LoginInfoModel } from './login.models';
+import { MatDialog } from '@angular/material/dialog';
+import { RegisterComponent } from './register/register.component';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,7 @@ export class LoginComponent implements OnInit {
     public apiService: ApiService,
     private msg: MessageService,
     public loadingService: LoadingService,
+    public dialog: MatDialog,
   ) { }
   account: string = "";
   password: string = "";
@@ -47,7 +50,7 @@ export class LoginComponent implements OnInit {
   async onLogin() {
     if (this.isCheck()) {
       let sta = await this.getLoginAuth();
-      if(sta){
+      if (sta) {
         this.oidcLogin();
         console.log(this.account);
       }
@@ -84,6 +87,19 @@ export class LoginComponent implements OnInit {
       return true;
     }
   }
+  /**新增範本按鈕 */
+  onRegisterClick() {
+    const dialogRef = this.dialog.open(RegisterComponent, {
+      width: "360px",
+      height: "auto",
+      data: "",
+      hasBackdrop: true,
+      disableClose: true
+    })
+    dialogRef.afterClosed().subscribe(async result => {
+      console.log(result);
+    });
+  }
 
   getLoginAuth() {
     this.loadingService.loadingOn();
@@ -101,12 +117,12 @@ export class LoginComponent implements OnInit {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            if(data.code == "200"){
+            if (data.code == "200") {
               console.log(data.data);
-              localStorage.setItem('id',data.data.userId);
-              localStorage.setItem('name',data.data.userName);
+              localStorage.setItem('id', data.data.userId);
+              localStorage.setItem('name', data.data.userName);
               resolve(true);
-            }else{
+            } else {
               this.msg.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });
               this.loadingService.loadingOff();
               reject(false);
