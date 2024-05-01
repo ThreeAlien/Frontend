@@ -217,9 +217,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       style: 'currency',
       currency: 'TWD'
     });
-    let res = twFormat.format(coin);
+    let res = twFormat.format(+coin.toFixed(2));
     // //去除00
-    // res = res.replace(/\.\d{2}$/, '');
+    res = res.replace(/\.\d{2}$/, '');
     return res;
   }
   //點閱率計算
@@ -257,7 +257,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       for (const x of this.dataList.controls) {
         this.loadingService.loadingOn();
         if (x.value.sta == true) {
-          console.log("123");
           this.setTotalToZero();
           switch (x.value.contentId) {
             //每日報表

@@ -50,7 +50,7 @@
   </mat-card>
   <br>
 
-  <p-table [value]="dataLsit" dataKey="index" [paginator]="true" editMode="row" [rows]="5"
+  <p-table [value]="dataLsit" dataKey="index" [paginator]="true" editMode="row" [rows]="10"
     [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
     [rowsPerPageOptions]="[5, 10, 20]" (sortFunction)="sortChange($event)" [customSort]="true" [scrollable]="true"
     scrollHeight="600px" [tableStyle]="{'min-width': '50rem'}" class="table" color="warn">
@@ -112,7 +112,7 @@
         <td>{{detail.mediaType}}</td>
         <td>{{ detail.budgetStartDate | date: 'yyyy/MM/dd'}}</td>
         <td>{{ detail.budgetEndDate | date: 'yyyy/MM/dd'}}</td>
-        <td>{{detail.accountBuget | currency: 'TWD'}}</td>
+        <td>{{detail.accountBuget}}</td>
         <td>
           <div style="display: flex;align-items: center;">
             <input class="inputEdit" *ngIf="detail.isEdit == true" type="number" [(ngModel)]="detail.profit" style="width: 65px;">
@@ -121,8 +121,8 @@
           </div>
 
         </td>
-        <td>{{detail.reportCost | currency: 'TWD'}}</td>
-        <td>{{detail.realCost | currency: 'TWD'}}</td>
+        <td>{{detail.reportCost}}</td>
+        <td>{{detail.realCost}}</td>
         <td>
           <div style="display: flex;">
             <div *ngIf="detail.isEdit == false">

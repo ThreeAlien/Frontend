@@ -108,7 +108,6 @@ export class AddRepExmplePopComponent implements OnInit {
     if (this.isSetPermission()) {
       await this.setPermission();
     }
-    console.log(this.inPutdata);
     /**編輯狀態下塞值 */
     if (this.inPutdata.type == "edit") {
       this.formType = this.inPutdata.type;
@@ -145,9 +144,9 @@ export class AddRepExmplePopComponent implements OnInit {
     this.loadingService.loadingOff();
   }
   onChange(data: any) {
-    console.log(data);
+
     this.AccItem = data.value;
-    console.log(this.AccItem);
+
 
   }
   /**如果擁有汎古主帳號 權限全開*/
@@ -182,7 +181,6 @@ export class AddRepExmplePopComponent implements OnInit {
       })
       this.AccItemList = tmpPermissionMain;
       resolve();
-      console.log(this.AccItemList);
     })
   }
   changeFormType(value: string) {
@@ -207,7 +205,6 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   /**選帳戶活動名稱 */
   changeMcc(data: MccModel) {
-    console.log(data);
     //pop 取得最後一個
     //來確保在 client_subname 為 undefined 時不會拋出異常。
     //如果 pop() 結果為 undefined，則預設為空字串
@@ -222,7 +219,7 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   /**刪除報表欄位 */
   onRemoveCol(dataList: repColModel, rmData: repColListModel) {
-    console.log(dataList, rmData);
+
     dataList.TrueList = dataList.TrueList.filter(x => {
       if (x.colName == rmData.colName) {
         dataList.FalseList.push({
@@ -261,7 +258,6 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   /**檢查要新增或編輯報表Reqest並且塞入值 */
   checkReq() {
-    console.log(this.myForm);
     if (!this.myForm.valid) {
       Object.keys(this.myForm.controls).forEach(col => {
         if (this.myForm.get(col)?.value == '' || this.myForm.get(col)?.value == null) {
@@ -325,12 +321,11 @@ export class AddRepExmplePopComponent implements OnInit {
       const request = { clientId: "" };
       let rD = JSON.stringify(request);
       const qryDataUrl = environment.apiServiceHost + `api/CustomerInfo/GetCustomer`;
-      console.log(qryDataUrl);
       return new Promise<void>((resolve) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            if (data) {
+            if (data.data) {
               data.data.forEach((x: AccModel) => {
                 this.AccItemList.push(x);
               });
@@ -352,12 +347,11 @@ export class AddRepExmplePopComponent implements OnInit {
     try {
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/SubClient/GetSubClient`;
-      console.log(qryDataUrl);
       return new Promise<void>((resolve) => {
         this.apiService.CallApi(qryDataUrl, 'POST', {}).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            if (data) {
+            if (data.data !== null) {
               data.data.forEach((x: MccModel) => {
                 this.ChildMccItemListData.push(x);
               });
@@ -386,12 +380,10 @@ export class AddRepExmplePopComponent implements OnInit {
       let rD = JSON.stringify(request);
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportContentInfo/GetReportContent`;
-      console.log(qryDataUrl);
       this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
         next: (res) => {
           var data = res as BaseResponse;
           if (data.data) {
-            console.log(data.data)
             data.data.forEach((x: repConModel) => {
               x.status = false;
               this.repContentList.push(x);
@@ -421,7 +413,6 @@ export class AddRepExmplePopComponent implements OnInit {
           var data = res as BaseResponse;
           let repColList: repColListModel[];
           if (data.data) {
-            console.log(data.data);
             this.defaultColumnSta = data.data;
             this.defaultColumnSta.forEach(x => {
               repColList = [
@@ -494,7 +485,6 @@ export class AddRepExmplePopComponent implements OnInit {
       path = environment.apiServiceHost + `api/ReportInfo/CreateReport`;
     }
     if (reqData) {
-      console.log(this.columnArray);
       //#region  資料處理
       //先把 有勾的報表內容 紀錄起來
       //編輯狀態下
@@ -540,7 +530,6 @@ export class AddRepExmplePopComponent implements OnInit {
             })
           }
         })
-        console.log(this.tmpDBReportColumn);
         this.columnArray.forEach(x => {
           this.tmpDBReportColumn.forEach(y => {
             //如果有檢查到原本DB column 是有的, 可是送出的時候發現沒在裡面，要把DB的砍掉 ，isDelete 是true
@@ -640,7 +629,6 @@ export class AddRepExmplePopComponent implements OnInit {
       reqData.columnData.forEach(x => {
         this.columnArray.forEach(y => {
           if (x.contentId == y.conId) {
-            console.log(x);
             y.TrueList.forEach(colSta => {
               switch (colSta.colName) {
                 case columnMapping.colAccount:
@@ -741,7 +729,6 @@ export class AddRepExmplePopComponent implements OnInit {
           }
         })
       })
-      console.log(reqData);
 
       //#endregion
       return new Promise<void>((resolve) => {
@@ -770,7 +757,6 @@ export class AddRepExmplePopComponent implements OnInit {
       const request = { columnID: `${id}` };
       let rD = JSON.stringify(request);
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReportDetail`;
-      console.log(qryDataUrl);
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
@@ -778,7 +764,7 @@ export class AddRepExmplePopComponent implements OnInit {
             let repColList: repColListModel[];
             if (data.data) {
               let detailData = data.data as getReportDetailRes[];
-              console.log(detailData);
+
               let colarray: repConModel[] = [];
               this.repContentList.forEach(x => {
                 detailData.forEach(y => {
@@ -847,11 +833,7 @@ export class AddRepExmplePopComponent implements OnInit {
             reject();
           }
         });
-      }).then(response => {
-        console.log(response);
-      }).catch(e => {
-        console.log(e);
-      });
+      })
     }
     catch (e: any) {
       this.msgBoxService.msgBoxShow(e.toString());
@@ -863,7 +845,7 @@ export class AddRepExmplePopComponent implements OnInit {
   //#region CSS事件
   //設定狀態按鈕CSS
   setStatusClass(d: any, s: any) {
-    //console.log(d);
+
     let css = "";
     if (d == s) {
       css = "btnStatusSelect";

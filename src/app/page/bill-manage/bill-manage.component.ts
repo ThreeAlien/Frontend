@@ -80,6 +80,17 @@ export class BillManageComponent implements OnInit {
     this.eD = "";
     this.getBill();
   }
+  /**台幣轉換 */
+  twFormat(coin: number): string {
+    coin = coin / 1000000;
+    const twFormat = new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: 'TWD'
+    });
+    let res = twFormat.format(+coin.toFixed(2));
+    res = res.replace(/\.\d{2}$/, '');
+    return res;
+  }
   /**查詢帳單API */
   getBill(req?: BillRequsetModel) {
     const path = environment.apiServiceHost + `api/BillManagement/GetBillManagement`;
@@ -98,13 +109,13 @@ export class BillManageComponent implements OnInit {
           x.index = `${i++}`
         })
         this.dataLsit = data;
-        console.log(this.dataLsit);
       }),
       map(() => {
         this.dataLsit.forEach(x => {
           x.data.forEach(y => {
-            y.accountBuget = (parseInt(y.accountBuget) / 1000000).toString();
-            y.realCost = (parseInt(y.realCost) / 1000000).toString();
+            y.accountBuget = this.twFormat(parseInt(y.accountBuget));
+            y.realCost = this.twFormat(parseInt(y.realCost));
+            y.reportCost = this.twFormat(parseInt(y.reportCost));
             y.isEdit = false;
           })
         })
@@ -119,7 +130,6 @@ export class BillManageComponent implements OnInit {
 
   /**編輯帳單API */
   editBill(req: BillEditRequsetModel) {
-    console.log(req);
     const path = environment.apiServiceHost + `api/BillManagement/UpdateBillManagement`;
     let request: BillEditRequsetModel = {
       subNo: req.subNo,
@@ -129,6 +139,7 @@ export class BillManageComponent implements OnInit {
       map((res: BaseResponse) => {
         if (res.code == "200") {
           this.messageService.add({ severity: 'success', summary: '成功', detail: '修改帳單成功!!' });
+          this.getBill();
         } else {
           this.messageService.add({ severity: 'warn', summary: '失敗', detail: `修改帳單失敗!!` });
         }

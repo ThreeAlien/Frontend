@@ -23,7 +23,7 @@ export interface BillDataList {
   /**結束日期 */
   budgetEndDate?: string;
   /**報表費用 */
-  reportCost?: string;
+  reportCost: string;
   /**客戶實際花費 */
   realCost: string;
   /**是否編輯 */
