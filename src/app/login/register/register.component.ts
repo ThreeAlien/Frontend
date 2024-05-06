@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -8,7 +8,7 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dial
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<RegisterComponent>,
     public dialog: MatDialog,
@@ -19,13 +19,14 @@ export class RegisterComponent {
   isShowPws: boolean = false;
   isShowChkPws: boolean = false;
   isChkErr:boolean = false;
-
+  // 排除特殊字元
+  // password: new FormControl('', [Validators.pattern("^(?=.*[0-9])(?=.*[A-Za-z])[0-9A-Za-z]{6,20}"), Validators.required]),
   ngOnInit(): void {
     this.myForm = new FormGroup({
       userId: new FormControl('', [Validators.pattern("^[0-9A-Za-z]+$"), Validators.required]),
       userName: new FormControl('', [Validators.minLength(2),Validators.maxLength(10), Validators.required]),
       account: new FormControl('', [Validators.pattern("^[0-9A-Za-z]+$"), Validators.required]),
-      password: new FormControl('', [Validators.pattern("^(?=.*[0-9])(?=.*[A-Za-z])[0-9A-Za-z]{6,20}"), Validators.required]),
+      password: new FormControl('', [Validators.pattern("^[0-9A-Za-z]+$}"), Validators.required]),
       chkPsw: new FormControl('', Validators.required),
       email: new FormControl('', [Validators.required,Validators.email]),
     });

@@ -39,6 +39,26 @@ export enum colMapping{
   cpc = "CPC",
   ctr = "點閱率"
 }
+export class exportDataList {
+  /**是否被勾選 */
+  sta!: boolean;
+  /**報表ID */
+  Id!: number;
+  /**報表ID */
+  contentId!:string;
+  /**報表名稱 */
+  reportName!: string;
+  /**開始時間 */
+  SD!: string;
+  /**結束時間 */
+  ED!: string;
+  /**報表日期區間篩選 */
+  dateRangePickList: dateRangeModel[] = [];
+}
+export interface dateRangeModel {
+  name: string;
+  value: string;
+}
 export interface exportData{
   date:string;
   adGroupName:string;

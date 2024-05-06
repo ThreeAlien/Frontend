@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/service/api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { ExportReportModel, colMapping, exportData } from './report-export-pop.model';
+import { ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList } from './report-export-pop.model';
 import { LoadingService } from 'src/app/service/loading.service';
 import '../../../../assets/msjh-normal.js';
 import { map } from 'jquery';
@@ -29,7 +29,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     public dialogRef: MatDialogRef<ReportExpotPopComponent>, @Inject(MAT_DIALOG_DATA) public inPutdata: exportSampleModels,
     public datePipe: DatePipe, private formBuilder: FormBuilder, public apiService: ApiService,
     public loadingService: LoadingService, private messageService: MessageService) { }
-
 
   firstFormGroup = this.formBuilder.group({
     dataList: this.formBuilder.array([])
@@ -71,7 +70,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
-    console.log(data);
+    data.controls['dateRangePickList'].setValue([
+      { name: "今日", value: "D" },
+      { name: "過去七天", value: "L7W" },
+      { name: "本周", value: "W" },
+      { name: "上個月", value: "LM" },
+      { name: "本月", value: "M" },
+    ])
+    console.log(data.controls['dateRangePickList']);
     if (value) {
       data.controls['SD'].setValidators([Validators.required]);
       data.controls['ED'].setValidators([Validators.required]);
@@ -91,6 +97,50 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       data.controls.forEach((x: FormGroup) => {
         x.controls['sta'].setValue(false);
       })
+    }
+  }
+  //日期快速篩選
+  dateRangeClick(chip: dateRangeModel, data: any) {
+    let today = new Date();
+    switch (chip.value) {
+      case "D":
+        data.controls['SD'].setValue(new Date());
+        data.controls['ED'].setValue(new Date());
+        break;
+      case "W":
+        let firstWeekDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+        let lastWeekDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (7 - today.getDay()));
+        //如果第一天跨月，把當月的第一天當本周的第一天
+        if (firstWeekDay.getMonth() !== today.getMonth()) {
+          firstWeekDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        }
+        //如果最後一天跨月，把當月的最後一天當本周的最後一天
+        if (lastWeekDay.getMonth() == today.getMonth() + 1) {
+          lastWeekDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        }
+        data.controls['SD'].setValue(firstWeekDay);
+        data.controls['ED'].setValue(lastWeekDay);
+        break;
+      case "L7W":
+        let firstLastWeekDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        let lastLastWeekDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+        data.controls['SD'].setValue(firstLastWeekDay);
+        data.controls['ED'].setValue(lastLastWeekDay);
+        break;
+      case "M":
+        let firstMonDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        let lastMonDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        data.controls['SD'].setValue(firstMonDay);
+        data.controls['ED'].setValue(lastMonDay);
+        break;
+      case "LM":
+        let firstLastMonDay = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        let lastLastMonDay = new Date(today.getFullYear(), today.getMonth() - 1 + 1, 0);
+        data.controls['SD'].setValue(firstLastMonDay);
+        data.controls['ED'].setValue(lastLastMonDay);
+        break;
+      default:
+        return;
     }
   }
   /**步驟切換(案下一步) */
@@ -242,8 +292,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       resolve();
     });
   }
-  setTotalToZero(){
-    this.impressTotal  = 0;
+  setTotalToZero() {
+    this.impressTotal = 0;
     this.clickTotal = 0;
     this.costTotal = 0;
     this.ctrTotal = '';
@@ -764,13 +814,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 if (x.contentId == "repCon00015") {
                   this.isKwEnable = true;
                 }
-                this.dataList.push(this.formBuilder.group({
+                this.dataList.push(this.formBuilder.group<exportDataList>({
                   sta: false,
                   Id: x.reportNo,
                   reportName: x.contentName,
                   contentId: x.contentId,
                   SD: '',
-                  ED: ''
+                  ED: '',
+                  dateRangePickList: []
                 }));
               })
             }

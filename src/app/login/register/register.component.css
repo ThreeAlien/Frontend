@@ -5,14 +5,13 @@
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 30px;
+  padding: 15px;
   flex-direction: column;
   align-items: center;
   font-size: 24px;
 }
 
 .herderTitle {
-  padding-top: 10px;
   font-weight: bold;
   color: #3E7E55;
   font-size: 1.2em;
@@ -27,7 +26,7 @@
 
 .content {
   width: 100%;
-  padding: 8px;
+
   line-height: 1.2em;
   letter-spacing: 2px;
   font-size: 0.65em;
@@ -38,7 +37,7 @@
 .divTd {
   display: flex;
   align-items: baseline;
-
+  flex-direction: column;
 }
 
 .pRightTitle {
@@ -50,8 +49,8 @@
   width: 100%;
   height: 2.3em;
   border-radius: 8px;
-  color: #f0f0f0 !important;
-  background-color: #3E7E55 !important;
+  color: #f0f0f0;
+  background-color: #3E7E55;
 }
 
 .cancelTxt {
@@ -74,13 +73,10 @@
 .mat-mdc-form-field-error {
   font-size: 12px;
 }
-.mat-mdc-form-field-infix {
-  width: 100%;
-}
 .field{
   width: 100%;
-  height: 72px;
 }
-.eyeIcon{
- padding-left: 20px;
+.titleLable{
+  font-size: 12px;
+  padding-bottom: 3px;
 }

@@ -244,3 +244,6 @@
   background-color: #fafafa;
   border: solid 1px #808080;
 }
+.clickChips:hover {
+  background-color: #AADCB6 !important;
+}

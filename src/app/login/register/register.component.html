@@ -13,10 +13,10 @@
         <tr>
           <td>
             <div class="divTd">
-              <mat-form-field class="field">
-                <mat-label>員工編號</mat-label>
-                <input matInput name="userId" formControlName="userId" placeholder="員工編號">
-                <mat-error>此處為必填且只能填寫數字或英文</mat-error>
+              <label class="titleLable">員工編號 :</label>
+              <mat-form-field class="field" appearance="outline">
+                <input matInput name="userId" formControlName="userId" placeholder="請輸入">
+                <mat-error>此處為必填，不可特殊符號</mat-error>
               </mat-form-field>
             </div>
           </td>
@@ -24,10 +24,10 @@
         <tr>
           <td>
             <div class="divTd">
-              <mat-form-field class="field">
-                <mat-label>中文姓名</mat-label>
-                <input matInput name="userName" formControlName="userName" placeholder="姓名">
-                <mat-error>請輸入2-10字元</mat-error>
+              <label class="titleLable">帳號 :</label>
+              <mat-form-field class="field" appearance="outline">
+                <input matInput name="account" formControlName="account" placeholder="請輸入">
+                <mat-error>此處為必填，不可特殊符號</mat-error>
               </mat-form-field>
             </div>
           </td>
@@ -35,31 +35,21 @@
         <tr>
           <td>
             <div class="divTd">
-              <mat-form-field class="field">
-                <mat-label>帳號</mat-label>
-                <input matInput name="account" formControlName="account" placeholder="帳號">
-                <mat-error>此處為必填且只能填寫數字或英文</mat-error>
-              </mat-form-field>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="divTd">
-              <mat-form-field class="field">
-                <mat-label>密碼</mat-label>
-                <div style="display: flex;align-content: space-between;">
-                  <div>
-                    <input matInput [type]="isShowPws ? 'text':'password'" name="password" formControlName="password" placeholder="密碼">
+              <label class="titleLable">密碼 :</label>
+              <mat-form-field class="field" appearance="outline">
+                <div style="display: flex;justify-content: space-between;">
+                  <div class="input">
+                    <input matInput [type]="isShowPws ? 'text':'password'" name="password" formControlName="password"
+                      placeholder="請輸入">
                   </div>
-                  <div class="eyeIcon">
-                    <span><mat-icon *ngIf="isShowPws" (click)="isShowPwsClick('p')">visibility</mat-icon></span>
+                  <div *ngIf="isShowPws">
+                    <mat-icon (click)="isShowPwsClick('p')">visibility</mat-icon>
                   </div>
-                  <div class="eyeIcon">
-                    <span><mat-icon *ngIf="!isShowPws" (click)="isShowPwsClick('p')">visibility_off</mat-icon></span>
+                  <div *ngIf="!isShowPws">
+                    <mat-icon (click)="isShowPwsClick('p')">visibility_off</mat-icon>
                   </div>
                 </div>
-                <mat-error>請輸入6-20字元且包含數字與英文</mat-error>
+                <mat-error>此處為必填，6-20位字元，不可特殊符號</mat-error>
               </mat-form-field>
             </div>
           </td>
@@ -67,20 +57,21 @@
         <tr>
           <td>
             <div class="divTd">
-              <mat-form-field class="field">
-                <mat-label>確認密碼</mat-label>
-                <div style="display: flex;">
+              <label class="titleLable">確認密碼 :</label>
+              <mat-form-field class="field" appearance="outline">
+                <div style="display: flex;justify-content: space-between;">
                   <div>
-                    <input matInput [type]="isShowChkPws ? 'text':'password'" id="chkPsw" formControlName="chkPsw" placeholder="確認密碼">
+                    <input matInput  [type]="isShowChkPws ? 'text':'password'" id="chkPsw" formControlName="chkPsw"
+                      placeholder="請輸入">
                   </div>
-                  <div class="eyeIcon">
-                    <span><mat-icon *ngIf="isShowChkPws" (click)="isShowPwsClick('ckp')">visibility</mat-icon></span>
+                  <div *ngIf="isShowChkPws">
+                    <mat-icon (click)="isShowPwsClick('ckp')">visibility</mat-icon>
                   </div>
-                  <div class="eyeIcon">
-                    <span><mat-icon *ngIf="!isShowChkPws" (click)="isShowPwsClick('ckp')">visibility_off</mat-icon></span>
+                  <div *ngIf="!isShowChkPws">
+                    <mat-icon (click)="isShowPwsClick('ckp')">visibility_off</mat-icon>
                   </div>
                 </div>
-                <mat-error >與密碼不符</mat-error>
+                <mat-error>與密碼不符</mat-error>
               </mat-form-field>
             </div>
           </td>
@@ -88,14 +79,26 @@
         <tr>
           <td>
             <div class="divTd">
-              <mat-form-field class="field">
-                <mat-label>信箱</mat-label>
-                <input matInput name="email" formControlName="email" placeholder="信箱 xxx@mail.com">
-                <mat-error>請確認格式是否正確</mat-error>
+              <label class="titleLable">姓名 :</label>
+              <mat-form-field class="field" appearance="outline">
+                <input matInput name="userName" formControlName="userName" placeholder="請輸入">
+                <mat-error>此處為必填，2-10位字元，不可為特殊符號</mat-error>
               </mat-form-field>
             </div>
           </td>
         </tr>
+        <tr>
+          <td>
+            <div class="divTd">
+              <label class="titleLable">信箱 :</label>
+              <mat-form-field class="field" appearance="outline">
+                <input matInput name="email" formControlName="email" placeholder="請輸入">
+                <mat-error>請確認信箱格式是否正確</mat-error>
+              </mat-form-field>
+            </div>
+          </td>
+        </tr>
+        <br>
         <tr>
           <td>
             <div style="display: flex;flex-direction: column;align-items: center;">

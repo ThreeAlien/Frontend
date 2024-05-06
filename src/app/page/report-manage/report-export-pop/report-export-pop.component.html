@@ -1,7 +1,7 @@
 <app-loading></app-loading>
 <p-toast position="bottom-right"></p-toast>
 <div class="header">
-  <label class="modal-header_Ttitle_label" >匯出範本:{{subClientName}}</label>
+  <label class="modal-header_Ttitle_label">匯出範本:{{subClientName}}</label>
   <div class="CloseBtn" (click)="onCancel()">
     <ng-container>
       <mat-icon>clear</mat-icon>
@@ -33,15 +33,28 @@
                     </td>
                     <td class="td_2">{{d.value.reportName}}</td>
                     <td class="td_2">
-                      <mat-form-field class="timeInputOut" *ngIf="d.value.sta == true">
-                        <mat-date-range-input [rangePicker]="picker">
-                          <input matStartDate placeholder="起" formControlName="SD">
-                          <input matEndDate placeholder="迄" formControlName="ED">
-                        </mat-date-range-input>
-                        <mat-error>請填寫時間</mat-error>
-                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-date-range-picker #picker></mat-date-range-picker>
-                      </mat-form-field>
+                      <div style="display: flex;align-items: center;justify-content: center;">
+                        <div>
+                          <mat-form-field class="timeInputOut" *ngIf="d.value.sta == true">
+                            <mat-date-range-input [rangePicker]="picker">
+                              <input matStartDate placeholder="起" formControlName="SD">
+                              <input matEndDate placeholder="迄" formControlName="ED">
+                            </mat-date-range-input>
+                            <mat-error>請填寫時間</mat-error>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+                          </mat-form-field>
+                        </div>
+                        <div style="padding-left: 12px;">
+                          <mat-chip-set cdkDropList cdkDropListOrientation="horizontal" *ngIf="d.value.sta == true">
+                            <ng-container *ngFor="let chip of d.value.dateRangePickList">
+                              <mat-chip cdkDrag (click)="dateRangeClick(chip,d)" class="clickChips">
+                                {{chip.name}}
+                              </mat-chip>
+                            </ng-container>
+                          </mat-chip-set>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </ng-container>
