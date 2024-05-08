@@ -163,7 +163,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   /**匯出PDF */
-  async exportPdfNG() {
+  async exportPdf() {
     const doc = new jsPDF("p", "pt", "a4")
     doc.setFont('msjh');
     doc.text('汎古數位媒體行銷股份有限公司', 14, 20)
@@ -178,18 +178,28 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       })
     })
     doc.save('table.pdf');
-
   }
-  title = 'Excel';
+  /**單筆匯出PDF */
+  async exportSinglePdf(table: ExportReportModel) {
+    const doc = new jsPDF("p", "pt", "a4")
+    doc.setFont('msjh');
+    doc.text('汎古數位媒體行銷股份有限公司', 14, 20)
+    autoTable(doc, {
+      html: `#${table.tableId}`,
+      tableWidth: 'auto',
+      useCss: true,
+      styles: {
+        font: "msjh"
+      }
+    })
+
+    doc.save('table.pdf');
+  }
+
   /** 匯出EXCEL報表 */
   exportExcel() {
-
-    let excelTable;
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     try {
-      this.exportDataList.forEach(x => {
-        excelTable = document.getElementById(x.tableId);
-      })
       this.exportDataList.forEach(x => {
         let lastRow = -1;
         var excelTable = document.getElementById(x.tableId);
@@ -252,6 +262,75 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         }
         XLSX.utils.book_append_sheet(wb, ws, x.reportName);
       });
+      XLSX.writeFile(wb, 'ScoreSheet.xlsx');
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  /** 單筆匯出EXCEL報表 */
+  exportSingleExcel(table: ExportReportModel) {
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    try {
+      let lastRow = -1;
+      var excelTable = document.getElementById(table.tableId);
+      let ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
+      //抓最後一比在第幾行
+      for (let i in ws) {
+        if (typeof ws[i] !== 'object') continue;
+        let cell = XLSX.utils.decode_cell(i);
+        if (cell.r > lastRow && ws[i].t !== undefined) {
+          lastRow = cell.r;
+        }
+      }
+      for (var i in ws) {
+        if (typeof ws[i] != 'object') continue;
+        let cell = XLSX.utils.decode_cell(i);
+        //整個table
+        ws[i].s = {
+          //字形
+          font: {
+            name: 'arial',
+            sz: 14
+          },
+          //字體位置
+          alignment: {
+            vertical: 'center',
+            horizontal: 'center',
+            wrapText: true,//換行
+          },
+        }
+        //給每行一個顏色
+        if (cell.r % 2) {
+          // every other row
+          ws[i].s.fill = {
+            // background color
+            patternType: 'solid',
+            fgColor: { rgb: 'EAEEE5' },
+          };
+        }
+        //第二列跟最後一列(標題)
+        if (cell.r == 1 || cell.r == lastRow) {
+          ws[i].s = {
+            font: {
+              bold: true,
+              name: 'arial',
+              sz: 16
+            },
+            //字體位置
+            alignment: {
+              vertical: 'center',
+              horizontal: 'center',
+              wrapText: true,//換行
+            },
+            fill: {
+              patternType: 'solid',
+              fgColor: { rgb: '7ABD87' },
+            }
+          };
+        }
+        ws['!cols']?.push({ wch: 15 });
+      }
+      XLSX.utils.book_append_sheet(wb, ws, table.reportName);
       XLSX.writeFile(wb, 'ScoreSheet.xlsx');
     } catch (e) {
       console.log(e);

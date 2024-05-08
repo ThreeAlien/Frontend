@@ -269,7 +269,7 @@ export class ReportManageComponent implements OnInit {
             if (data.code == "200") {
               this.messageService.add({ severity: 'success', summary: '成功', detail: '報表範本已刪除!' });
             } else {
-              this.messageService.add({ severity: 'warn', summary: '失敗', detail: '刪除報表範本失敗!' });
+              this.messageService.add({ severity: 'error', summary: '失敗', detail: '刪除報表範本失敗!' });
             }
             this.loadingService.loadingOff();
             resolve();

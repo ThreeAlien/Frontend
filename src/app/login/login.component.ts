@@ -1,3 +1,4 @@
+import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -26,7 +27,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     public apiService: ApiService,
-    private msg: MessageService,
+    private msgSvc: MessageService,
     public loadingService: LoadingService,
     public dialog: MatDialog,
   ) { }
@@ -87,7 +88,7 @@ export class LoginComponent implements OnInit {
       return true;
     }
   }
-  /**新增範本按鈕 */
+  /**註冊按鈕 */
   onRegisterClick() {
     const dialogRef = this.dialog.open(RegisterComponent, {
       width: "360px",
@@ -98,9 +99,11 @@ export class LoginComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(async result => {
       console.log(result);
+      if(result.data){
+        this.msgSvc.add({ severity: 'success', summary: '成功', detail: '註冊成功，請重新登入!!' })
+      }
     });
   }
-
   getLoginAuth() {
     this.loadingService.loadingOn();
     let acc = this.account;
@@ -123,13 +126,13 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('name', data.data.userName);
               resolve(true);
             } else {
-              this.msg.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });
+              this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });
               this.loadingService.loadingOff();
               reject(false);
             }
           },
           error: (error: HttpErrorResponse) => {
-            this.msg.add({ severity: 'error', summary: '錯誤', detail: `登入失敗請聯絡工程師` });
+            this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: `登入失敗請聯絡工程師` });
             this.loadingService.loadingOff();
             reject(false)
           },

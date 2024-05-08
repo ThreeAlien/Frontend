@@ -73,13 +73,12 @@
             <form #tableList id="tableList">
               <ng-container *ngFor="let tableList of exportDataList">
                 <div class="table_center90">
-                  <!-- <div style="display: flex;justify-content: space-between;">
+                  <div style="display: flex;justify-content: space-between;">
                     <div style="display: flex;" *ngIf="isIcon == true">
-                      <div class="ExcelIcon"></div>
-                      <div class="PdfIcon"></div>
-                      <div class="deleteIcon"></div>
+                      <div class="ExcelIcon" (click)="exportSingleExcel(tableList)"></div>
+                      <div class="PdfIcon" (click)="exportSinglePdf(tableList)"></div>
                     </div>
-                  </div> -->
+                  </div>
                   <table id="{{tableList.tableId}}" class='table'
                     style="width: 100%;align-items: center;border-collapse: collapse;">
                     <tr class='tr_th_title str_center'>
@@ -101,9 +100,16 @@
                         </ng-container>
                       </tr>
                     </ng-container>
-                    <tr class='tr_th_1 str_center'>
+                    <tr class='tr_th_1 str_center' *ngIf="tableList.reportName !== '關鍵字成效'">
                       <ng-container *ngFor="let footD of tableList.totalList;index as i;">
                         <th class="th_2" [ngClass]="{ th_R : i == tableList.totalList.length-1,th_L : i==0}">
+                          {{footD.colValue}}</th>
+                      </ng-container>
+                    </tr>
+                    <tr class='tr_th_1 str_center' *ngIf="tableList.reportName == '關鍵字成效'">
+                      <th colspan="3" class="th_L th_2">總計</th>
+                      <ng-container *ngFor="let footD of tableList.totalList;index as i;">
+                        <th class="th_2" [ngClass]="{ th_R : i == tableList.totalList.length-1}">
                           {{footD.colValue}}</th>
                       </ng-container>
                     </tr>
@@ -120,14 +126,14 @@
           <div style="height: 100%;">
             <button mat-button [matMenuTriggerFor]="menu" class="downBtn">
               <mat-icon>download</mat-icon>
-              下載
+              全部下載
             </button>
             <mat-menu #menu="matMenu">
               <button mat-menu-item (click)="exportExcel()">
                 <mat-icon>save</mat-icon>
                 EXCEL
               </button>
-              <button mat-menu-item (click)="exportPdfNG()">
+              <button mat-menu-item (click)="exportPdf()">
                 <mat-icon>picture_as_pdf</mat-icon>
                 PDF
               </button>

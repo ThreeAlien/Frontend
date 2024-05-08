@@ -122,7 +122,7 @@ export class BillManageComponent implements OnInit {
         this.loadingService.loadingOff();
       }),
       catchError(async (err) => {
-        this.messageService.add({ severity: 'warn', summary: '失敗', detail: '修改帳單失敗!!' })
+        this.messageService.add({ severity: 'error', summary: '失敗', detail: '修改帳單失敗!!' })
         this.loadingService.loadingOff();
       })
     ).subscribe();
@@ -141,11 +141,11 @@ export class BillManageComponent implements OnInit {
           this.messageService.add({ severity: 'success', summary: '成功', detail: '修改帳單成功!!' });
           this.getBill();
         } else {
-          this.messageService.add({ severity: 'warn', summary: '失敗', detail: `修改帳單失敗!!` });
+          this.messageService.add({ severity: 'error', summary: '失敗', detail: `修改帳單失敗!!` });
         }
       }),
       catchError(async (err) => {
-        this.messageService.add({ severity: 'warn', summary: '失敗', detail: '修改帳單失敗!!' })
+        this.messageService.add({ severity: 'error', summary: '失敗', detail: '修改帳單失敗!!' })
         this.loadingService.loadingOff();
       })
     ).subscribe();

@@ -212,8 +212,7 @@
 .downBtn {
   background-color: #fafafa;
   border: 1px solid #ccc;
-  width: 80px;
-  /* padding: 0.625rem 1.5rem; */
+  width: 120px;
 }
 
 .mat-stepper-vertical {
