@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-ssojump',
-  templateUrl: './ssojump.component.html',
-  styleUrls: ['./ssojump.component.css']
+    selector: 'app-ssojump',
+    templateUrl: './ssojump.component.html',
+    styleUrls: ['./ssojump.component.css'],
+    standalone: true
 })
 export class SSOJumpComponent implements OnInit {
   constructor(private clientSSO: ClientSSOService,

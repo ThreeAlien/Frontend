@@ -1,7 +1,7 @@
 import { LoginInfoService } from './../../service/login-info.service';
 import { data } from 'jquery';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,15 +14,29 @@ import { DialogResult, MsgBoxBtnType, MsgBoxInfo } from '../../share/msg-box/msg
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
 import { GetReportRequest, exportSampleModels, media, GoalAdsMapping, reportGoalAdsModel as reportGoalAdsModel } from './report-manage.models';
-import { MessageService, SortEvent } from 'primeng/api';
+import { MessageService, SortEvent, SharedModule } from 'primeng/api';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { LoadingService } from 'src/app/service/loading.service';
 import { map, tap } from 'rxjs';
+import { TableModule } from 'primeng/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { ToastModule } from 'primeng/toast';
+import { LoadingComponent } from '../../share/loading/loading.component';
 
 @Component({
-  selector: 'app-report-manage',
-  templateUrl: './report-manage.component.html',
-  styleUrls: ['./report-manage.component.css']
+    selector: 'app-report-manage',
+    templateUrl: './report-manage.component.html',
+    styleUrls: ['./report-manage.component.css'],
+    standalone: true,
+    imports: [LoadingComponent, ToastModule, MatCardModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, FormsModule, MatSelectModule, NgFor, MatOptionModule, MatDatepickerModule, MatButtonModule, MatIconModule, TableModule, SharedModule]
 })
 export class ReportManageComponent implements OnInit {
   constructor(private _liveAnnouncer: LiveAnnouncer,private cdr: ChangeDetectorRef,

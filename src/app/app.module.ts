@@ -1,10 +1,8 @@
-import { TopComponent } from './home/top/top.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ReportManageComponent } from './page/report-manage/report-manage.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -19,7 +17,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { AsideComponent } from './home/aside/aside.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
@@ -46,6 +43,9 @@ import {MatStepperModule} from '@angular/material/stepper';
 import { LoadingComponent } from './share/loading/loading.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { RegisterComponent } from './login/register/register.component';
+import { AsideComponent } from './page/home/aside/aside.component';
+import { HomeComponent } from './page/home/home.component';
+import { TopComponent } from './page/home/top/top.component';
 export const MY_DATE_FORMATS = {
   parse: {
     dateInput: "YYYY-MM-DD"//display值出來後轉的值
@@ -58,71 +58,69 @@ export const MY_DATE_FORMATS = {
   }
 };
 @NgModule({
-  imports: [
-    HttpClientModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CommonModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatListModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatMenuModule,
-    MatCardModule,
-    MatDialogModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatChipsModule,
-    CdkDrag,
-    CdkDropList,
-    ButtonModule,
-    MatCheckboxModule,
-    ToastModule,
-    TableModule,
-    MatNativeDateModule,
-    MatInputModule,
-    MomentDateModule,
-    MatDatepickerModule,
-    MatStepperModule,
-    DropdownModule
-  ],
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    ReportManageComponent,
-    AddRepExmplePopComponent,
-    HomeComponent,
-    AsideComponent,
-    TopComponent,
-    MsgBoxComponent,
-    ReportExpotPopComponent,
-    SetColumnPopComponent,
-    SSOJumpComponent,
-    BillManageComponent,
-    LoadingComponent,
-    RegisterComponent,
-  ],
-  bootstrap: [AppComponent],
-  providers: [
-    DatePipe,
-    MessageService,
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' },
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CommonModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatListModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatMenuModule,
+        MatCardModule,
+        MatDialogModule,
+        MatRadioModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatChipsModule,
+        CdkDrag,
+        CdkDropList,
+        ButtonModule,
+        MatCheckboxModule,
+        ToastModule,
+        TableModule,
+        MatNativeDateModule,
+        MatInputModule,
+        MomentDateModule,
+        MatDatepickerModule,
+        MatStepperModule,
+        DropdownModule,
+        LoginComponent,
+        ReportManageComponent,
+        AddRepExmplePopComponent,
+        HomeComponent,
+        AsideComponent,
+        TopComponent,
+        MsgBoxComponent,
+        ReportExpotPopComponent,
+        SetColumnPopComponent,
+        SSOJumpComponent,
+        BillManageComponent,
+        LoadingComponent,
+        RegisterComponent
+    ],
+    declarations: [AppComponent],
+    bootstrap: [AppComponent],
+    providers: [
+        DatePipe,
+        MessageService,
+        { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+        { provide: MAT_DATE_LOCALE, useValue: 'zh-TW' },
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }

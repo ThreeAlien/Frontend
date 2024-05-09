@@ -8,8 +8,8 @@ describe('ClientManageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [BillManageComponent]
-    });
+    imports: [BillManageComponent]
+});
     fixture = TestBed.createComponent(BillManageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

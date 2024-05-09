@@ -1,17 +1,30 @@
 import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
-import { MessageService, SortEvent } from 'primeng/api';
+import { MessageService, SortEvent, SharedModule } from 'primeng/api';
 import { BillDataList, BillDataModel, BillEditRequsetModel, BillRequsetModel } from './bill-manage.models';
 import { ApiService } from 'src/app/service/api.service';
 import { environment } from 'src/environments/environment';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { catchError, map, tap } from 'rxjs';
 import { LoadingService } from 'src/app/service/loading.service';
+import { ToastModule } from 'primeng/toast';
+import { LoadingComponent } from '../../share/loading/loading.component';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
-  selector: 'app-bill-manage',
-  templateUrl: './bill-manage.component.html',
-  styleUrls: ['./bill-manage.component.css']
+    selector: 'app-bill-manage',
+    templateUrl: './bill-manage.component.html',
+    styleUrls: ['./bill-manage.component.css'],
+    standalone: true,
+    imports: [MatCardModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, FormsModule, MatDatepickerModule, MatButtonModule, MatIconModule, TableModule, SharedModule, NgIf, NgFor, LoadingComponent, ToastModule, DatePipe]
 })
 export class BillManageComponent implements OnInit {
   constructor(private apiSvc: ApiService, public loadingService: LoadingService,

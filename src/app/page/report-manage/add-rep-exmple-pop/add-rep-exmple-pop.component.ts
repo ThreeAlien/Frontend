@@ -1,26 +1,57 @@
 import { data } from 'jquery';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiService } from './../../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MccModel, AccModel, columnMapping, columnModel, repConModel, reportGoalAdsModel, GoalAdsMapping, repColModel, repColListModel, addReportRequest as setReportRequest, columnDataReq, exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf, NgFor } from '@angular/common';
 import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { LoadingService } from 'src/app/service/loading.service';
-import { MessageService } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { LoginInfoService } from 'src/app/service/login-info.service';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { DropdownModule } from 'primeng/dropdown';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatIconModule } from '@angular/material/icon';
+import { ToastModule } from 'primeng/toast';
+import { LoadingComponent } from '../../../share/loading/loading.component';
+import { catchError, map } from 'rxjs';
 
 
 @Component({
   selector: 'app-add-rep-exmple-pop',
   templateUrl: './add-rep-exmple-pop.component.html',
   styleUrls: ['./add-rep-exmple-pop.component.css'],
+  standalone: true,
+  imports: [
+    LoadingComponent,
+    ToastModule,
+    NgIf,
+    MatIconModule,
+    ReactiveFormsModule,
+    MatRadioModule,
+    DropdownModule,
+    FormsModule,
+    SharedModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
+    MatOptionModule,
+    MatInputModule,
+    MatChipsModule,
+    CdkDropList,
+    CdkDrag,
+  ],
 })
 /**新增報表範本 */
 export class AddRepExmplePopComponent implements OnInit {
@@ -31,8 +62,8 @@ export class AddRepExmplePopComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
     public apiService: ApiService,
     public datePipe: DatePipe,
-    private loginInfo : LoginInfoService,
-    private msgBoxService: MsgBoxService, public loadingService: LoadingService, private messageService: MessageService) { }
+    private loginInfo: LoginInfoService,
+    private msgBoxService: MsgBoxService, public loadingService: LoadingService, private messageService: MessageService) {this.loadingService.loadingOn(); }
   //#region 資料宣告
   mediaType = "";
   mediaG = "G";
@@ -97,10 +128,9 @@ export class AddRepExmplePopComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.mediaType = "G";
     await this.getClinetName();
-    this.loadingService.loadingOn();
     await this.getChildName();
     await this.getReportContent();
-    await this.getDefaultRepContent();
+    this.getDefaultRepContent();
     const pData = localStorage.getItem('USER_ADSINFO');
     if (pData) {
       this.PermissionsData = JSON.parse(pData);
@@ -198,7 +228,7 @@ export class AddRepExmplePopComponent implements OnInit {
       this.myForm.controls.targetMedia.setValue(anyData);
       const ChildMccItemListTmp = this.ChildMccItemListData;
       this.ChildMccItemList = ChildMccItemListTmp.filter(x => x.clientId == data.clientId);
-      if(this.ChildMccItemList.length ==0){
+      if (this.ChildMccItemList.length == 0) {
         this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無子帳戶活動名稱!' })
       }
     }
@@ -208,7 +238,7 @@ export class AddRepExmplePopComponent implements OnInit {
     //pop 取得最後一個
     //來確保在 client_subname 為 undefined 時不會拋出異常。
     //如果 pop() 結果為 undefined，則預設為空字串
-    const kw: string = data.subName?.split('_').pop() ?? "";
+    const kw: string = data.subName?.split('_')[1];
     var res = this.reportGoalAdsList.filter(x => x.goalId.toLowerCase().includes(kw.toLowerCase()));
     this.myForm.controls.targetMedia.setValue(res[0]);
   }
@@ -406,73 +436,71 @@ export class AddRepExmplePopComponent implements OnInit {
   }
   /**取得預設欄位 API */
   getDefaultRepContent() {
-    return new Promise<void>((resolve) => {
-      const path = environment.apiServiceHost + `api/ReportContentInfo/GetReportDefaultFields`;
-      this.apiService.CallApi(path, 'POST').subscribe({
-        next: (res) => {
-          var data = res as BaseResponse;
-          let repColList: repColListModel[];
-          if (data.data) {
-            this.defaultColumnSta = data.data;
-            this.defaultColumnSta.forEach(x => {
-              repColList = [
-                { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
-                { colName: columnMapping.colAccount, colStatus: x.isColAccount },
-                { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
-                { colName: columnMapping.colCPA, colStatus: x.isColCPA },
-                { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-                { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-                { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-                { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-                { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-                { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-                { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-                { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-                { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-                { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
-                { colName: columnMapping.colClicks, colStatus: x.isColClicks },
-                { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
-                { colName: columnMapping.colCTR, colStatus: x.isColCTR },
-                { colName: columnMapping.colCpc, colStatus: x.isColCPC },
-                { colName: columnMapping.colCost, colStatus: x.isColCost },
-                { colName: columnMapping.colAge, colStatus: x.isColAge },
-                { colName: columnMapping.colCon, colStatus: x.isColCon },
-                { colName: columnMapping.colConAction, colStatus: x.isColConAction },
-                { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
-                { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
-                { colName: columnMapping.colGender, colStatus: x.isColGender },
-                { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
-                { colName: columnMapping.colConRate, colStatus: x.isColConRate },
-                { colName: columnMapping.colConValue, colStatus: x.isColConValue },
-                { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-                // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-                // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
-              ];
-              var tList = repColList.filter(x => x.colStatus == true);
-              var fList = repColList.filter(x => x.colStatus == false);
-              this.columnArray.push({
-                conId: x.contentId,
-                conName: x.contentName,
-                conStatus: false,
-                TrueList: tList,
-                FalseList: fList,
-              });
-            })
-            resolve();
-          } else {
-            var data = res as BaseResponse;
-            this.msgData.title = `回應碼${data.code}`;
-            this.msgData.msg = `訊息${data.msg}`;
-            this.msgBoxService.msgBoxShow(this.msgData);
-            resolve();
-          }
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error.error);
-        },
-      });
-    })
-
+    this.loadingService.loadingOn();
+    const path = environment.apiServiceHost + `api/ReportContentInfo/GetReportDefaultFields`;
+    this.apiService.CallApi(path, 'POST').pipe(
+      map((res: BaseResponse) => {
+        let repColList: repColListModel[];
+        if (res.data) {
+          this.defaultColumnSta = res.data;
+          this.defaultColumnSta.forEach(x => {
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colCon, colStatus: x.isColCon },
+              { colName: columnMapping.colConAction, colStatus: x.isColConAction },
+              { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
+              { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+              { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
+              { colName: columnMapping.colConRate, colStatus: x.isColConRate },
+              { colName: columnMapping.colConValue, colStatus: x.isColConValue },
+              { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+              // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
+              // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
+            ];
+            var tList = repColList.filter(x => x.colStatus == true);
+            var fList = repColList.filter(x => x.colStatus == false);
+            this.columnArray.push({
+              conId: x.contentId,
+              conName: x.contentName,
+              conStatus: false,
+              TrueList: tList,
+              FalseList: fList,
+            });
+          });
+          this.loadingService.loadingOff();
+        }
+        else {
+          this.msgData.title = `回應碼${res.code}`;
+          this.msgData.msg = `訊息${res.msg}`;
+          this.msgBoxService.msgBoxShow(this.msgData);
+          this.loadingService.loadingOff();
+        }
+      }),
+      catchError(async (err) => {
+        this.messageService.add({ severity: 'error', summary: '錯誤', detail: '取得預設欄位未知錯誤!' })
+        this.loadingService.loadingOff();
+      })
+    ).subscribe();
   }
   /**新增或編輯報表範本 API*/
   async setReport(type: string) {

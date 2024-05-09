@@ -81,17 +81,26 @@
                   </div>
                   <table id="{{tableList.tableId}}" class='table'
                     style="width: 100%;align-items: center;border-collapse: collapse;">
+                    <!-- 報表項目 -->
                     <tr class='tr_th_title str_center'>
                       <td [attr.colspan]="tableList.colNameList.length" style="border: 3px #000000 solid;">
                         {{tableList.reportName}}
                       </td>
                     </tr>
-                    <tr class='tr_th_1 str_center'>
-                      <ng-container *ngFor="let thD of tableList.colNameList;index as i;">
-                        <th [width]="thD.width" [ngClass]="{ th_R : i == tableList.colNameList.length-1,th_L : i==0}">
-                          {{thD.colValue}}</th>
+                    <!-- 標題 -->
+                    <tr class='tr_th_1 str_center' cdkDropList cdkDropListOrientation="horizontal"
+                      [cdkDropListData]="tableList.colNameList"(cdkDropListDropped)="dropTable($event,tableList.tableId)">
+                      <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
+                        <th cdkDrag (mousedown)="mouseDown($event)" cdkDragLockAxis="x" class="th_Nor"
+                          [ngClass]="{ th_R : i == tableList.colNameList.length-1,th_L : i==0}">
+                          {{thD.colValue}}
+                          <div *cdkDragPreview style="font-size: 18px;" class="placeholder" [style.width]="pos?.width">
+                              {{thD.colValue}}
+                          </div>
+                        </th>
                       </ng-container>
                     </tr>
+                    <!-- 內容數據 -->
                     <ng-container *ngFor="let trList of tableList.colValueList;index as index;">
                       <tr class="tr_td_2 str_center" [ngClass]="{ trCss2 : index %2 == 0,trCss : index%2 !== 0}">
                         <ng-container *ngFor="let td of trList.tdList;index as i;">

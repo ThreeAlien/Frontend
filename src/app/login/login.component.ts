@@ -1,7 +1,7 @@
 import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterOutlet } from '@angular/router';
 import { ClientSSOService } from '../service/client-sso.service';
 import { environment } from 'src/environments/environment';
 import { MessageService } from 'primeng/api';
@@ -13,12 +13,19 @@ import { LoginInfoService } from '../service/login-info.service';
 import { LoginInfoModel } from './login.models';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterComponent } from './register/register.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { LoadingComponent } from '../share/loading/loading.component';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [MessageService]
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    providers: [MessageService],
+    standalone: true,
+    imports: [ToastModule, LoadingComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterOutlet]
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;

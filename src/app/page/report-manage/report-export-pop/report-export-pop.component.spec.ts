@@ -8,8 +8,8 @@ describe('ReportExpotPopComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportExpotPopComponent]
-    });
+    imports: [ReportExpotPopComponent]
+});
     fixture = TestBed.createComponent(ReportExpotPopComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

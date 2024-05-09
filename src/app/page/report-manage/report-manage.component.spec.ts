@@ -8,8 +8,8 @@ describe('ReportManageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportManageComponent]
-    });
+    imports: [ReportManageComponent]
+});
     fixture = TestBed.createComponent(ReportManageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

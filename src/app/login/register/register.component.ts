@@ -1,6 +1,6 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoadingService } from 'src/app/service/loading.service';
 import { registerRequest } from './register.model';
@@ -10,11 +10,19 @@ import { environment } from 'src/environments/environment';
 import { ApiService } from 'src/app/service/api.service';
 import { catchError, map } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { LoadingComponent } from '../../share/loading/loading.component';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+    standalone: true,
+    imports: [ToastModule, LoadingComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, NgIf, MatIconModule, MatButtonModule]
 })
 export class RegisterComponent implements OnInit {
   constructor(

@@ -1,7 +1,7 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, NgIf, NgClass } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -14,14 +14,26 @@ import { exportSampleModels, getReportDetailRes } from '../report-manage.models'
 import { ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList } from './report-export-pop.model';
 import { LoadingService } from 'src/app/service/loading.service';
 import '../../../../assets/msjh-normal.js';
-import { map } from 'jquery';
 import { MessageService } from 'primeng/api';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { CdkDropList, CdkDrag, CdkDragDrop,CdkDragPreview, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatIconModule } from '@angular/material/icon';
+import { ToastModule } from 'primeng/toast';
+import { LoadingComponent } from '../../../share/loading/loading.component';
 
 
 @Component({
-  selector: 'app-report-export-pop',
-  templateUrl: './report-export-pop.component.html',
-  styleUrls: ['./report-export-pop.component.css']
+    selector: 'app-report-export-pop',
+    templateUrl: './report-export-pop.component.html',
+    styleUrls: ['./report-export-pop.component.css'],
+    standalone: true,
+    imports: [LoadingComponent, ToastModule, MatIconModule, MatStepperModule, ReactiveFormsModule, MatCheckboxModule, NgFor, NgIf, MatFormFieldModule, MatDatepickerModule, MatChipsModule, CdkDropList, CdkDrag,CdkDragPreview, MatButtonModule, FormsModule, NgClass, MatMenuModule]
 })
 //報表匯出
 export class ReportExpotPopComponent implements AfterViewInit, OnInit {
@@ -51,6 +63,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   ctrTotal: string = "";
   cpcTotal: number = 0;
   costTotal: number = 0;
+  pos: any;
+  release: boolean = true;
   /**總比數 */
   tableCount = 0;
   /**報表名稱 */
@@ -159,6 +173,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       if (isExport) {
         this.exportDataList = [];
         await this.getExportReport();
+      }else{
+        this.messageService.add({ severity: 'warn', summary: '提醒', detail: '尚未勾選報表' })
       }
     }
   }
@@ -194,6 +210,39 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     })
 
     doc.save('table.pdf');
+  }
+  mouseDown(event: any, el: any = null) {
+    el = el || event.target;
+    this.pos = {
+      x: el.getBoundingClientRect().left - event.clientX + "px",
+      y: el.getBoundingClientRect().top - event.clientY + "px",
+      width: el.getBoundingClientRect().width + "px"
+    };
+  }
+  dropTable(event: CdkDragDrop<any[]>, tableId: any) {
+    let totalData = this.exportDataList.find(x => x.tableId == tableId);
+    const data = this.exportDataList.find(x => x.tableId == tableId)?.colNameList;
+    const footerData = this.exportDataList.find(x => x.tableId == tableId)?.totalList;
+    if (data && footerData) {
+      if (event.previousContainer === event.container) {
+        //更改 內容
+        totalData?.colValueList.forEach(x => {
+          moveItemInArray(x.tdList, event.previousIndex, event.currentIndex);
+        })
+        //更改 總計列 #TODO如果是關鍵字要判斷不給移，因為她總計是獨立的
+        moveItemInArray(footerData, event.previousIndex, event.currentIndex);
+        //更改 Title列
+        moveItemInArray(data, event.previousIndex, event.currentIndex);
+      } else {
+        // Move items between lists
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
+    }
   }
 
   /** 匯出EXCEL報表 */
@@ -659,7 +708,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
               this.costTotal = this.cpcTotal * this.clickTotal;
               tmpD.totalList.push(
-                { colValue: "總計", colSta: true },
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },

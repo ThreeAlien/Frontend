@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
 import { LoginRoutingGuardService } from './login-routing-guard.service';
-import { LoginComponent } from './login/login.component';
 import { SSOJumpComponent } from './ssojump/ssojump.component';
 import { ReportManageComponent } from './page/report-manage/report-manage.component';
 import { BillManageComponent } from './page/bill-manage/bill-manage.component';
@@ -10,15 +8,15 @@ import { BillManageComponent } from './page/bill-manage/bill-manage.component';
 const routes: Routes = [
   {
     path: "login",
-    component: LoginComponent,
+    loadComponent: () =>
+      import('./login/login.component').then((mod) => mod.LoginComponent),
     data: { title: "登入" }
   },
   {
     path: "home",
-    component: HomeComponent,
-    data: {
-      title: "主頁"
-    },
+    loadComponent: () =>
+      import('./page/home/home.component').then((mod) => mod.HomeComponent),
+    data: {title: "主頁"},
     children: [
       {
         path: "",
@@ -27,7 +25,8 @@ const routes: Routes = [
       },
       {
         path: "reportManage",
-        component: ReportManageComponent,
+        loadComponent: () =>
+          import('./page/report-manage/report-manage.component').then((mod) => mod.ReportManageComponent),
         canActivate: [LoginRoutingGuardService],
         data: {
           title: "範本管理"
@@ -35,7 +34,8 @@ const routes: Routes = [
       },
       {
         path: "clientManage",
-        component: BillManageComponent,
+        loadComponent: () =>
+          import('./page/bill-manage/bill-manage.component').then((mod) => mod.BillManageComponent),
         canActivate: [LoginRoutingGuardService],
         data: {
           title: "客戶管理"

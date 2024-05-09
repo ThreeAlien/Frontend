@@ -2,11 +2,16 @@
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Observable } from "rxjs";
+import { MatButtonModule } from "@angular/material/button";
+import { NgStyle, NgIf } from "@angular/common";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
-  selector: 'app-msg-box',
-  templateUrl: './msg-box.component.html',
-  styleUrls: ['./msg-box.component.css']
+    selector: 'app-msg-box',
+    templateUrl: './msg-box.component.html',
+    styleUrls: ['./msg-box.component.css'],
+    standalone: true,
+    imports: [MatIconModule, NgStyle, NgIf, MatButtonModule]
 })
 export class MsgBoxComponent implements OnInit {
 

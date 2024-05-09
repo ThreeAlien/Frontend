@@ -1,13 +1,21 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { repColListModel } from '../report-manage.models';
+import { MatButtonModule } from '@angular/material/button';
+import { NgFor, NgClass } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-set-column-pop',
-  templateUrl: './set-column-pop.component.html',
-  styleUrls: ['./set-column-pop.component.css']
+    selector: 'app-set-column-pop',
+    templateUrl: './set-column-pop.component.html',
+    styleUrls: ['./set-column-pop.component.css'],
+    standalone: true,
+    imports: [MatIconModule, MatCheckboxModule, ReactiveFormsModule, FormsModule, MatChipsModule, CdkDropList, NgFor, CdkDrag, NgClass, MatButtonModule]
 })
 export class SetColumnPopComponent implements OnInit {
   constructor(
