@@ -25,7 +25,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';
 import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from '../../../share/loading/loading.component';
-import { catchError, map } from 'rxjs';
+import { Observable, catchError, filter, map, switchMap, tap } from 'rxjs';
 
 
 @Component({
@@ -127,10 +127,9 @@ export class AddRepExmplePopComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.mediaType = "G";
-    await this.getReportContent();
-    await this.getDefaultRepContent();
     await this.getClinetName();
     await this.getChildName();
+    await this.getReportContent();
     const pData = localStorage.getItem('USER_ADSINFO');
     if (pData) {
       this.PermissionsData = JSON.parse(pData);
@@ -144,7 +143,9 @@ export class AddRepExmplePopComponent implements OnInit {
       this.editData = this.inPutdata.data;
       if (this.editData) {
         let colId = this.editData.columnID;
-        await this.getReportDetail(colId);
+        this.getDefaultRepContent().pipe(
+          switchMap(() => this.getReportDetail(colId))
+        ).subscribe();
         this.reportId = this.editData.reportID;
         this.formEditTitle = this.editData.reportName;
         this.myForm.controls.repExmName.setValue(this.editData.reportName);
@@ -432,78 +433,62 @@ export class AddRepExmplePopComponent implements OnInit {
     }
   }
   /**取得預設欄位 API */
-  async getDefaultRepContent() {
-    this.loadingService.loadingOn();
+  getDefaultRepContent(): Observable<void> {
+    let repColList: repColListModel[];
     const path = environment.apiServiceHost + `api/ReportContentInfo/GetReportDefaultFields`;
-    return new Promise<void>((resolve, reject) => {
-      this.apiService.CallApi(path, 'POST').pipe(
-        map((res: BaseResponse) => {
-          let repColList: repColListModel[];
-          if (res.data) {
-            console.log(res.data);
-            this.defaultColumnSta = res.data;
-            this.defaultColumnSta.forEach(x => {
-              repColList = [
-                { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
-                { colName: columnMapping.colAccount, colStatus: x.isColAccount },
-                { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
-                { colName: columnMapping.colCPA, colStatus: x.isColCPA },
-                { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-                { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-                { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-                { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-                { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-                { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-                { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-                { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-                { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-                { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
-                { colName: columnMapping.colClicks, colStatus: x.isColClicks },
-                { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
-                { colName: columnMapping.colCTR, colStatus: x.isColCTR },
-                { colName: columnMapping.colCpc, colStatus: x.isColCPC },
-                { colName: columnMapping.colCost, colStatus: x.isColCost },
-                { colName: columnMapping.colAge, colStatus: x.isColAge },
-                { colName: columnMapping.colCon, colStatus: x.isColCon },
-                { colName: columnMapping.colConAction, colStatus: x.isColConAction },
-                { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
-                { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
-                { colName: columnMapping.colGender, colStatus: x.isColGender },
-                { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
-                { colName: columnMapping.colConRate, colStatus: x.isColConRate },
-                { colName: columnMapping.colConValue, colStatus: x.isColConValue },
-                { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-                // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-                // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
-              ];
-              var tList = repColList.filter(x => x.colStatus == true);
-              var fList = repColList.filter(x => x.colStatus == false);
-              this.columnArray.push({
-                conId: x.contentId,
-                conName: x.contentName,
-                conStatus: false,
-                TrueList: tList,
-                FalseList: fList,
-              });
-            });
-            this.loadingService.loadingOff();
-          }
-          else {
-            this.msgData.title = `回應碼${res.code}`;
-            this.msgData.msg = `訊息${res.msg}`;
-            this.msgBoxService.msgBoxShow(this.msgData);
-            this.loadingService.loadingOff();
-            resolve();
-          }
-        }),
-        catchError(async (err) => {
-          this.messageService.add({ severity: 'error', summary: '錯誤', detail: '取得預設欄位未知錯誤!' })
-          this.loadingService.loadingOff();
-          resolve();
+    return this.apiService.CallApi(path, 'POST').pipe(
+      tap((data) => console.log(data)),
+      map(res => res && res.data ? res.data : []),
+      map((data: columnModel[]) => {
+        data.forEach(x => {
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+            { colName: columnMapping.colAge, colStatus: x.isColAge },
+            { colName: columnMapping.colCon, colStatus: x.isColCon },
+            { colName: columnMapping.colConAction, colStatus: x.isColConAction },
+            { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
+            { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
+            { colName: columnMapping.colGender, colStatus: x.isColGender },
+            { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
+            { colName: columnMapping.colConRate, colStatus: x.isColConRate },
+            { colName: columnMapping.colConValue, colStatus: x.isColConValue },
+            { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+            // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
+            // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
+          ];
+          let tList = repColList.filter(x => x.colStatus == true);
+          let fList = repColList.filter(x => x.colStatus == false);
+          this.columnArray.push({
+            conId: x.contentId,
+            conName: x.contentName,
+            conStatus: false,
+            TrueList: tList,
+            FalseList: fList,
+          });
         })
-      ).subscribe();
-      resolve();
-    })
+      }),
+      catchError(async (err) => {
+        this.messageService.add({ severity: 'error', summary: '錯誤', detail: '取得預設欄位未知錯誤!' })
+      })
+    )
   }
   /**新增或編輯報表範本 API*/
   async setReport(type: string) {
@@ -783,92 +768,77 @@ export class AddRepExmplePopComponent implements OnInit {
     }
   }
   /**取得報表明細(報表欄位_編輯用)API */
-  async getReportDetail(id?: string) {
-    try {
-      const request = { columnID: `${id}` };
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReportDetail`;
-      return new Promise<void>((resolve, reject) => {
-        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
-          next: (res) => {
-            var data = res as BaseResponse;
-            let repColList: repColListModel[];
-            if (data.data) {
-              let detailData = data.data as getReportDetailRes[];
-
-              let colarray: repConModel[] = [];
-              this.repContentList.forEach(x => {
-                detailData.forEach(y => {
-                  if (x.contentID == y.contentId) {
-                    x.reportNo = y.reportNo;
-                    x.status = true;
-                    colarray.push(x)
-                  }
-                })
-              })
-              detailData.forEach(x => {
-                repColList = [
-                  { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
-                  { colName: columnMapping.colAccount, colStatus: x.isColAccount },
-                  { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
-                  { colName: columnMapping.colCPA, colStatus: x.isColCPA },
-                  { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-                  { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-                  { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-                  { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-                  { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-                  { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-                  { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-                  { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-                  { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-                  { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
-                  { colName: columnMapping.colClicks, colStatus: x.isColClicks },
-                  { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
-                  { colName: columnMapping.colCTR, colStatus: x.isColCTR },
-                  { colName: columnMapping.colCpc, colStatus: x.isColCPC },
-                  { colName: columnMapping.colCost, colStatus: x.isColCost },
-                  { colName: columnMapping.colAge, colStatus: x.isColAge },
-                  { colName: columnMapping.colCon, colStatus: x.isColCon },
-                  { colName: columnMapping.colConAction, colStatus: x.isColConAction },
-                  { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
-                  { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
-                  { colName: columnMapping.colGender, colStatus: x.isColGender },
-                  { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
-                  { colName: columnMapping.colConRate, colStatus: x.isColConRate },
-                  { colName: columnMapping.colConValue, colStatus: x.isColConValue },
-                  { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-                  // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-                  // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
-                ];
-                var tList = repColList.filter(x => x.colStatus == true);
-                var fList = repColList.filter(x => x.colStatus == false);
-                colarray.forEach(y => {
-                  this.columnArray.forEach(z => {
-                    if (y.contentID == z.conId && x.contentId == y.contentID) {
-                      z.conStatus = true;
-                      z.TrueList = tList;
-                      z.FalseList = fList;
-                    }
-                  })
-                })
-              })
-              this.tmpDBReportColumn = colarray;
-              this.myForm.controls.repContent.setValue(colarray);
+  getReportDetail(id?: string): Observable<void> {
+    const request = { columnID: `${id}` };
+    let rD = JSON.stringify(request);
+    let repColList: repColListModel[];
+    const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReportDetail`;
+    return this.apiService.CallApi(qryDataUrl, 'POST', rD).pipe(
+      map(res => res && res.data ? res.data : []),
+      map((data: getReportDetailRes[]) => {
+        let colarray: repConModel[] = [];
+        this.repContentList.forEach(x => {
+          data.forEach(y => {
+            if (x.contentID == y.contentId) {
+              x.reportNo = y.reportNo;
+              x.status = true;
+              colarray.push(x)
             }
-            this.loadingService.loadingOff();
-            resolve();
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error.error);
-            this.loadingService.loadingOff();
-            reject();
-          }
+          })
+          data.forEach(x => {
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colCon, colStatus: x.isColCon },
+              { colName: columnMapping.colConAction, colStatus: x.isColConAction },
+              { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
+              { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+              { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
+              { colName: columnMapping.colConRate, colStatus: x.isColConRate },
+              { colName: columnMapping.colConValue, colStatus: x.isColConValue },
+              { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+              // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
+              // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
+            ];
+            var tList = repColList.filter(x => x.colStatus == true);
+            var fList = repColList.filter(x => x.colStatus == false);
+            colarray.forEach(y => {
+              this.columnArray.forEach(z => {
+                if (y.contentID == z.conId && x.contentId == y.contentID) {
+                  z.conStatus = true;
+                  z.TrueList = tList;
+                  z.FalseList = fList;
+                }
+              })
+            })
+          });
+          this.tmpDBReportColumn = colarray;
+          this.myForm.controls.repContent.setValue(colarray);
         });
+      }),
+      catchError(async (err) => {
+        this.messageService.add({ severity: 'error', summary: '錯誤', detail: '取得報表明細未知錯誤!' })
       })
-    }
-    catch (e: any) {
-      this.msgBoxService.msgBoxShow(e.toString());
-    }
+    )
   }
   //#endregion
 

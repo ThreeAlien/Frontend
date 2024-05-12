@@ -116,7 +116,6 @@
   letter-spacing: 2px;
   font-size: 18px;
 }
-
 .th_1 {
   border-bottom: 3px #000000 solid;
 }
@@ -126,6 +125,9 @@
 }
 .th_Nor{
   cursor: move;
+}
+.th_Nor:hover{
+  background-color: rgba(234, 238, 229, 0.5);
 }
 .th_R{
   border-right: 3px #000000 solid !important;
