@@ -8,14 +8,14 @@
 </div>
 <div class="Windows">
   <div class="WindwsDiv">
-    <div style="display: flex;justify-content: space-around;">
+    <div style="display: flex;justify-content: space-around;" cdkDropListGroup>
       <div class="PickListArea">
         <div class="headerTtitlelabel">
           已選擇欄位
-          <mat-checkbox [checked]="trueChkBox" [(ngModel)]="trueChkBox"  (change)="trueChkAll($event)">全選</mat-checkbox>
+          <mat-checkbox [checked]="trueChkBox" [(ngModel)]="trueChkBox" (change)="trueChkAll($event)">全選</mat-checkbox>
         </div>
-        <div class="TruePickAreaDiv">
-          <mat-chip-set cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+        <div class="TruePickAreaDiv" id="t" cdkDropList [cdkDropListData]="tList" (cdkDropListDropped)="drop($event)">
+          <mat-chip-set>
             <ng-container *ngFor="let d of tList">
               <mat-chip cdkDrag (click)="isClick(d)" [ngClass]="{clickChips: d.colStatus}">
                 {{d.colName}}
@@ -47,10 +47,11 @@
       <div class="PickListArea">
         <div class="headerTtitlelabel">
           未選擇欄位
-          <mat-checkbox [checked]="falseChkBox" [(ngModel)]="falseChkBox" (change)="falseChkAll($event)">全選</mat-checkbox>
+          <mat-checkbox [checked]="falseChkBox" [(ngModel)]="falseChkBox"
+            (change)="falseChkAll($event)">全選</mat-checkbox>
         </div>
-        <div class="FalsePickAreaDiv">
-          <mat-chip-set cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+        <div class="FalsePickAreaDiv" id="f" cdkDropList [cdkDropListData]="fList" (cdkDropListDropped)="drop($event)">
+          <mat-chip-set>
             <ng-container *ngFor="let d of fList">
               <mat-chip cdkDrag (click)="isClick(d)" [ngClass]="{clickChips: d.colStatus}">
                 {{d.colName}}

@@ -169,50 +169,15 @@ export class AddRepExmplePopComponent implements OnInit {
         })
       }
     } else {
+      this.getDefaultRepContent().subscribe();
       this.dataCount = this.inPutdata.data;
       this.formType = this.inPutdata.type;
     }
     this.loadingService.loadingOff();
   }
+  //#region  按鈕事件
   onChange(data: any) {
-
     this.AccItem = data.value;
-
-
-  }
-  /**如果擁有汎古主帳號 權限全開*/
-  isSetPermission(): boolean {
-    for (let i = 0; i < this.PermissionsData.length; i++) {
-      if (this.PermissionsData[i] == '3255036910') {
-        return false;
-      } else {
-        return true;
-      }
-    }
-    return true;
-  }
-  setPermission() {
-    return new Promise<void>((resolve) => {
-      let tmpPermissionChild: MccModel[] = [];
-      this.PermissionsData.forEach(y => {
-        this.ChildMccItemListData.forEach(x => {
-          if (x.subId == y) {
-            tmpPermissionChild.push(x);
-          }
-        })
-      });
-      let tmpPermissionMain: AccModel[] = [];
-      this.ChildMccItemListData = tmpPermissionChild;
-      this.AccItemList.forEach(x => {
-        this.ChildMccItemListData.forEach(y => {
-          if (x.clientId == y.clientId) {
-            tmpPermissionMain.push(x);
-          }
-        })
-      })
-      this.AccItemList = tmpPermissionMain;
-      resolve();
-    })
   }
   changeFormType(value: string) {
     this.mediaType = value;
@@ -261,6 +226,56 @@ export class AddRepExmplePopComponent implements OnInit {
   /**預設報表欄位change */
   onChangeDefauRepCon(sta: any, data: repConModel) {
     this.columnArray.filter(x => x.conId == data.contentID)[0].conStatus = sta.source._selected;
+  }
+  async onOk(type: string): Promise<void> {
+    this.loadingService.loadingOn();
+    if (type == "edit") {
+      await this.setReport('edit');
+    } else if (type == "add") {
+      await this.setReport('add');
+    }
+    this.loadingService.loadingOff();
+  }
+  onCancel(): void {
+
+    this.dialogRef.close({ data: false, type: this.formType });
+  }
+  //#endregion
+
+  //#region 私有方法
+  /**如果擁有汎古主帳號 權限全開*/
+  isSetPermission(): boolean {
+    for (let i = 0; i < this.PermissionsData.length; i++) {
+      if (this.PermissionsData[i] == '3255036910') {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
+  setPermission() {
+    return new Promise<void>((resolve) => {
+      let tmpPermissionChild: MccModel[] = [];
+      this.PermissionsData.forEach(y => {
+        this.ChildMccItemListData.forEach(x => {
+          if (x.subId == y) {
+            tmpPermissionChild.push(x);
+          }
+        })
+      });
+      let tmpPermissionMain: AccModel[] = [];
+      this.ChildMccItemListData = tmpPermissionChild;
+      this.AccItemList.forEach(x => {
+        this.ChildMccItemListData.forEach(y => {
+          if (x.clientId == y.clientId) {
+            tmpPermissionMain.push(x);
+          }
+        })
+      })
+      this.AccItemList = tmpPermissionMain;
+      resolve();
+    })
   }
   /**設定欄位是否顯示 */
   setColClick(data: repColModel) {
@@ -342,6 +357,353 @@ export class AddRepExmplePopComponent implements OnInit {
     }
 
   }
+  serDefaultRepColumn(data: columnModel[]) {
+    let repColList: repColListModel[];
+    let tList: repColListModel[];
+    let fList: repColListModel[];
+    data.forEach(x => {
+      repColList = []
+      switch (x.contentId) {
+        //每日每周
+        case "repCon00001":
+        case "repCon00002":
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+            { colName: columnMapping.colAge, colStatus: x.isColAge },
+            { colName: columnMapping.colGender, colStatus: x.isColGender },
+            //地區
+            { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+          ];
+          break;
+        //年齡報表
+        case "repCon00005":
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+            { colName: columnMapping.colAge, colStatus: x.isColAge },
+            { colName: columnMapping.colGender, colStatus: x.isColGender },
+          ];
+          break;
+        //性別報表
+        case "repCon00006":
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+            { colName: columnMapping.colAge, colStatus: x.isColAge },
+            { colName: columnMapping.colGender, colStatus: x.isColGender },
+          ];
+          break;
+        //地區報表
+        case "repCon00007":
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+            { colName: columnMapping.colAge, colStatus: x.isColAge },
+            { colName: columnMapping.colGender, colStatus: x.isColGender },
+            { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+          ];
+          break;
+        //關鍵字
+        case "repCon00015":
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+          ];
+          break;
+        default:
+          repColList = [
+            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+            { colName: columnMapping.colCost, colStatus: x.isColCost },
+            { colName: columnMapping.colAge, colStatus: x.isColAge },
+            { colName: columnMapping.colCon, colStatus: x.isColCon },
+            { colName: columnMapping.colConAction, colStatus: x.isColConAction },
+            { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
+            { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
+            { colName: columnMapping.colGender, colStatus: x.isColGender },
+            { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
+            { colName: columnMapping.colConRate, colStatus: x.isColConRate },
+            { colName: columnMapping.colConValue, colStatus: x.isColConValue },
+            { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+          ];
+          break;
+      }
+      tList = repColList.filter(x => x.colStatus == true);
+      fList = repColList.filter(x => x.colStatus == false);
+      this.columnArray.push({
+        conId: x.contentId,
+        conName: x.contentName,
+        conStatus: false,
+        TrueList: tList,
+        FalseList: fList,
+      });
+    });
+  }
+  serReportDetailColumn(data: getReportDetailRes[]) {
+    let repColList: repColListModel[];
+    let tList: repColListModel[];
+    let fList: repColListModel[];
+    let colarray: repConModel[] = [];
+    this.repContentList.forEach(repC => {
+      data.forEach(y => {
+        if (repC.contentID == y.contentId) {
+          repC.reportNo = y.reportNo;
+          repC.status = true;
+          colarray.push(repC)
+        }
+      })
+      data.forEach(x => {
+        repColList = []
+        switch (x.contentId) {
+          //每日每周
+          case "repCon00001" || "repCon00002":
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+              //地區
+              { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+            ];
+            break;
+          //年齡報表
+          case "repCon00005":
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+            ];
+            break;
+          //性別報表
+          case "repCon00006":
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+            ];
+            break;
+          //地區報表
+          case "repCon00007":
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+              { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+            ];
+            break;
+          //關鍵字
+          case "repCon00015":
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+            ];
+            break;
+          default:
+            repColList = [
+              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
+              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
+              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
+              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
+              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
+              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
+              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
+              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
+              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
+              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
+              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
+              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
+              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
+              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
+              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
+              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
+              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
+              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
+              { colName: columnMapping.colCost, colStatus: x.isColCost },
+              { colName: columnMapping.colAge, colStatus: x.isColAge },
+              { colName: columnMapping.colCon, colStatus: x.isColCon },
+              { colName: columnMapping.colConAction, colStatus: x.isColConAction },
+              { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
+              { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
+              { colName: columnMapping.colGender, colStatus: x.isColGender },
+              { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
+              { colName: columnMapping.colConRate, colStatus: x.isColConRate },
+              { colName: columnMapping.colConValue, colStatus: x.isColConValue },
+              { colName: columnMapping.colConstant, colStatus: x.isColConstant },
+            ];
+            return;
+        }
+        tList = repColList.filter(x => x.colStatus == true);
+        fList = repColList.filter(x => x.colStatus == false);
+        colarray.forEach(y => {
+          this.columnArray.forEach(z => {
+            if (y.contentID == z.conId && x.contentId == y.contentID) {
+              z.conStatus = true;
+              z.TrueList = tList;
+              z.FalseList = fList;
+            }
+          })
+        });
+      });
+      this.tmpDBReportColumn = colarray;
+      this.myForm.controls.repContent.setValue(colarray);
+    })
+  }
+  //#endregion
+
   //#region API事件
   /**客戶名稱API */
   async getClinetName() {
@@ -414,8 +776,19 @@ export class AddRepExmplePopComponent implements OnInit {
           if (data.data) {
             data.data.forEach((x: repConModel) => {
               x.status = false;
+              //TODO 先把能用的報表寫死，目前提供六個
+              if(x.contentID == "repCon00001" ||
+              x.contentID == "repCon00002" ||
+              x.contentID == "repCon00005" ||
+              x.contentID == "repCon00006" ||
+              x.contentID == "repCon00007" || x.contentID == "repCon00015"){
+                x.enable = true;
+              }else{
+                x.enable = false;
+              }
               this.repContentList.push(x);
             });
+            console.log(this.repContentList);
           } else {
             var data = res as BaseResponse;
             this.msgData.title = `回應碼${data.code}`;
@@ -437,54 +810,8 @@ export class AddRepExmplePopComponent implements OnInit {
     let repColList: repColListModel[];
     const path = environment.apiServiceHost + `api/ReportContentInfo/GetReportDefaultFields`;
     return this.apiService.CallApi(path, 'POST').pipe(
-      tap((data) => console.log(data)),
       map(res => res && res.data ? res.data : []),
-      map((data: columnModel[]) => {
-        data.forEach(x => {
-          repColList = [
-            { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
-            { colName: columnMapping.colAccount, colStatus: x.isColAccount },
-            { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
-            { colName: columnMapping.colCPA, colStatus: x.isColCPA },
-            { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
-            { colName: columnMapping.colClicks, colStatus: x.isColClicks },
-            { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
-            { colName: columnMapping.colCTR, colStatus: x.isColCTR },
-            { colName: columnMapping.colCpc, colStatus: x.isColCPC },
-            { colName: columnMapping.colCost, colStatus: x.isColCost },
-            { colName: columnMapping.colAge, colStatus: x.isColAge },
-            { colName: columnMapping.colCon, colStatus: x.isColCon },
-            { colName: columnMapping.colConAction, colStatus: x.isColConAction },
-            { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
-            { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
-            { colName: columnMapping.colGender, colStatus: x.isColGender },
-            { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
-            { colName: columnMapping.colConRate, colStatus: x.isColConRate },
-            { colName: columnMapping.colConValue, colStatus: x.isColConValue },
-            { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-            // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-            // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
-          ];
-          let tList = repColList.filter(x => x.colStatus == true);
-          let fList = repColList.filter(x => x.colStatus == false);
-          this.columnArray.push({
-            conId: x.contentId,
-            conName: x.contentName,
-            conStatus: false,
-            TrueList: tList,
-            FalseList: fList,
-          });
-        })
-      }),
+      map((data: columnModel[]) => { this.serDefaultRepColumn(data) }),
       catchError(async (err) => {
         this.messageService.add({ severity: 'error', summary: '錯誤', detail: '取得預設欄位未知錯誤!' })
       })
@@ -775,73 +1102,13 @@ export class AddRepExmplePopComponent implements OnInit {
     const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReportDetail`;
     return this.apiService.CallApi(qryDataUrl, 'POST', rD).pipe(
       map(res => res && res.data ? res.data : []),
-      map((data: getReportDetailRes[]) => {
-        let colarray: repConModel[] = [];
-        this.repContentList.forEach(x => {
-          data.forEach(y => {
-            if (x.contentID == y.contentId) {
-              x.reportNo = y.reportNo;
-              x.status = true;
-              colarray.push(x)
-            }
-          })
-          data.forEach(x => {
-            repColList = [
-              { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
-              { colName: columnMapping.colAccount, colStatus: x.isColAccount },
-              { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
-              { colName: columnMapping.colCPA, colStatus: x.isColCPA },
-              { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
-              { colName: columnMapping.colClicks, colStatus: x.isColClicks },
-              { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
-              { colName: columnMapping.colCTR, colStatus: x.isColCTR },
-              { colName: columnMapping.colCpc, colStatus: x.isColCPC },
-              { colName: columnMapping.colCost, colStatus: x.isColCost },
-              { colName: columnMapping.colAge, colStatus: x.isColAge },
-              { colName: columnMapping.colCon, colStatus: x.isColCon },
-              { colName: columnMapping.colConAction, colStatus: x.isColConAction },
-              { colName: columnMapping.colConGoal, colStatus: x.isColConByDate },
-              { colName: columnMapping.colConByDate, colStatus: x.isColConGoal },
-              { colName: columnMapping.colGender, colStatus: x.isColGender },
-              { colName: columnMapping.colConPerCost, colStatus: x.isColConPerCost },
-              { colName: columnMapping.colConRate, colStatus: x.isColConRate },
-              { colName: columnMapping.colConValue, colStatus: x.isColConValue },
-              { colName: columnMapping.colConstant, colStatus: x.isColConstant },
-              // { colName: columnMapping.colStartDate, colStatus: x.isColStartDate },
-              // { colName: columnMapping.colEndDate, colStatus: x.isColEndDate }
-            ];
-            var tList = repColList.filter(x => x.colStatus == true);
-            var fList = repColList.filter(x => x.colStatus == false);
-            colarray.forEach(y => {
-              this.columnArray.forEach(z => {
-                if (y.contentID == z.conId && x.contentId == y.contentID) {
-                  z.conStatus = true;
-                  z.TrueList = tList;
-                  z.FalseList = fList;
-                }
-              })
-            })
-          });
-          this.tmpDBReportColumn = colarray;
-          this.myForm.controls.repContent.setValue(colarray);
-        });
-      }),
+      map((data: getReportDetailRes[]) => { this.serReportDetailColumn(data) }),
       catchError(async (err) => {
         this.messageService.add({ severity: 'error', summary: '錯誤', detail: '取得報表明細未知錯誤!' })
       })
     )
   }
   //#endregion
-
 
   //#region CSS事件
   //設定狀態按鈕CSS
@@ -856,17 +1123,5 @@ export class AddRepExmplePopComponent implements OnInit {
     return css;
   }
   //#endregion
-  async onOk(type: string): Promise<void> {
-    this.loadingService.loadingOn();
-    if (type == "edit") {
-      await this.setReport('edit');
-    } else if (type == "add") {
-      await this.setReport('add');
-    }
-    this.loadingService.loadingOff();
-  }
-  onCancel(): void {
 
-    this.dialogRef.close({ data: false, type: this.formType });
-  }
 }

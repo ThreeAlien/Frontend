@@ -16,7 +16,7 @@ const routes: Routes = [
     path: "home",
     loadComponent: () =>
       import('./page/home/home.component').then((mod) => mod.HomeComponent),
-    data: {title: "主頁"},
+    data: { title: "主頁" },
     children: [
       {
         path: "",

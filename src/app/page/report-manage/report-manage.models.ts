@@ -80,6 +80,8 @@ export interface repConModel {
   contentName: string;
   /**狀態是否選用 */
   status: boolean;
+  /**是否啟用 */
+  enable:boolean;
 }
 /**欄位名稱 */
 export interface columnModel {

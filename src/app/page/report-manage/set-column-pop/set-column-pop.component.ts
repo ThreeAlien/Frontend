@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, transferArrayItem, CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MsgBoxService } from 'src/app/service/msg-box.service';
@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
     templateUrl: './set-column-pop.component.html',
     styleUrls: ['./set-column-pop.component.css'],
     standalone: true,
-    imports: [MatIconModule, MatCheckboxModule, ReactiveFormsModule, FormsModule, MatChipsModule, CdkDropList, NgFor, CdkDrag, NgClass, MatButtonModule]
+    imports: [MatIconModule, MatCheckboxModule, ReactiveFormsModule, FormsModule, MatChipsModule, CdkDropList, NgFor,CdkDropListGroup, CdkDrag, NgClass, MatButtonModule]
 })
 export class SetColumnPopComponent implements OnInit {
   constructor(
@@ -38,8 +38,18 @@ export class SetColumnPopComponent implements OnInit {
   }
 
   /**欄位拖移 */
-  drop(event: CdkDragDrop<[]>) {
-    //moveItemInArray(this.vegetables, event.previousIndex, event.currentIndex);
+  drop(event: CdkDragDrop<any[]>) {
+    console.log(event);
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
   }
   isClick(data:repColListModel){
     if(data.colStatus){
