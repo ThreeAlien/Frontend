@@ -113,7 +113,6 @@ export class ReportManageComponent implements OnInit {
   }
   /**查詢按鈕 */
   async filterQry() {
-    console.log(this.reportGoalAds)
     let reqData: GetReportRequest = {
       reportName: this.reportName,
       reportGoalAds: this.reportGoalAds,
@@ -142,7 +141,6 @@ export class ReportManageComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: '成功', detail: '新增範本成功!' });
         await this.getRepExm();
       }
-      console.log(result);
     });
   }
   /**編輯範本按鈕 */
@@ -161,7 +159,6 @@ export class ReportManageComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: '成功', detail: '編輯範本成功!' });
         await this.getRepExm();
       }
-      console.log(result);
     });
   }
   /**匯出範本按鈕 */
@@ -206,7 +203,6 @@ export class ReportManageComponent implements OnInit {
     await this.getRepExm();
   }
   changeSort(sortInfo: Sort) {
-    console.log(sortInfo);
     if (sortInfo.direction) {
 
     } else {
@@ -282,12 +278,10 @@ export class ReportManageComponent implements OnInit {
       };
       let rD = JSON.stringify(request);
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/DeleteReport`;
-      console.log(qryDataUrl);
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            console.log(res);
             if (data.code == "200") {
               this.messageService.add({ severity: 'success', summary: '成功', detail: '報表範本已刪除!' });
             } else {

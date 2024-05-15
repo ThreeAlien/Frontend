@@ -150,8 +150,11 @@ export class AddRepExmplePopComponent implements OnInit {
       if (this.editData) {
         let colId = this.editData.columnID;
         this.getDefaultRepContent().pipe(
+          tap(() => this.loadingService.loadingOn()),
           switchMap(() => this.getReportDetail(colId))
-        ).subscribe();
+        ).subscribe({
+          next:()=>{this.loadingService.loadingOff()}
+        });
         this.reportId = this.editData.reportID;
         this.formEditTitle = this.editData.reportName;
         this.myForm.controls.repExmName.setValue(this.editData.reportName);
@@ -175,7 +178,11 @@ export class AddRepExmplePopComponent implements OnInit {
         })
       }
     } else {
-      this.getDefaultRepContent().subscribe();
+      this.getDefaultRepContent().pipe(
+        tap(() => this.loadingService.loadingOn())
+      ).subscribe({
+        next:()=>{this.loadingService.loadingOff()}
+      });
       this.dataCount = this.inPutdata.data;
       this.formType = this.inPutdata.type;
     }
@@ -736,7 +743,6 @@ export class AddRepExmplePopComponent implements OnInit {
               }
               this.repContentList.push(x);
             });
-            console.log(this.repContentList);
           } else {
             var data = res as BaseResponse;
             this.msgData.title = `回應碼${data.code}`;

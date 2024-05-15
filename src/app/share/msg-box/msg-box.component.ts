@@ -27,7 +27,6 @@ export class MsgBoxComponent implements OnInit {
 
     const msgBoxInfo = new MsgBoxInfo();
     const inputInfo = this.inputData;
-    console.log(inputInfo);
     if(inputInfo?.msg) {
 
       msgBoxInfo.msg = this.replaceMsg(inputInfo.msg);

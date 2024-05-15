@@ -38,7 +38,6 @@ export class SetColumnPopComponent implements OnInit {
 
   /**欄位拖移 */
   drop(event: CdkDragDrop<any[]>) {
-    console.log(event);
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {

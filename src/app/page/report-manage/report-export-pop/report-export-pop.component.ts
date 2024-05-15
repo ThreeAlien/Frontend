@@ -16,7 +16,7 @@ import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { CdkDropList, CdkDrag, CdkDragDrop,CdkDragPreview, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDropList, CdkDrag, CdkDragDrop, CdkDragPreview, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,18 +31,18 @@ import { tap } from 'rxjs';
 
 
 @Component({
-    selector: 'app-report-export-pop',
-    templateUrl: './report-export-pop.component.html',
-    styleUrls: ['./report-export-pop.component.css'],
-    standalone: true,
-    imports: [LoadingComponent, ToastModule, MatIconModule, MatStepperModule, ReactiveFormsModule, MatCheckboxModule, NgFor, NgIf, MatFormFieldModule, MatDatepickerModule, MatChipsModule, CdkDropList, CdkDrag,CdkDragPreview, MatButtonModule, FormsModule, NgClass, MatMenuModule]
+  selector: 'app-report-export-pop',
+  templateUrl: './report-export-pop.component.html',
+  styleUrls: ['./report-export-pop.component.css'],
+  standalone: true,
+  imports: [LoadingComponent, ToastModule, MatIconModule, MatStepperModule, ReactiveFormsModule, MatCheckboxModule, NgFor, NgIf, MatFormFieldModule, MatDatepickerModule, MatChipsModule, CdkDropList, CdkDrag, CdkDragPreview, MatButtonModule, FormsModule, NgClass, MatMenuModule]
 })
 //報表匯出
 export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   constructor(
     public dialogRef: MatDialogRef<ReportExpotPopComponent>, @Inject(MAT_DIALOG_DATA) public inPutdata: exportSampleModels,
     public datePipe: DatePipe, private formBuilder: FormBuilder, public apiService: ApiService,
-    public loadingService: LoadingService, private messageService: MessageService,private CommonSvc:CommonService) { }
+    public loadingService: LoadingService, private messageService: MessageService, private CommonSvc: CommonService) { }
 
   firstFormGroup = this.formBuilder.group({
     dataList: this.formBuilder.array([])
@@ -78,11 +78,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     await this.getReportDetail(this.colId);
   }
   async ngOnInit(): Promise<void> {
-    console.log(this.inPutdata);
     this.colId = this.inPutdata.columnID;
     this.subId = this.inPutdata.subID;
     this.subClientName = this.inPutdata.subClientName;
-
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -93,7 +91,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       { name: "上個月", value: "LM" },
       { name: "本月", value: "M" },
     ])
-    console.log(data.controls['dateRangePickList']);
     if (value) {
       data.controls['SD'].setValidators([Validators.required]);
       data.controls['ED'].setValidators([Validators.required]);
@@ -175,7 +172,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       if (isExport) {
         this.exportDataList = [];
         await this.getExportReport();
-      }else{
+      } else {
         this.messageService.add({ severity: 'warn', summary: '提醒', detail: '尚未勾選報表' })
       }
     }
@@ -280,6 +277,13 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               wrapText: true,//換行
             },
           }
+          //保留百分比
+          if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v <= 1) {
+            ws[i].z = '0.00%'
+          }
+          if (typeof ws[i].v === 'number' && !ws[i].z) {
+            ws[i].z = '#,##0'
+          }
           //給每行一個顏色
           if (cell.r % 2) {
             // every other row
@@ -350,6 +354,13 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             wrapText: true,//換行
           },
         }
+        //保留百分比
+        if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v <= 1) {
+          ws[i].z = '0.00%'
+        }
+        if (typeof ws[i].v === 'number' && !ws[i].z) {
+          ws[i].z = '#,##0'
+        }
         //給每行一個顏色
         if (cell.r % 2) {
           // every other row
@@ -391,15 +402,17 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.dialogRef.close({ data: false });
   }
   //數值轉換台幣
-  twFormat(coin: number): string {
-    coin = coin / 1000000;
+  twFormat(coin: number,type:string): string {
+    coin = Math.round((coin / 1000000) * 100) / 100;
     const twFormat = new Intl.NumberFormat('zh-TW', {
       style: 'currency',
       currency: 'TWD'
     });
     let res = twFormat.format(+coin.toFixed(2));
-    // //去除00
-    res = res.replace(/\.\d{2}$/, '');
+    //費用去除00
+    if(type == "cost"){
+      res = res.replace(/\.\d{2}$/, '');
+    }
     return res;
   }
   //點閱率計算
@@ -417,7 +430,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     return new Promise<void>((resolve, reject) => {
       for (let i = 0; i < this.exportDataList.length; i++) {
         this.exportDataList[i].tableId = `table_${i}`;
-        console.log(this.exportDataList[i]);
       }
       resolve();
     });
@@ -493,7 +505,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             let data = res as BaseResponse;
             if (data.data.length > 0) {
               data.data as exportData;
-              console.log(data.data);
               let tmpD: ExportReportModel = {
                 reportName: "性別成效",
                 tableId: "",
@@ -532,8 +543,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc), colSta: true },
-                  { colValue: this.twFormat(y.cost), colSta: true },
+                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -544,8 +555,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal), colSta: true },
-                { colValue: this.twFormat(this.costTotal), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -587,7 +598,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             let data = res as BaseResponse;
             if (data.data.length > 0) {
               data.data as exportData;
-              console.log(data.data);
               let tmpD: ExportReportModel = {
                 reportName: "年齡成效",
                 tableId: "",
@@ -615,8 +625,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc), colSta: true },
-                  { colValue: this.twFormat(y.cost), colSta: true },
+                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -627,8 +637,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal), colSta: true },
-                { colValue: this.twFormat(this.costTotal), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -670,7 +680,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             let data = res as BaseResponse;
             if (data.data.length > 0) {
               data.data as exportData;
-              console.log(data.data);
               let tmpD: ExportReportModel = {
                 reportName: "關鍵字成效",
                 tableId: "",
@@ -702,8 +711,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc), colSta: true },
-                  { colValue: this.twFormat(y.cost), colSta: true },
+                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -713,8 +722,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal), colSta: true },
-                { colValue: this.twFormat(this.costTotal), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -756,7 +765,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             let data = res as BaseResponse;
             if (data.data.length > 0) {
               data.data as exportData;
-              console.log(data.data);
               let tmpD: ExportReportModel = {
                 reportName: "地區成效",
                 tableId: "",
@@ -784,8 +792,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc), colSta: true },
-                  { colValue: this.twFormat(y.cost), colSta: true },
+                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -796,15 +804,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal), colSta: true },
-                { colValue: this.twFormat(this.costTotal), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
             } else {
               this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無地區成效報表資訊!' })
             }
-            console.log(this.exportDataList);
             this.loadingService.loadingOff();
             resolve();
           },
@@ -857,7 +864,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             let data = res as BaseResponse;
             if (data.data.length > 0) {
               data.data as exportData;
-              console.log(data.data);
               let tmpD: ExportReportModel = {
                 reportName: type == "Day" ? "每日報表" : "每周報表",
                 tableId: "",
@@ -885,8 +891,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc), colSta: true },
-                  { colValue: this.twFormat(y.cost), colSta: true },
+                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -897,8 +903,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal), colSta: true },
-                { colValue: this.twFormat(this.costTotal), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -928,16 +934,13 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       const request = { columnID: `${id}` };
       let rD = JSON.stringify(request);
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReportDetail`;
-      console.log(qryDataUrl);
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            console.log(data.data);
             let repColList: getReportDetailRes[];
-            if (data.data) {
-              repColList = data.data;
-              console.log(repColList);
+            repColList = data.data;
+            if (repColList.length != 0) {
               this.dataList.setValue([]);
               repColList.forEach(x => {
                 if (x.contentId == "repCon00015") {
@@ -953,6 +956,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   dateRangePickList: []
                 }));
               })
+            }else{
+              this.messageService.add({ severity: 'warn', summary: '提醒', detail: '請到編輯報表選擇報表內容!' })
             }
             resolve();
           },
