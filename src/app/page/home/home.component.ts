@@ -5,7 +5,7 @@ import { TopComponent } from './top/top.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AsideComponent } from './aside/aside.component';
-import { LoginInfoService } from 'src/app/service/login-info.service';
+import { CommonService } from 'src/app/share/service/common.service';
 
 
 @Component({
@@ -17,9 +17,10 @@ import { LoginInfoService } from 'src/app/service/login-info.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private CommonSvc:CommonService) { }
 
   ngOnInit(): void {  
+    await this.CommonSvc.getClinetName();
   }
 
   toggleSideNav(sideNav: MatSidenav) {
