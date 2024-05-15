@@ -1,4 +1,3 @@
-import { data } from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
@@ -10,7 +9,6 @@ import { BaseResponse } from '../share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoadingService } from '../service/loading.service';
 import { LoginInfoService } from '../service/login-info.service';
-import { LoginInfoModel } from './login.models';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterComponent } from './register/register.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +34,7 @@ export class LoginComponent implements OnInit {
     public apiService: ApiService,
     private msgSvc: MessageService,
     public loadingService: LoadingService,
+    private LoginInfoSvc :LoginInfoService,
     public dialog: MatDialog,
   ) { }
   account: string = "";
@@ -127,8 +126,9 @@ export class LoginComponent implements OnInit {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            if (data.code == "200") {
-              console.log(data.data);
+            if (data.code == "200") {      
+              this.LoginInfoSvc.userProfileSub.next(data.data);
+              //#TODO 要把localStorage 砍掉
               localStorage.setItem('id', data.data.userId);
               localStorage.setItem('name', data.data.userName);
               resolve(true);

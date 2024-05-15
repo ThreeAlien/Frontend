@@ -16,16 +16,15 @@ export class TopComponent implements OnInit {
 
   constructor(private clientSSO: ClientSSOService,
     private router: Router,
-    private loginInfo: LoginInfoService) { }
+    private loginInfoSvc : LoginInfoService) { }
 
   title = environment.production ? '' : '測試區';
   userName!: string;
 
-  ngOnInit(): void {
-    const name = this.loginInfo.userInfo.userName;
-    if (name) {
-      this.userName = name
-    }
+  ngOnInit(): void {    
+    this.loginInfoSvc.userProfile().pipe(
+      tap(x=> this.userName = x.name )
+    ).subscribe();    
 
   }
   onLogout() {

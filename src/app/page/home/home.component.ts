@@ -17,20 +17,9 @@ import { LoginInfoService } from 'src/app/service/login-info.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private loginInfoService : LoginInfoService) { }
+  constructor() { }
 
-  ngOnInit(): void {
-    const id = localStorage.getItem('id');
-    const name = localStorage.getItem('name');
-    if(id){
-      this.loginInfoService.userInfo.userId = id;
-    }
-    if(name){
-      this.loginInfoService.userInfo.userName = name
-    }
-
-
-
+  ngOnInit(): void {  
   }
 
   toggleSideNav(sideNav: MatSidenav) {

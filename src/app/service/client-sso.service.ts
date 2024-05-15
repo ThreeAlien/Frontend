@@ -58,8 +58,6 @@ export class ClientSSOService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ADSINFO);
     localStorage.removeItem(EXPIRATION_KEY);
-    localStorage.removeItem(NAME);
-    localStorage.removeItem(ID);
   }
 
   /**檢查是否有登入過 */

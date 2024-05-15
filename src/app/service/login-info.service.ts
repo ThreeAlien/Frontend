@@ -8,6 +8,9 @@ import { LoginInfoModel } from '../login/login.models';
 export class LoginInfoService {
 
   constructor() { }
+  userProfileSub: BehaviorSubject<LoginInfoModel> = new BehaviorSubject<LoginInfoModel>(null);
+  userProfile$ : Observable<LoginInfoModel> = this.userProfileSub.asObservable();
+
   private _userInfo: LoginInfoModel = new LoginInfoModel;
 
 
@@ -17,5 +20,12 @@ export class LoginInfoService {
 
   set userInfo(userInfo: LoginInfoModel) {
     this._userInfo = userInfo;
+  }
+  /**
+   * 訂閱(使用資料)
+   * @returns
+   */
+  userProfile(): Observable<LoginInfoModel> {
+    return this.userProfile$.pipe(skipWhile((data) => !data));
   }
 }
