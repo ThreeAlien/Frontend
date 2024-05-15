@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ClientSSOService } from './service/client-sso.service';
+import { ClientSSOService } from './share/service/client-sso.service';
+
 
 @Injectable({
   providedIn: 'root'

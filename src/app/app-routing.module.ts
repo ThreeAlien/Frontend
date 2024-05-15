@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginRoutingGuardService } from './login-routing-guard.service';
 import { SSOJumpComponent } from './ssojump/ssojump.component';
-import { ReportManageComponent } from './page/report-manage/report-manage.component';
-import { BillManageComponent } from './page/bill-manage/bill-manage.component';
 
 const routes: Routes = [
   {

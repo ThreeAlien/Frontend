@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AsideComponent } from './aside/aside.component';
 import { CommonService } from 'src/app/share/service/common.service';
+import { LoginInfoService } from 'src/app/share/service/login-info.service';
+import { tap } from 'rxjs';
 
 
 @Component({
@@ -17,10 +19,18 @@ import { CommonService } from 'src/app/share/service/common.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private CommonSvc:CommonService) { }
+  constructor(private CommonSvc:CommonService,private loginInfoSvc : LoginInfoService) { }
 
-  ngOnInit(): void {  
-    await this.CommonSvc.getClinetName();
+  async ngOnInit(): Promise<void> {
+    // await this.CommonSvc.getClinetName();
+    const id = localStorage.getItem('id');
+    const name = localStorage.getItem('name');
+    if(id){
+      this.loginInfoSvc.userInfo.id = id;
+    }
+    if(name){
+      this.loginInfoSvc.userInfo.name = name
+    }
   }
 
   toggleSideNav(sideNav: MatSidenav) {

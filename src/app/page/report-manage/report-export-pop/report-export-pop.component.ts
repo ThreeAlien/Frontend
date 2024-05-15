@@ -1,3 +1,4 @@
+import { CommonService } from 'src/app/share/service/common.service';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DatePipe, NgFor, NgIf, NgClass } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
@@ -7,12 +8,10 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from "xlsx-js-style";
 import { BaseResponse } from 'src/app/share/Models/share.model';
-import { ApiService } from 'src/app/service/api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
 import { ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList } from './report-export-pop.model';
-import { LoadingService } from 'src/app/service/loading.service';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -26,6 +25,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatIconModule } from '@angular/material/icon';
 import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from '../../../share/loading/loading.component';
+import { ApiService } from 'src/app/share/service/api.service';
+import { LoadingService } from 'src/app/share/service/loading.service';
+import { tap } from 'rxjs';
 
 
 @Component({
@@ -40,7 +42,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   constructor(
     public dialogRef: MatDialogRef<ReportExpotPopComponent>, @Inject(MAT_DIALOG_DATA) public inPutdata: exportSampleModels,
     public datePipe: DatePipe, private formBuilder: FormBuilder, public apiService: ApiService,
-    public loadingService: LoadingService, private messageService: MessageService) { }
+    public loadingService: LoadingService, private messageService: MessageService,private CommonSvc:CommonService) { }
 
   firstFormGroup = this.formBuilder.group({
     dataList: this.formBuilder.array([])

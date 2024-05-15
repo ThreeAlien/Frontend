@@ -1,7 +1,6 @@
 
 import { Component, OnInit, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Observable } from "rxjs";
 import { MatButtonModule } from "@angular/material/button";
 import { NgStyle, NgIf } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";

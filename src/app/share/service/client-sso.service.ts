@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BaseResponse } from '../share/Models/share.model';
+import { BaseResponse } from '../Models/share.model';
 
 /**登入存一個TOKEN */
 const TOKEN_KEY = '';
@@ -58,6 +58,8 @@ export class ClientSSOService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ADSINFO);
     localStorage.removeItem(EXPIRATION_KEY);
+    localStorage.removeItem(NAME);
+    localStorage.removeItem(ID);
   }
 
   /**檢查是否有登入過 */

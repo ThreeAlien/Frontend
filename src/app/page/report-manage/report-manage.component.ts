@@ -1,23 +1,18 @@
-import { LoginInfoService } from './../../service/login-info.service';
-import { data } from 'jquery';
+import { CommonService } from 'src/app/share/service/common.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { DatePipe, NgFor } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { environment } from 'src/environments/environment';
-import { ApiService } from '../../service/api.service';
-import { MsgBoxService } from '../../service/msg-box.service';
 import { DialogResult, MsgBoxBtnType, MsgBoxInfo } from '../../share/msg-box/msg-box.component';
 import { AddRepExmplePopComponent } from './add-rep-exmple-pop/add-rep-exmple-pop.component';
 import { ReportExpotPopComponent } from './report-export-pop/report-export-pop.component';
-import { GetReportRequest, exportSampleModels, media, GoalAdsMapping, reportGoalAdsModel as reportGoalAdsModel } from './report-manage.models';
+import { GetReportRequest, exportSampleModels, GoalAdsMapping, reportGoalAdsModel as reportGoalAdsModel } from './report-manage.models';
 import { MessageService, SortEvent, SharedModule } from 'primeng/api';
-import { BaseResponse } from 'src/app/share/Models/share.model';
-import { LoadingService } from 'src/app/service/loading.service';
-import { map, tap } from 'rxjs';
+import { BaseResponse, LoginInfoModel } from 'src/app/share/Models/share.model';
 import { TableModule } from 'primeng/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,23 +25,28 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from '../../share/loading/loading.component';
+import { ApiService } from 'src/app/share/service/api.service';
+import { LoadingService } from 'src/app/share/service/loading.service';
+import { MsgBoxService } from 'src/app/share/service/msg-box.service';
+import { LoginInfoService } from 'src/app/share/service/login-info.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-report-manage',
-    templateUrl: './report-manage.component.html',
-    styleUrls: ['./report-manage.component.css'],
-    standalone: true,
-    imports: [LoadingComponent, ToastModule, MatCardModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, FormsModule, MatSelectModule, NgFor, MatOptionModule, MatDatepickerModule, MatButtonModule, MatIconModule, TableModule, SharedModule]
+  selector: 'app-report-manage',
+  templateUrl: './report-manage.component.html',
+  styleUrls: ['./report-manage.component.css'],
+  standalone: true,
+  imports: [LoadingComponent, ToastModule, MatCardModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, FormsModule, MatSelectModule, NgFor, MatOptionModule, MatDatepickerModule, MatButtonModule, MatIconModule, TableModule, SharedModule]
 })
 export class ReportManageComponent implements OnInit {
-  constructor(private _liveAnnouncer: LiveAnnouncer,private cdr: ChangeDetectorRef,
+  constructor(private _liveAnnouncer: LiveAnnouncer, private cdr: ChangeDetectorRef,
     public dialog: MatDialog,
     public datePipe: DatePipe,
     public apiService: ApiService,
     private msgBoxService: MsgBoxService,
     public loadingService: LoadingService,
     private messageService: MessageService,
-  private loginInfoService: LoginInfoService) { };
+    private CommonSvc: CommonService) { };
   displayedColumns: string[] = ['client_subname', 'report_name', 'report_goalads', 'report_media', 'edit_date', 'func'];
   Data: exportSampleModels[] = [];
   /**報表範本名稱 */
@@ -79,7 +79,15 @@ export class ReportManageComponent implements OnInit {
     { goalId: "pmas", goalName: GoalAdsMapping.glgPmas },
     { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
+  userProfile: LoginInfoModel = new LoginInfoModel;
+
   async ngOnInit() {
+    (await this.CommonSvc.getClinetName()).pipe(
+      tap(() => this.loadingService.loadingOn()),
+      switchMap(() => this.CommonSvc.getChildName())
+    ).subscribe({
+      next: () => { this.loadingService.loadingOff(); }
+    });
     await this.getRepExm();
     this.cdr.detectChanges(); // 手動觸發變更偵測
   }
@@ -167,7 +175,7 @@ export class ReportManageComponent implements OnInit {
       disableClose: true
     })
     dialogRef.afterClosed().subscribe(async result => {
-      console.log(result);
+      return false;
     });
   }
   /**刪除按鈕 */
@@ -219,7 +227,7 @@ export class ReportManageComponent implements OnInit {
         reportMedia: req ? req.reportMedia : '',
         startDate: sD ? sD : '',
         endDate: eD ? eD : '',
-        userId: this.loginInfoService.userInfo.userId
+        userId: this.userProfile.id
       }
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReport`;
@@ -239,8 +247,8 @@ export class ReportManageComponent implements OnInit {
                 })
                 this.Data.push(x);
               });
-              let now  = new Date();
-              this.dataCount = this.Data.filter(x=>x.createDate == this.datePipe.transform(now,"yyyy/MM/dd")).length;
+              let now = new Date();
+              this.dataCount = this.Data.filter(x => x.createDate == this.datePipe.transform(now, "yyyy/MM/dd")).length;
             } else {
               var data = res as BaseResponse;
               this.msgData.title = `回應碼${data.code}`;

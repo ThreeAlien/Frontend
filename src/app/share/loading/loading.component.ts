@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { LoadingService } from 'src/app/service/loading.service';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { LoadingService } from '../service/loading.service';
 
 @Component({
     selector: 'app-loading',

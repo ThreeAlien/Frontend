@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LoginInfoModel } from '../login/login.models';
+import { BehaviorSubject, Observable, skipWhile } from 'rxjs';
+import { LoginInfoModel } from '../Models/share.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +10,9 @@ import { LoginInfoModel } from '../login/login.models';
 export class LoginInfoService {
 
   constructor() { }
-  userProfileSub: BehaviorSubject<LoginInfoModel> = new BehaviorSubject<LoginInfoModel>(null);
-  userProfile$ : Observable<LoginInfoModel> = this.userProfileSub.asObservable();
+  // newData!:LoginInfoModel; 目前跳頁的方式抓不到資料
+  // userProfileSub: BehaviorSubject<LoginInfoModel> = new BehaviorSubject<LoginInfoModel>(this.newData);
+  // userProfile$ : Observable<LoginInfoModel> = this.userProfileSub.asObservable();
 
   private _userInfo: LoginInfoModel = new LoginInfoModel;
 
@@ -25,7 +28,7 @@ export class LoginInfoService {
    * 訂閱(使用資料)
    * @returns
    */
-  userProfile(): Observable<LoginInfoModel> {
-    return this.userProfile$.pipe(skipWhile((data) => !data));
-  }
+  // userProfile(): Observable<LoginInfoModel> {
+  //   return this.userProfile$.pipe(skipWhile((data) => !data));
+  // }
 }

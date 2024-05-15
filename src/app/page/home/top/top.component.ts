@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientSSOService } from 'src/app/service/client-sso.service';
-import { LoginInfoService } from 'src/app/service/login-info.service';
 import { environment } from 'src/environments/environment';
 import { MatIconModule } from '@angular/material/icon';
+import { tap } from 'rxjs';
+import { ClientSSOService } from 'src/app/share/service/client-sso.service';
+import { LoginInfoService } from 'src/app/share/service/login-info.service';
 
 @Component({
     selector: 'app-top',
@@ -16,15 +17,16 @@ export class TopComponent implements OnInit {
 
   constructor(private clientSSO: ClientSSOService,
     private router: Router,
-    private loginInfoSvc : LoginInfoService) { }
+    private loginInfoSvc : LoginInfoService,) { }
 
   title = environment.production ? '' : '測試區';
   userName!: string;
 
-  ngOnInit(): void {    
-    this.loginInfoSvc.userProfile().pipe(
-      tap(x=> this.userName = x.name )
-    ).subscribe();    
+  ngOnInit(): void {
+    const name = this.loginInfoSvc.userInfo.name;
+    if (name) {
+      this.userName = name
+    }
 
   }
   onLogout() {

@@ -1,20 +1,16 @@
 import { data } from 'jquery';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { ApiService } from './../../../service/api.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MccModel, AccModel, columnMapping, columnModel, repConModel, reportGoalAdsModel, GoalAdsMapping, repColModel, repColListModel, addReportRequest as setReportRequest, columnDataReq, exportSampleModels, getReportDetailRes } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
-import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
 import { SetColumnPopComponent } from '../set-column-pop/set-column-pop.component';
-import { BaseResponse } from 'src/app/share/Models/share.model';
-import { LoadingService } from 'src/app/service/loading.service';
+import { BaseResponse, LoginInfoModel } from 'src/app/share/Models/share.model';
 import { MessageService, SharedModule } from 'primeng/api';
-import { LoginInfoService } from 'src/app/service/login-info.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
@@ -26,6 +22,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from '../../../share/loading/loading.component';
 import { Observable, catchError, filter, map, switchMap, tap } from 'rxjs';
+import { ApiService } from 'src/app/share/service/api.service';
+import { LoadingService } from 'src/app/share/service/loading.service';
+import { LoginInfoService } from 'src/app/share/service/login-info.service';
+import { MsgBoxService } from 'src/app/share/service/msg-box.service';
+import { CommonService } from 'src/app/share/service/common.service';
 
 
 @Component({
@@ -62,7 +63,7 @@ export class AddRepExmplePopComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
     public apiService: ApiService,
     public datePipe: DatePipe,
-    private loginInfo: LoginInfoService,
+    private CommonSvc: CommonService,
     private msgBoxService: MsgBoxService, public loadingService: LoadingService, private messageService: MessageService) { this.loadingService.loadingOn(); }
   //#region 資料宣告
   mediaType = "";
@@ -123,12 +124,17 @@ export class AddRepExmplePopComponent implements OnInit {
   });
   dataCount: string = "";
   selectedCarObj = {};
+  userProfile: LoginInfoModel = new LoginInfoModel;
   //#endregion
 
   async ngOnInit(): Promise<void> {
     this.mediaType = "G";
-    await this.getClinetName();
-    await this.getChildName();
+    this.CommonSvc.AccItemList().pipe(
+      tap(x => this.AccItemList = x),
+      switchMap(() => this.CommonSvc.ChildMccItemList().pipe(
+        tap(x => this.ChildMccItemListData = x)
+      ))
+    ).subscribe();
     await this.getReportContent();
     const pData = localStorage.getItem('USER_ADSINFO');
     if (pData) {
@@ -318,7 +324,7 @@ export class AddRepExmplePopComponent implements OnInit {
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
       const tMedia = this.myForm.controls.targetMedia.value?.goalId;
       const media = this.mediaType == "G" ? "google" : "META";
-      const id = this.loginInfo.userInfo.userId;
+      const id = this.userProfile.id;
       const date = this.SDtm;
       let setData: setReportRequest = {
         reportId: '',
@@ -705,64 +711,6 @@ export class AddRepExmplePopComponent implements OnInit {
   //#endregion
 
   //#region API事件
-  /**客戶名稱API */
-  async getClinetName() {
-    try {
-      const request = { clientId: "" };
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/CustomerInfo/GetCustomer`;
-      return new Promise<void>((resolve) => {
-        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
-          next: (res) => {
-            var data = res as BaseResponse;
-            if (data.data) {
-              data.data.forEach((x: AccModel) => {
-                this.AccItemList.push(x);
-              });
-            }
-            resolve();
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error.error);
-          }
-        });
-      })
-    }
-    catch (e: any) {
-      this.msgBoxService.msgBoxShow(e.toString());
-    }
-  }
-  /**子帳戶活動名稱 API*/
-  async getChildName() {
-    try {
-      this.msgData = new MsgBoxInfo;
-      const qryDataUrl = environment.apiServiceHost + `api/SubClient/GetSubClient`;
-      return new Promise<void>((resolve) => {
-        this.apiService.CallApi(qryDataUrl, 'POST', {}).subscribe({
-          next: (res) => {
-            var data = res as BaseResponse;
-            if (data.data !== null) {
-              data.data.forEach((x: MccModel) => {
-                this.ChildMccItemListData.push(x);
-              });
-            } else {
-              var data = res as BaseResponse;
-              this.msgData.title = `回應碼${data.code}`;
-              this.msgData.msg = `訊息${data.msg}`;
-              this.msgBoxService.msgBoxShow(this.msgData);
-            }
-            resolve();
-          },
-          error: (error: HttpErrorResponse) => {
-            console.log(error.error);
-          },
-        });
-      });
-    }
-    catch (e: any) {
-      this.msgBoxService.msgBoxShow(e.toString());
-    }
-  }
   /**報表內容下拉選單api */
   async getReportContent() {
     try {
@@ -777,13 +725,13 @@ export class AddRepExmplePopComponent implements OnInit {
             data.data.forEach((x: repConModel) => {
               x.status = false;
               //TODO 先把能用的報表寫死，目前提供六個
-              if(x.contentID == "repCon00001" ||
-              x.contentID == "repCon00002" ||
-              x.contentID == "repCon00005" ||
-              x.contentID == "repCon00006" ||
-              x.contentID == "repCon00007" || x.contentID == "repCon00015"){
+              if (x.contentID == "repCon00001" ||
+                x.contentID == "repCon00002" ||
+                x.contentID == "repCon00005" ||
+                x.contentID == "repCon00006" ||
+                x.contentID == "repCon00007" || x.contentID == "repCon00015") {
                 x.enable = true;
-              }else{
+              } else {
                 x.enable = false;
               }
               this.repContentList.push(x);

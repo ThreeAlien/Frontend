@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterOutlet } from '@angular/router';
-import { ClientSSOService } from '../service/client-sso.service';
 import { environment } from 'src/environments/environment';
 import { MessageService } from 'primeng/api';
-import { ApiService } from '../service/api.service';
 import { BaseResponse } from '../share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LoadingService } from '../service/loading.service';
-import { LoginInfoService } from '../service/login-info.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterComponent } from './register/register.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +12,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoadingComponent } from '../share/loading/loading.component';
 import { ToastModule } from 'primeng/toast';
+import { ApiService } from '../share/service/api.service';
+import { ClientSSOService } from '../share/service/client-sso.service';
+import { LoadingService } from '../share/service/loading.service';
+import { LoginInfoService } from '../share/service/login-info.service';
+import { tap } from 'rxjs';
 
 @Component({
     selector: 'app-login',
@@ -126,9 +127,7 @@ export class LoginComponent implements OnInit {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
             var data = res as BaseResponse;
-            if (data.code == "200") {      
-              this.LoginInfoSvc.userProfileSub.next(data.data);
-              //#TODO 要把localStorage 砍掉
+            if (data.code == "200") {
               localStorage.setItem('id', data.data.userId);
               localStorage.setItem('name', data.data.userName);
               resolve(true);

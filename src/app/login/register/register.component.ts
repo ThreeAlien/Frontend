@@ -2,12 +2,10 @@ import { DatePipe, NgIf } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LoadingService } from 'src/app/service/loading.service';
 import { registerRequest } from './register.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseResponse } from 'src/app/share/Models/share.model';
 import { environment } from 'src/environments/environment';
-import { ApiService } from 'src/app/service/api.service';
 import { catchError, map } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LoadingComponent } from '../../share/loading/loading.component';
 import { ToastModule } from 'primeng/toast';
+import { ApiService } from 'src/app/share/service/api.service';
+import { LoadingService } from 'src/app/share/service/loading.service';
 
 @Component({
     selector: 'app-register',

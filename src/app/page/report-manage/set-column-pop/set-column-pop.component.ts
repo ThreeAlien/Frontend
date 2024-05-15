@@ -1,7 +1,6 @@
 import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, transferArrayItem, CdkDropListGroup } from '@angular/cdk/drag-drop';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MsgBoxService } from 'src/app/service/msg-box.service';
 import { repColListModel } from '../report-manage.models';
 import { MatButtonModule } from '@angular/material/button';
 import { NgFor, NgClass } from '@angular/common';
@@ -21,7 +20,7 @@ export class SetColumnPopComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<SetColumnPopComponent>,
     @Inject(MAT_DIALOG_DATA) public inPutdata: any,
-    private msgBoxService: MsgBoxService) { }
+  ) { }
   contentName:string = "";
   tList: repColListModel[] = [];
   fList: repColListModel[] = [];

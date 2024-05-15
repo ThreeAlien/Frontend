@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientSSOService } from '../service/client-sso.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ClientSSOService } from '../share/service/client-sso.service';
 
 @Component({
     selector: 'app-ssojump',
