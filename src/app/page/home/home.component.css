@@ -59,4 +59,43 @@
   padding: 15px 0px 0px 10px;
   margin-right: 167px;
 }
+/* RWD設定大小 */
+
+/* 1680以下畫面原長度/1.14 */
+
+@media screen and (max-width: 1680px) {
+  .top_item2{
+    margin-right: calc(180px / 1.14);
+  }
+}
+
+
+
+/* 1366以下畫面原長度/1.4 */
+
+@media screen and (max-width: 1366px) {
+  .top_item2{
+    margin-right: calc(180px / 1.4);
+  }
+}
+
+
+
+/* 1100以下畫面原長度/1.75*/
+
+@media screen and (max-width: 1100px) {
+  .top_item2{
+    margin-right: calc(180px / 1.75);
+  }
+}
+
+
+
+/* 980以下畫面原長度/2*/
+
+@media screen and (max-width: 980px) {
+  .top_item2{
+    margin-right: calc(180px / 2);
+  }
+}
 

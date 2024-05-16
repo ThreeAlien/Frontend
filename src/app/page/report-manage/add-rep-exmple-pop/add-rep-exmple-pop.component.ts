@@ -2,7 +2,7 @@ import { data } from 'jquery';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { MccModel, AccModel, columnMapping, columnModel, repConModel, reportGoalAdsModel, GoalAdsMapping, repColModel, repColListModel, addReportRequest as setReportRequest, columnDataReq, exportSampleModels, getReportDetailRes } from '../report-manage.models';
+import { MccModel, AccModel, columnMapping, columnModel, repConModel, reportGoalAdsModel, GoalAdsMapping, repColModel, repColListModel, columnDataReq, exportSampleModels, getReportDetailRes, setReportRequest } from '../report-manage.models';
 import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
 import { environment } from 'src/environments/environment';
 import { MsgBoxInfo } from 'src/app/share/msg-box/msg-box.component';
@@ -64,6 +64,7 @@ export class AddRepExmplePopComponent implements OnInit {
     public apiService: ApiService,
     public datePipe: DatePipe,
     private CommonSvc: CommonService,
+    private loginInfoSvc: LoginInfoService,
     private msgBoxService: MsgBoxService, public loadingService: LoadingService, private messageService: MessageService) { this.loadingService.loadingOn(); }
   //#region 資料宣告
   mediaType = "";
@@ -111,7 +112,7 @@ export class AddRepExmplePopComponent implements OnInit {
   formType: string = "";
   formEditTitle: string = "";
   editData: exportSampleModels | undefined;
-  reportId!: string;
+  columnID!: string;
   /**暫存原本DB報表內容欄位 */
   tmpDBReportColumn: repConModel[] = [];
 
@@ -153,9 +154,9 @@ export class AddRepExmplePopComponent implements OnInit {
           tap(() => this.loadingService.loadingOn()),
           switchMap(() => this.getReportDetail(colId))
         ).subscribe({
-          next:()=>{this.loadingService.loadingOff()}
+          next: () => { this.loadingService.loadingOff() }
         });
-        this.reportId = this.editData.reportID;
+        this.columnID = this.editData.columnID;
         this.formEditTitle = this.editData.reportName;
         this.myForm.controls.repExmName.setValue(this.editData.reportName);
         this.AccItemList.forEach(x => {
@@ -181,7 +182,7 @@ export class AddRepExmplePopComponent implements OnInit {
       this.getDefaultRepContent().pipe(
         tap(() => this.loadingService.loadingOn())
       ).subscribe({
-        next:()=>{this.loadingService.loadingOff()}
+        next: () => { this.loadingService.loadingOff() }
       });
       this.dataCount = this.inPutdata.data;
       this.formType = this.inPutdata.type;
@@ -331,10 +332,11 @@ export class AddRepExmplePopComponent implements OnInit {
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
       const tMedia = this.myForm.controls.targetMedia.value?.goalId;
       const media = this.mediaType == "G" ? "google" : "META";
-      const id = this.userProfile.id;
+      const id = this.loginInfoSvc.userInfo.id;
       const date = this.SDtm;
       let setData: setReportRequest = {
         reportId: '',
+        columnID: '',
         reportName: '',
         reportGoalAds: '',
         reportMedia: '',
@@ -347,7 +349,7 @@ export class AddRepExmplePopComponent implements OnInit {
         columnData: []
       };
       if (this.formType == "edit") {
-        setData.reportId = this.reportId,
+          setData.columnID = this.columnID,
           setData.reportName = reptName ? reptName : '',
           setData.reportGoalAds = tMedia ? tMedia : '',
           setData.reportMedia = media,
@@ -358,6 +360,7 @@ export class AddRepExmplePopComponent implements OnInit {
       }
       if (this.formType == "add") {
         setData.reportId = repid,
+          setData.columnID = '',
           setData.reportName = reptName ? reptName : '',
           setData.reportGoalAds = tMedia ? tMedia : '',
           setData.reportMedia = media,
@@ -1022,6 +1025,7 @@ export class AddRepExmplePopComponent implements OnInit {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error.error);
+            this.loadingService.loadingOff();
           }
         });
       })

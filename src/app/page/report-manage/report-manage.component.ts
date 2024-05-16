@@ -184,9 +184,8 @@ export class ReportManageComponent implements OnInit {
     const msgResult = this.msgBoxService.msgBoxShow(this.msgData);
     msgResult.then(async x => {
       if (x?.result == DialogResult.ok) {
-        await this.deleteReport(data.reportID);
+        await this.deleteReport(data.columnID);
         await this.getRepExm();
-
       } else {
         return;
       }
@@ -272,7 +271,7 @@ export class ReportManageComponent implements OnInit {
     try {
       this.loadingService.loadingOn();
       const request = {
-        reportID: id,
+        columnID: id,
         reportStatus: true
       };
       let rD = JSON.stringify(request);

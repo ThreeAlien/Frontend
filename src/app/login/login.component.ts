@@ -17,6 +17,8 @@ import { ClientSSOService } from '../share/service/client-sso.service';
 import { LoadingService } from '../share/service/loading.service';
 import { LoginInfoService } from '../share/service/login-info.service';
 import { tap } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,7 @@ import { tap } from 'rxjs';
   styleUrls: ['./login.component.css'],
   providers: [MessageService],
   standalone: true,
-  imports: [ToastModule, LoadingComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterOutlet]
+  imports: [ToastModule, LoadingComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule,NgIf, MatIconModule, RouterOutlet]
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
@@ -111,7 +113,7 @@ export class LoginComponent implements OnInit {
   }
   /**是否顯示密碼 */
   isShowPwsClick() {
-    this.isShowPws = !this.isShowPws;
+    this.isShowChkPws = !this.isShowChkPws;
   }
   getLoginAuth() {
     this.loadingService.loadingOn();

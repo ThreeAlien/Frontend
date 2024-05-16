@@ -966,6 +966,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error.error);
+            this.loadingService.loadingOff();
             reject();
           }
         });

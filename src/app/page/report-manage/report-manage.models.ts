@@ -195,8 +195,9 @@ export class GetReportRequest {
   /**使用者ID */
   userId!:string;
 }
-export class addReportRequest {
-  reportId!: string;
+export class setReportRequest {
+  reportId?: string;
+  columnID!: string;
   reportName!: string;
   /**目標廣告 */
   reportGoalAds!: string;
