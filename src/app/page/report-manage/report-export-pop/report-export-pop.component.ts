@@ -192,7 +192,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         }
       })
     })
-    doc.save('table.pdf');
+    let fileName = `${this.subClientName}報表.pdf`
+    doc.save(fileName);
   }
   /**單筆匯出PDF */
   async exportSinglePdf(table: ExportReportModel) {
@@ -207,8 +208,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         font: "msjh"
       }
     })
-
-    doc.save('table.pdf');
+    let fileName = `${this.subClientName}_${table.reportName}報表.pdf`
+    doc.save(fileName);
   }
   mouseDown(event: any, el: any = null) {
     el = el || event.target;
@@ -317,7 +318,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         }
         XLSX.utils.book_append_sheet(wb, ws, x.reportName);
       });
-      XLSX.writeFile(wb, 'ScoreSheet.xlsx');
+      let fileName = `${this.subClientName}報表.xlsx`
+      XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);
     }
@@ -393,7 +395,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         ws['!cols']?.push({ wch: 15 });
       }
       XLSX.utils.book_append_sheet(wb, ws, table.reportName);
-      XLSX.writeFile(wb, 'ScoreSheet.xlsx');
+      let fileName = `${this.subClientName}_${table.reportName}報表.xlsx`
+      XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);
     }

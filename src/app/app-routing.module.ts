@@ -31,12 +31,12 @@ const routes: Routes = [
         }
       },
       {
-        path: "clientManage",
+        path: "billManage",
         loadComponent: () =>
           import('./page/bill-manage/bill-manage.component').then((mod) => mod.BillManageComponent),
         canActivate: [LoginRoutingGuardService],
         data: {
-          title: "客戶管理"
+          title: "帳單管理"
         }
       },
     ]

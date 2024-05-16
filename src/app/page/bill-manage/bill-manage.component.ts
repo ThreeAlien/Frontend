@@ -152,7 +152,7 @@ export class BillManageComponent implements OnInit {
       map((res: BaseResponse) => {
         if (res.code == "200") {
           this.messageService.add({ severity: 'success', summary: '成功', detail: '修改帳單成功!!' });
-          this.getBill();
+          this.filterQry();
         } else {
           this.messageService.add({ severity: 'error', summary: '失敗', detail: `修改帳單失敗!!` });
         }
