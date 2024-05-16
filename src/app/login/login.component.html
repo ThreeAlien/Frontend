@@ -18,8 +18,18 @@
         <div class="inputArea">
           <div class="lable">密碼:</div>
           <div class="input">
-            <mat-form-field appearance="outline">
-              <input matInput type="password" placeholder="請輸入" formControlName="pwd" />
+            <mat-form-field appearance="outline">             
+              <div style="display: flex;justify-content: space-between;">
+                <div>                 
+                  <input matInput [type]="isShowChkPws ? 'text':'password'" placeholder="請輸入" formControlName="pwd" />
+                </div>
+                <div *ngIf="isShowChkPws">
+                  <mat-icon (click)="isShowPwsClick()">visibility</mat-icon>
+                </div>
+                <div *ngIf="!isShowChkPws">
+                  <mat-icon (click)="isShowPwsClick()">visibility_off</mat-icon>
+                </div>
+              </div>
               <mat-error>請填寫正確格式</mat-error>
             </mat-form-field>
           </div>

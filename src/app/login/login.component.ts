@@ -19,12 +19,12 @@ import { LoginInfoService } from '../share/service/login-info.service';
 import { tap } from 'rxjs';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css'],
-    providers: [MessageService],
-    standalone: true,
-    imports: [ToastModule, LoadingComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterOutlet]
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
+  providers: [MessageService],
+  standalone: true,
+  imports: [ToastModule, LoadingComponent, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterOutlet]
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
@@ -35,18 +35,19 @@ export class LoginComponent implements OnInit {
     public apiService: ApiService,
     private msgSvc: MessageService,
     public loadingService: LoadingService,
-    private LoginInfoSvc :LoginInfoService,
+    private LoginInfoSvc: LoginInfoService,
     public dialog: MatDialog,
   ) { }
   account: string = "";
   password: string = "";
+  isShowChkPws: boolean = false;
 
 
   async ngOnInit() {
 
     this.loadingService.loadingOff();
     this.form = this.formBuilder.group({
-      acc: ['Admin', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]],
+      acc: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]],
       pwd: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]+$')]]
     })
     let isLogin = this.clientSSO.isLoggedIn();
@@ -103,10 +104,14 @@ export class LoginComponent implements OnInit {
       disableClose: true
     })
     dialogRef.afterClosed().subscribe(async result => {
-      if(result.data){
+      if (result.data) {
         this.msgSvc.add({ severity: 'success', summary: '成功', detail: '註冊成功，請重新登入!!' })
       }
     });
+  }
+  /**是否顯示密碼 */
+  isShowPwsClick() {
+    this.isShowPws = !this.isShowPws;
   }
   getLoginAuth() {
     this.loadingService.loadingOn();

@@ -46,7 +46,7 @@ export class ReportManageComponent implements OnInit {
     private msgBoxService: MsgBoxService,
     public loadingService: LoadingService,
     private messageService: MessageService,
-    private CommonSvc: CommonService) { };
+    private CommonSvc: CommonService, private loginInfoSvc: LoginInfoService) { };
   displayedColumns: string[] = ['client_subname', 'report_name', 'report_goalads', 'report_media', 'edit_date', 'func'];
   Data: exportSampleModels[] = [];
   /**報表範本名稱 */
@@ -79,7 +79,6 @@ export class ReportManageComponent implements OnInit {
     { goalId: "pmas", goalName: GoalAdsMapping.glgPmas },
     { goalId: "kw", goalName: GoalAdsMapping.glgKw },
   ];
-  userProfile: LoginInfoModel = new LoginInfoModel;
 
   async ngOnInit() {
     (await this.CommonSvc.getClinetName()).pipe(
@@ -223,7 +222,7 @@ export class ReportManageComponent implements OnInit {
         reportMedia: req ? req.reportMedia : '',
         startDate: sD ? sD : '',
         endDate: eD ? eD : '',
-        userId: this.userProfile.id
+        userId: this.loginInfoSvc.userInfo.id
       }
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReport`;

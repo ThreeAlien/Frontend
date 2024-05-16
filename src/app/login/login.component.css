@@ -23,7 +23,7 @@
   height: 100%;
   background-image: url("../../assets/icon/LogoB512.png");
   background-repeat: no-repeat;
-  background-position: center
+  background-position: center;
 }
 
 .inputArea {
@@ -76,30 +76,175 @@
   justify-content: space-around;
 }
 
-.addBtnRes {
+.addBtnRes,
+.addBtnLogin {
   width: 100%;
   height: 2.8em;
   border-radius: 8px;
   line-height: 1.5em;
   border: 2px #000000 solid;
+  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif, "Noto Sans TC";
+  font-weight: bold;
+  line-height: 1.4em;
+  letter-spacing: 10px;
+  -webkit-text-size-adjust: 100%;
+}
+
+.addBtnRes {
   color: #f0f0f0 !important;
   background-color: #3E7E55 !important;
-  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
-  font-weight: bold;
-  line-height: 1.4em;
-  letter-spacing:10px;
-  -webkit-text-size-adjust:100%;
 }
-.addBtnLogin{
-  width: 100%;
-  height: 2.8em;
-  border-radius: 8px;
-  border: 2px #000000 solid;
+
+.addBtnLogin {
   color: #808080 !important;
   background-color: #EAEEE5 !important;
-  font-family: 'Palanquin Dark', Arial, Helvetica, sans-serif,"Noto Sans TC";
-  font-weight: bold;
-  line-height: 1.4em;
-  letter-spacing:10px;
-  -webkit-text-size-adjust:100%;
+}
+
+/* RWD */
+/* 1680px 原大小/1.14 */
+@media screen and (max-width: 1680px) {
+  .container {
+    width: 52.63%;
+    min-width: calc(872px / 1.14);
+    height: 52.63%;
+    min-height: calc(512px / 1.14);
+  }
+
+  .logo {
+    width: 61.4%;
+    min-width: calc(512px / 1.14);
+  }
+
+  .inputArea,
+  .loginArea {
+    width: 26.32%;
+    min-width: calc(360px / 1.14);
+  }
+
+  .title {
+    font-size: calc(48px / 1.14);
+  }
+
+  .iconText {
+    font-size: calc(32px / 1.14);
+  }
+
+  .lable {
+    font-size: calc(20px / 1.14);
+  }
+
+  .buttonArea {
+    font-size: calc(1.2em / 1.14);
+  }
+}
+
+/* 1366px原大小/1.4 */
+@media screen and (max-width: 1366px) {
+  .container {
+    width: 42.86%;
+    min-width: calc(872px / 1.4);
+    height: 42.86%;
+    min-height: calc(512px / 1.4);
+  }
+
+  .logo {
+    width: 50%;
+    min-width: calc(512px / 1.4);
+  }
+
+  .inputArea,
+  .loginArea {
+    width: 21.43%;
+    min-width: calc(360px / 1.4);
+  }
+
+  .title {
+    font-size: calc(48px / 1.4);
+  }
+
+  .iconText {
+    font-size: calc(32px / 1.4);
+  }
+
+  .lable {
+    font-size: calc(20px / 1.4);
+  }
+
+  .buttonArea {
+    font-size: calc(1.2em / 1.4);
+  }
+}
+
+/* 1100px原大小/1.75 */
+@media screen and (max-width: 1100px) {
+  .container {
+    width: 34.29%;
+    min-width: calc(872px / 1.75);
+    height: 34.29%;
+    min-height: calc(512px / 1.75);
+  }
+
+  .logo {
+    width: 40%;
+    min-width: calc(512px / 1.75);
+  }
+
+  .inputArea,
+  .loginArea {
+    width: 17.14%;
+    min-width: calc(360px / 1.75);
+  }
+
+  .title {
+    font-size: calc(48px / 1.75);
+  }
+
+  .iconText {
+    font-size: calc(32px / 1.75);
+  }
+
+  .lable {
+    font-size: calc(20px / 1.75);
+  }
+
+  .buttonArea {
+    font-size: calc(1.2em / 1.75);
+  }
+}
+
+/* 980px原大小/2 */
+@media screen and (max-width: 980px) {
+  .container {
+    width: 30%;
+    min-width: calc(872px / 2);
+    height: 30%;
+    min-height: calc(512px / 2);
+  }
+
+  .logo {
+    width: 35%;
+    min-width: calc(512px / 2);
+  }
+
+  .inputArea,
+  .loginArea {
+    width: 15%;
+    min-width: calc(360px / 2);
+  }
+
+  .title {
+    font-size: calc(48px / 2);
+  }
+
+  .iconText {
+    font-size: calc(32px / 2);
+  }
+
+  .lable {
+    font-size: calc(20px / 2);
+  }
+
+  .buttonArea {
+    font-size: calc(1.2em / 2);
+  }
 }
