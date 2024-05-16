@@ -448,22 +448,11 @@ export class AddRepExmplePopComponent implements OnInit {
             { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
             { colName: columnMapping.colCPA, colStatus: x.isColCPA },
             { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-            { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-            { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-            { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-            { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-            { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-            { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-            { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-            { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-            { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
             { colName: columnMapping.colClicks, colStatus: x.isColClicks },
             { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
             { colName: columnMapping.colCTR, colStatus: x.isColCTR },
             { colName: columnMapping.colCpc, colStatus: x.isColCPC },
             { colName: columnMapping.colCost, colStatus: x.isColCost },
-            { colName: columnMapping.colAge, colStatus: x.isColAge },
-            { colName: columnMapping.colGender, colStatus: x.isColGender },
             { colName: columnMapping.colConstant, colStatus: x.isColConstant },
           ];
           break;
@@ -553,7 +542,8 @@ export class AddRepExmplePopComponent implements OnInit {
         repColList = []
         switch (x.contentId) {
           //每日每周
-          case "repCon00001" || "repCon00002":
+          case "repCon00001":
+          case "repCon00002":
             repColList = [
               { colName: columnMapping.colCampaignName, colStatus: x.isColCampaignName },
               { colName: columnMapping.colAccount, colStatus: x.isColAccount },
@@ -622,22 +612,11 @@ export class AddRepExmplePopComponent implements OnInit {
               { colName: columnMapping.colCutomerID, colStatus: x.isColCutomerID },
               { colName: columnMapping.colCPA, colStatus: x.isColCPA },
               { colName: columnMapping.colAdGroupName, colStatus: x.isColAdGroupName },
-              { colName: columnMapping.colAdFinalURL, colStatus: x.isColAdFinalURL },
-              { colName: columnMapping.colHeadline, colStatus: x.isColHeadline },
-              { colName: columnMapping.colHeadLine_1, colStatus: x.isColHeadLine_1 },
-              { colName: columnMapping.colHeadLine_2, colStatus: x.isColHeadLine_2 },
-              { colName: columnMapping.colDirections, colStatus: x.isColDirections },
-              { colName: columnMapping.colDirections_1, colStatus: x.isColDirections_1 },
-              { colName: columnMapping.colDirections_2, colStatus: x.isColDirections_2 },
-              { colName: columnMapping.colAdName, colStatus: x.isColAdName },
-              { colName: columnMapping.colSrchKeyWord, colStatus: x.isColSrchKeyWord },
               { colName: columnMapping.colClicks, colStatus: x.isColClicks },
               { colName: columnMapping.colImpressions, colStatus: x.isColImpressions },
               { colName: columnMapping.colCTR, colStatus: x.isColCTR },
               { colName: columnMapping.colCpc, colStatus: x.isColCPC },
               { colName: columnMapping.colCost, colStatus: x.isColCost },
-              { colName: columnMapping.colAge, colStatus: x.isColAge },
-              { colName: columnMapping.colGender, colStatus: x.isColGender },
               { colName: columnMapping.colConstant, colStatus: x.isColConstant },
             ];
             break;
