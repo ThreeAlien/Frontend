@@ -24,7 +24,6 @@ export class SSOJumpComponent implements OnInit {
         let refresh = await this.clientSSO.getReFreshToken(code);
         if (refresh) {
           let PermissionsAds = await this.clientSSO.getPermissions(refresh);
-          console.log(PermissionsAds);
           if (PermissionsAds) {
             this.clientSSO.setUserInfo(PermissionsAds, 1);
             this.router.navigate(["/home"]);

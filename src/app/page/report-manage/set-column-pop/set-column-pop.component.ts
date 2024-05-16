@@ -94,7 +94,6 @@ export class SetColumnPopComponent implements OnInit {
   }
 
   trueChkAll(sta:any){
-    console.log(sta);
     if(sta.checked){
       this.tList.forEach(x=>{
         x.colStatus = true;

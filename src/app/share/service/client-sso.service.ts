@@ -27,7 +27,6 @@ export class ClientSSOService {
 
   // 確認伺服器認證登入
   async checklogInfo(NowUrl: any, NextUrl: any): Promise<boolean> {
-    console.log("確認伺服器認證登入");
     this.nowPageUrl = NowUrl;
     this.nextPageUrl = NextUrl;
     if (this.isLoggedIn()) {
@@ -121,8 +120,7 @@ export class ClientSSOService {
           var data = res as BaseResponse;
           if (data.code == "200") {
             resolve(data.data);
-          } else {
-            console.log(data);
+          } else {            
             resolve(false);
           }
         },

@@ -12,7 +12,6 @@ export class LoginRoutingGuardService {
   constructor(private router: Router, private clientSSO: ClientSSOService) { }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>> {
-    console.log("轉頁檢核");
     let isRouting = this.clientSSO.checklogInfo(this.router.url, route.routeConfig?.path);
     if (await isRouting) {
       return true;

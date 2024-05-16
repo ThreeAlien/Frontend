@@ -60,7 +60,6 @@ export class LoginComponent implements OnInit {
       let sta = await this.getLoginAuth();
       if (sta) {
         this.oidcLogin();
-        console.log(this.account);
       }
     }
   }
@@ -74,7 +73,6 @@ export class LoginComponent implements OnInit {
         redirect_uri: environment.redirect_uri,
         state: 'ssoLogin',
       });
-      console.log(client);
       client.requestCode();
     } catch (error) {
       console.log(error)
@@ -105,7 +103,6 @@ export class LoginComponent implements OnInit {
       disableClose: true
     })
     dialogRef.afterClosed().subscribe(async result => {
-      console.log(result);
       if(result.data){
         this.msgSvc.add({ severity: 'success', summary: '成功', detail: '註冊成功，請重新登入!!' })
       }
@@ -122,7 +119,6 @@ export class LoginComponent implements OnInit {
       };
       let rD = JSON.stringify(request);
       const qryDataUrl = environment.apiServiceHost + `api/Auth/Login`;
-      console.log(qryDataUrl);
       return new Promise<boolean>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
