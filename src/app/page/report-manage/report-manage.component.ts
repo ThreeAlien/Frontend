@@ -29,7 +29,7 @@ import { ApiService } from 'src/app/share/service/api.service';
 import { LoadingService } from 'src/app/share/service/loading.service';
 import { MsgBoxService } from 'src/app/share/service/msg-box.service';
 import { LoginInfoService } from 'src/app/share/service/login-info.service';
-import { switchMap, tap } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-report-manage',
@@ -163,7 +163,7 @@ export class ReportManageComponent implements OnInit {
   /**匯出範本按鈕 */
   exportBtn(data: exportSampleModels) {
     const dialogRef = this.dialog.open(ReportExpotPopComponent, {
-      width: "1080px",
+      width: "1390px",
       maxHeight: "760px",
       height: "auto",
       data: data,
@@ -173,6 +173,32 @@ export class ReportManageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async result => {
       return false;
     });
+  }
+  /**複製按鈕 */
+  exportCopyBtn(data: exportSampleModels) {
+    this.msgData = new MsgBoxInfo;
+    this.msgData.title = "提醒";
+    this.msgData.msg = `確定要複製此【${data.reportName}】報表?`
+    this.msgData.btnType = MsgBoxBtnType.ok_cancel;
+    const msgResult = this.msgBoxService.msgBoxShow(this.msgData,"400","400");
+    msgResult.then(async x => {
+      if (x?.result == DialogResult.ok) {
+        this.copyReport(data.columnID).pipe(
+          tap(() => this.loadingService.loadingOn()),
+          tap(x=>console.log(x)),
+          map(async res => {
+            if (res) {
+              console.log("4546445");
+              await this.getRepExm();
+            }
+          })
+        ).subscribe({
+          next: () => { this.loadingService.loadingOff() }
+        });
+      } else {
+        return;
+      }
+    })
   }
   /**刪除按鈕 */
   async deleteReportBtn(data: exportSampleModels) {
@@ -265,7 +291,28 @@ export class ReportManageComponent implements OnInit {
     }
 
   }
-
+  /**複製報表API */
+  copyReport(id: string) {
+    const request = { columnID: id };
+    let rD = JSON.stringify(request);
+    const path = environment.apiServiceHost + `api/ReportContentInfo/CopyReportContentInfo`;
+    return this.apiService.CallApi(path, 'POST', rD).pipe(
+      map(res => res && res.code ? res.code : []),
+      map(code => {
+        if (code == "200") {
+          console.log(code);
+          return true;
+        }else{
+          console.log(code);
+          return false;
+        }
+      }),
+      catchError(async (err) => {
+        console.log("複製報表未知錯誤");
+        return false;
+      })
+    )
+  }
   /**刪除範本api */
   deleteReport(id: string) {
     try {

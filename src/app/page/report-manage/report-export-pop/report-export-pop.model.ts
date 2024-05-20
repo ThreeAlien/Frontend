@@ -32,6 +32,7 @@ export enum colMapping{
   kwAdGroupName = "廣告群組",
   kwCampaignName = "廣告活動",
   kwColSrchKeyWord = "搜尋字詞",
+  matchType = "搜尋關鍵字比對類型",
   impression = "曝光數",
   date="日期",
   click = "點擊數",
@@ -64,6 +65,7 @@ export interface exportData{
   adGroupName:string;
   campaignName:string;
   colSrchKeyWord :string;
+  matchType:string,
   location:string;
   age:string;
   click:number;

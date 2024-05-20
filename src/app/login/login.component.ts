@@ -100,7 +100,8 @@ export class LoginComponent implements OnInit {
   onRegisterClick() {
     const dialogRef = this.dialog.open(RegisterComponent, {
       width: "360px",
-      height: "auto",
+      height: "85vh",
+      minHeight:"85vh",
       data: "",
       hasBackdrop: true,
       disableClose: true

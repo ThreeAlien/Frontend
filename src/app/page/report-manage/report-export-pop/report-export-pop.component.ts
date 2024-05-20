@@ -279,7 +279,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             },
           }
           //保留百分比
-          if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v <= 1) {
+          if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v < 1 && ws[i].v % 1 !== 0) {
             ws[i].z = '0.00%'
           }
           if (typeof ws[i].v === 'number' && !ws[i].z) {
@@ -357,7 +357,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
           },
         }
         //保留百分比
-        if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v <= 1) {
+        if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v < 1 && ws[i].v % 1 !== 0) {
           ws[i].z = '0.00%'
         }
         if (typeof ws[i].v === 'number' && !ws[i].z) {
@@ -405,7 +405,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.dialogRef.close({ data: false });
   }
   //數值轉換台幣
-  twFormat(coin: number,type:string): string {
+  twFormat(coin: number, type: string): string {
     coin = Math.round((coin / 1000000) * 100) / 100;
     const twFormat = new Intl.NumberFormat('zh-TW', {
       style: 'currency',
@@ -413,7 +413,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     });
     let res = twFormat.format(+coin.toFixed(2));
     //費用去除00
-    if(type == "cost"){
+    if (type == "cost") {
       res = res.replace(/\.\d{2}$/, '');
     }
     return res;
@@ -546,8 +546,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
+                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -558,8 +558,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -628,8 +628,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
+                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -640,8 +640,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -690,6 +690,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: colMapping.kwCampaignName, colSta: true, width: "auto" },
                   { colValue: colMapping.kwAdGroupName, colSta: true, width: "auto" },
                   { colValue: colMapping.kwColSrchKeyWord, colSta: true, width: "auto" },
+                  { colValue: colMapping.matchType, colSta: true, width: "auto" },
                   { colValue: colMapping.impression, colSta: true, width: "auto" },
                   { colValue: colMapping.click, colSta: true, width: "auto" },
                   { colValue: colMapping.ctr, colSta: true, width: "auto" },
@@ -711,11 +712,12 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.campaignName, colSta: true },
                   { colValue: y.adGroupName, colSta: true },
                   { colValue: y.colSrchKeyWord, colSta: true },
+                  { colValue: y.matchType, colSta: true },
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
+                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -725,8 +727,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -795,8 +797,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
+                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -807,8 +809,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -894,8 +896,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   { colValue: y.impressions.toLocaleString(), colSta: true },
                   { colValue: y.click.toLocaleString(), colSta: true },
                   { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc,'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost,'cost'), colSta: true },
+                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
+                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
                 )
               })
               this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
@@ -906,8 +908,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
                 { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal,'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal,'cost'), colSta: true },
+                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
               )
 
               this.exportDataList.push(tmpD);
@@ -959,7 +961,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   dateRangePickList: []
                 }));
               })
-            }else{
+            } else {
               this.messageService.add({ severity: 'warn', summary: '提醒', detail: '請到編輯報表選擇報表內容!' })
             }
             resolve();
