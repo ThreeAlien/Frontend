@@ -208,7 +208,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         font: "msjh"
       }
     })
-    let fileName = `${this.subClientName}_${table.reportName}報表.pdf`
+    let fileName = `${this.subClientName}_${table.reportName}.pdf`
     doc.save(fileName);
   }
   mouseDown(event: any, el: any = null) {
@@ -395,7 +395,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         ws['!cols']?.push({ wch: 15 });
       }
       XLSX.utils.book_append_sheet(wb, ws, table.reportName);
-      let fileName = `${this.subClientName}_${table.reportName}報表.xlsx`
+      let fileName = `${this.subClientName}_${table.reportName}.xlsx`
       XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);

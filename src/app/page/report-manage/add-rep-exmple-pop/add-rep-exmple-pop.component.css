@@ -21,14 +21,6 @@
   flex-direction: column;
   padding: 15px;
 }
-
-.modal-header {
-  border-bottom: 1px solid #3E7E55 !important;
-  color: #AADCB6;
-  width: 100%;
-  line-height: 43px;
-}
-
 .modal-header_Ttitle_label {
   float: left;
   font-size: 20px;
