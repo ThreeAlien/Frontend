@@ -7,6 +7,7 @@
   margin-bottom: 10px;
   justify-content: space-between;
   align-items: baseline;
+  font-weight: bold;
 }
 .dialog-header-title{
   font-size: 26px;
@@ -35,7 +36,7 @@
   text-align: left;
   word-wrap: break-word;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   font-style: normal;
   font-stretch: normal;
   line-height: 2.45;
@@ -43,12 +44,15 @@
   color: #000000;
 }
 
-.dialog-footer{
+.dialog-footer {
+  padding: 4px;
+  border-top: 1px solid #7abd87;
+}
+
+.dialog-footer-content {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  padding: 4px;
-  text-align: center;
-  border-top: 2px solid #7ABD87;
-  height: 50px;
+  padding-top: 5px;
+  padding-bottom: 6px;
 }

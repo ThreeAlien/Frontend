@@ -21,30 +21,32 @@
       </div>
     </div>
   </div>
-  <div flex class="dialog-footer">
-    <button mat-raised-button *ngIf="msgBox.btnType == 'ok' || msgBox.btnType == 'ok_cancel'" color="primary"
-      (click)="onOk()">
-      <mat-icon>
-        check
-      </mat-icon>
-      {{msgBox.btnTxtOk}}
-    </button>
-    <button mat-raised-button *ngIf="msgBox.btnType == 'ok_cancel'" color="warn" (click)="onCancel()">
-      <mat-icon>
-        close
-      </mat-icon>
-      {{msgBox.btnTxtCancel}}
-    </button>
-    <button mat-raised-button *ngIf="msgBox.btnType == 'yes_no'" color="primary" icon="check" (click)="onYes()">
-      <mat-icon>
-        close
-      </mat-icon>{{msgBox.btnTxtYes}}
-    </button>
-    <button mat-raised-button *ngIf="msgBox.btnType == 'yes_no'" color="warn" icon="close" (click)="onNo()">
-      <mat-icon>
-        close
-      </mat-icon>
-      {{msgBox.btnTxtNo}}
-    </button>
+  <div class="dialog-footer">
+    <div class="dialog-footer-content">
+      <button mat-raised-button *ngIf="msgBox.btnType == 'ok' || msgBox.btnType == 'ok_cancel'" color="primary"
+        (click)="onOk()">
+        <mat-icon>
+          check
+        </mat-icon>
+        {{msgBox.btnTxtOk}}
+      </button>
+      <button mat-raised-button *ngIf="msgBox.btnType == 'ok_cancel'" color="warn" (click)="onCancel()">
+        <mat-icon>
+          close
+        </mat-icon>
+        {{msgBox.btnTxtCancel}}
+      </button>
+      <button mat-raised-button *ngIf="msgBox.btnType == 'yes_no'" color="primary" icon="check" (click)="onYes()">
+        <mat-icon>
+          close
+        </mat-icon>{{msgBox.btnTxtYes}}
+      </button>
+      <button mat-raised-button *ngIf="msgBox.btnType == 'yes_no'" color="warn" icon="close" (click)="onNo()">
+        <mat-icon>
+          close
+        </mat-icon>
+        {{msgBox.btnTxtNo}}
+      </button>
+    </div>
   </div>
 </div>
