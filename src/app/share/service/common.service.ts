@@ -32,7 +32,7 @@ export class CommonService {
       map(res => res && res.data ? res.data : []),
       tap((data: AccModel[]) => this.AccItemListSub.next(data)),
       catchError(async (err) => {
-        console.log("客戶名稱未知錯誤")
+        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '客戶名稱未知錯誤!' });        
       })
     )
   }
@@ -43,7 +43,7 @@ export class CommonService {
       map(res => res && res.data ? res.data : []),
       tap((data: MccModel[]) => this.ChildMccItemListSub.next(data)),
       catchError(async (err) => {
-        console.log("子帳戶活動名稱未知錯誤")
+        this.messageService.add({ severity: 'error', summary: '錯誤', detail: '子帳戶活動名稱未知錯誤!' })     
       })
     )
   }

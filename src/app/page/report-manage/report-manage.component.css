@@ -2,6 +2,7 @@ table {
   width: 100%;
   margin-top: 10px;
 }
+
 .mat-cell.mat-column-accActName {
   font-weight: bold;
 }
@@ -14,72 +15,40 @@ table {
   background-color: #AADCB6;
 }
 
-.titleCss {
-
-  font-size: 18px;
-  letter-spacing: 1.2px;
-}
-.top {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 0%);
-  background-color: #EAEEE5;
-  max-height: 84vh;
-  width: 93%;
-}
-
 .topTitle {
   font-weight: bold;
   font-size: 36px;
   float: left;
 }
 
-.pageFooter {
-  font-size: 14px;
-  background-color: #EAEEE5;
-}
-
-.qryLable1 {
-  font-size: 14px;
-  line-height: 1.43;
-}
-
-.qryLable2 {
-  width: 50%;
-  margin-left: 10px;
-}
-.divTr{
+.divTr {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   width: 100%;
 }
-.divTd{
+
+.divTd {
   display: flex;
 }
-.divTd2{
+
+.divTd2 {
   display: flex;
   padding-left: 20px;
 }
-.divLable{
+
+.divLable {
+  min-width: 128px;
   padding-top: 7px;
 }
-.input {
+.inputOut {
+  margin-left: 10px;
   width: 100%;
-  height: 32px;
-  padding: 0px 12px;
-  font-size: 18px;
-  line-height: 1.43;
-  color: #676767;
-  background-color: #fafafa;
-  background-image: none;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
 }
-.timeInputOut{
-  width: 106%;
+.timeInputOut {
+  min-width: 356px;
 }
+
 .addBtn {
   width: 155px;
   height: 2.3em;
@@ -90,142 +59,65 @@ table {
   margin-bottom: 5px;
 }
 
-.testBtn {
-  background-color: #EAEEE5;
-}
-
-.isTestBtn {
-  background-color: #676767;
-}
-
 .tableList {
   min-height: 50%;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
-tr.dataRow:hover {
-  background: whitesmoke;
-}
-/* @media screen and (max-width: 900px){
-  .inputOut {
-    width: 166px;
-  }
-  .divTr{
-    flex-direction: column;
-  }
-  .divTd2{
-    padding-left: 0;
-  }
-  .divLable{
-    width: 90px;
-  }
-} */
 /* RWD設定大小 */
-
 /* 1680以下畫面原長度/1.14 */
 @media screen and (max-width: 1680px) {
-  .top {
-    width: calc(93% / 1.14);
-  }
   .topTitle {
-    font-size: calc(36px / 1.14);
+    font-size: calc(36px / 1.4);
   }
-  .titleCss {
-    font-size: calc(18px / 1.14);
-  }
-  .pageFooter,
-  .qryLable1 {
-    font-size: calc(14px / 1.14);
-  }
-  .input {
-    font-size: calc(12px / 1.14);
-  }
+
   .addBtn {
     width: calc(155px / 1.14);
     height: calc(2.3em / 1.14);
     font-size: calc(18px / 1.14);
   }
+
+  .divTd2 {
+    padding-left: 12px;
+  }
+
+  .divLable {
+    font-size: 0.9em;
+  }
 }
 
 /* 1366以下畫面原長度/1.4 */
 @media screen and (max-width: 1366px) {
-  .top {
-    width: calc(93% / 1.4);
-  }
-  .topTitle {
-    font-size: calc(36px / 1.4);
-  }
-  .titleCss {
-    font-size: calc(18px / 1.4);
-  }
-  .pageFooter,
-  .qryLable1 {
-    font-size: calc(14px / 1.4);
-  }
-  .input {
-    font-size: calc(12px / 1.4);
-  }
   .addBtn {
     width: calc(155px / 1.4);
     height: calc(2.3em / 1.4);
+    font-size: 0.88em;
+  }
+
+  .divTd,
+  .divTd2 {
+    flex-direction: column;
+  }
+
+  .divLable {
+    font-size: 0.88em;
+    padding-top: 0px;
+    width: 127px;
   }
 }
 
 /* 1100以下畫面原長度/1.75 */
 @media screen and (max-width: 1100px) {
-  .top {
-    width: calc(93% / 1.75);
+
+  .divTr {
+    flex-direction: column;
   }
-  .topTitle {
-    font-size: calc(36px / 1.75);
-  }
-  .titleCss {
-    font-size: calc(18px / 1.75);
-  }
-  .pageFooter,
-  .qryLable1 {
-    font-size: calc(14px / 1.75);
-  }
-  .input {
-    font-size: calc(12px / 1.75);
-  }
-  .addBtn {
-    width: calc(155px / 1.75);
-    height: calc(2.3em / 1.75);
+  .divTd,
+  .divTd2 {
+    flex-direction: row;
+    padding-left: 0px;
   }
 }
 
 /* 980以下畫面原長度/2 */
-@media screen and (max-width: 980px) {
-  .top {
-    width: calc(93% / 2);
-  }
-  .topTitle {
-    font-size: calc(36px / 2);
-  }
-  .titleCss {
-    font-size: calc(18px / 2);
-  }
-  .pageFooter,
-  .qryLable1 {
-    font-size: calc(14px / 2);
-  }
-  .input {
-    font-size: calc(12px / 2);
-  }
-  .addBtn {
-    width: calc(155px / 2);
-  }
-  .inputOut {
-    width: 166px;
-  }
-  .divTr{
-    flex-direction: column;
-  }
-  .divTd2{
-    padding-left: 0;
-  }
-  .divLable{
-    width: 90px;
-  }
-}
+@media screen and (max-width: 980px) {}

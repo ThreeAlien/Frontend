@@ -169,7 +169,7 @@ body {
   .mat-mdc-icon-button.mat-mdc-button-base,
   .addExmDropdown .p-dropdown-panel .p-inputtext,
   .addExmDropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-    /* font-size: calc(14px / 1.14) !important; */
+    font-size: calc(14px / 1.14) !important;
     height: calc(37px / 1.14) !important;
   }
 
@@ -183,7 +183,7 @@ body {
   .mat-mdc-icon-button.mat-mdc-button-base,
   .addExmDropdown .p-dropdown-panel .p-inputtext,
   .addExmDropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-    /* font-size: calc(14px / 1.14) !important; */
+    font-size: calc(14px / 1.14) !important;
     height: calc(37px / 1.14) !important;
   }
   .mat-mdc-text-field-wrapper {
@@ -199,7 +199,7 @@ body {
   .mat-mdc-icon-button.mat-mdc-button-base,
   .addExmDropdown .p-dropdown-panel .p-inputtext,
   .addExmDropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-    /* font-size: calc(14px / 1.14) !important; */
+    font-size: calc(14px / 1.14) !important;
     height: calc(37px / 1.14) !important;
   }
   .mat-mdc-text-field-wrapper {
@@ -215,7 +215,7 @@ body {
   .mat-mdc-icon-button.mat-mdc-button-base,
   .addExmDropdown .p-dropdown-panel .p-inputtext,
   .addExmDropdown .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-    /* font-size: calc(14px / 1.14) !important; */
+    font-size: calc(14px / 1.14) !important;
     height: calc(37px / 1.14) !important;
   }
   .mat-mdc-text-field-wrapper {
