@@ -42,25 +42,65 @@
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 .addBtn {
-  width: 8.6em;
+  width: 155px;
   height: 2.3em;
   margin-left: 10px;
   border-radius: 15px;
-  font-size: 0.5em;
+  font-size: 18px;
   color: #676767;
   margin-bottom: 5px;
 }
-@media screen and (max-width: 900px){
-  .inputOut {
-    width: 166px;
+/* RWD設定大小 */
+/* 1680以下畫面原長度/1.14 */
+@media screen and (max-width: 1680px) {
+  .topTitle {
+    font-size: calc(36px / 1.4);
   }
-  .divTr{
-    flex-direction: column;
+  .addBtn {
+    width: calc(155px / 1.14);
+    height: calc(2.3em / 1.14);
+    font-size: calc(18px / 1.14);
   }
-  .divTd2{
-    padding-left: 0;
+  .divTd2 {
+    padding-left: 12px;
   }
-  .divLable{
-    width: 90px;
+  .divLable {
+    font-size: 0.9em;
   }
 }
+
+/* 1366以下畫面原長度/1.4 */
+@media screen and (max-width: 1366px) {
+  .addBtn {
+    width: calc(155px / 1.4);
+    height: calc(2.3em / 1.4);
+    font-size: 0.88em;
+  }
+
+  .divTd,
+  .divTd2 {
+    flex-direction: column;
+  }
+
+  .divLable {
+    font-size: 0.88em;
+    padding-top: 0px;
+    width: 127px;
+  }
+}
+
+/* 1100以下畫面原長度/1.75 */
+@media screen and (max-width: 1100px) {
+
+  .divTr {
+    flex-direction: column;
+  }
+  .divTd,
+  .divTd2 {
+    flex-direction: row;
+    padding-left: 0px;
+  }
+}
+
+/* 980以下畫面原長度/2 */
+@media screen and (max-width: 980px) {}

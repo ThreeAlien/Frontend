@@ -41,7 +41,10 @@ table {
   min-width: 128px;
   padding-top: 7px;
 }
-
+.inputOut {
+  margin-left: 10px;
+  width: 100%;
+}
 .timeInputOut {
   min-width: 356px;
 }
