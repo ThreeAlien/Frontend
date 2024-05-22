@@ -180,21 +180,17 @@ export class ReportManageComponent implements OnInit {
     this.msgData.title = "提醒";
     this.msgData.msg = `確定要複製此【${data.reportName}】報表?`
     this.msgData.btnType = MsgBoxBtnType.ok_cancel;
-    const msgResult = this.msgBoxService.msgBoxShow(this.msgData,"400","400");
+    const msgResult = this.msgBoxService.msgBoxShow(this.msgData);
     msgResult.then(async x => {
       if (x?.result == DialogResult.ok) {
-        this.copyReport(data.columnID).pipe(
-          tap(() => this.loadingService.loadingOn()),
+        this.copyReport(data.columnID).pipe(          
           tap(x=>console.log(x)),
           map(async res => {
-            if (res) {
-              console.log("4546445");
+            if (res) {              
               await this.getRepExm();
             }
           })
-        ).subscribe({
-          next: () => { this.loadingService.loadingOff() }
-        });
+        ).subscribe();
       } else {
         return;
       }
@@ -299,11 +295,9 @@ export class ReportManageComponent implements OnInit {
     return this.apiService.CallApi(path, 'POST', rD).pipe(
       map(res => res && res.code ? res.code : []),
       map(code => {
-        if (code == "200") {
-          console.log(code);
+        if (code == "200") {          
           return true;
-        }else{
-          console.log(code);
+        }else{          
           return false;
         }
       }),
