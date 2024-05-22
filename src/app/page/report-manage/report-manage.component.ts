@@ -45,7 +45,7 @@ export class ReportManageComponent implements OnInit {
     public apiService: ApiService,
     private msgBoxService: MsgBoxService,
     public loadingService: LoadingService,
-    private messageService: MessageService,
+    private msgSvc: MessageService,
     private CommonSvc: CommonService, private loginInfoSvc: LoginInfoService) { };
   displayedColumns: string[] = ['client_subname', 'report_name', 'report_goalads', 'report_media', 'edit_date', 'func'];
   Data: exportSampleModels[] = [];
@@ -137,7 +137,7 @@ export class ReportManageComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(async result => {
       if (result.data && result.type == "add") {
-        this.messageService.add({ severity: 'success', summary: '成功', detail: '新增範本成功!' });
+        this.msgSvc.add({ severity: 'success', summary: '成功', detail: '新增範本成功!' });
         await this.getRepExm();
       }
     });
@@ -155,7 +155,7 @@ export class ReportManageComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(async result => {
       if (result.data && result.type == "edit") {
-        this.messageService.add({ severity: 'success', summary: '成功', detail: '編輯範本成功!' });
+        this.msgSvc.add({ severity: 'success', summary: '成功', detail: '編輯範本成功!' });
         await this.getRepExm();
       }
     });
@@ -183,10 +183,10 @@ export class ReportManageComponent implements OnInit {
     const msgResult = this.msgBoxService.msgBoxShow(this.msgData);
     msgResult.then(async x => {
       if (x?.result == DialogResult.ok) {
-        this.copyReport(data.columnID).pipe(          
+        this.copyReport(data.columnID).pipe(
           tap(x=>console.log(x)),
           map(async res => {
-            if (res) {              
+            if (res) {
               await this.getRepExm();
             }
           })
@@ -295,14 +295,14 @@ export class ReportManageComponent implements OnInit {
     return this.apiService.CallApi(path, 'POST', rD).pipe(
       map(res => res && res.code ? res.code : []),
       map(code => {
-        if (code == "200") {          
+        if (code == "200") {
           return true;
-        }else{          
+        }else{
           return false;
         }
       }),
       catchError(async (err) => {
-        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '複製報表未知錯誤!' });        
+        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '複製報表未知錯誤!' });
         return false;
       })
     )
@@ -322,9 +322,9 @@ export class ReportManageComponent implements OnInit {
           next: (res) => {
             var data = res as BaseResponse;
             if (data.code == "200") {
-              this.messageService.add({ severity: 'success', summary: '成功', detail: '報表範本已刪除!' });
+              this.msgSvc.add({ severity: 'success', summary: '成功', detail: '報表範本已刪除!' });
             } else {
-              this.messageService.add({ severity: 'error', summary: '失敗', detail: '刪除報表範本失敗!' });
+              this.msgSvc.add({ severity: 'error', summary: '失敗', detail: '刪除報表範本失敗!' });
             }
             this.loadingService.loadingOff();
             resolve();

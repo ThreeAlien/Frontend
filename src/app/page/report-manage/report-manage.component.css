@@ -41,10 +41,12 @@ table {
   min-width: 128px;
   padding-top: 7px;
 }
+
 .inputOut {
   margin-left: 10px;
   width: 100%;
 }
+
 .timeInputOut {
   min-width: 356px;
 }
@@ -76,6 +78,10 @@ table {
     height: calc(2.3em / 1.14);
     font-size: calc(18px / 1.14);
   }
+  .divTd,
+  .divTd2 {
+    flex-direction: column;
+  }
 
   .divTd2 {
     padding-left: 12px;
@@ -83,6 +89,12 @@ table {
 
   .divLable {
     font-size: 0.9em;
+  }
+  .timeInputOut {
+    margin-left: 0px;
+  }
+  .inputOut {
+    margin-left: 0px;
   }
 }
 
@@ -112,6 +124,7 @@ table {
   .divTr {
     flex-direction: column;
   }
+
   .divTd,
   .divTd2 {
     flex-direction: row;

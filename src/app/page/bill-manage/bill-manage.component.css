@@ -87,6 +87,12 @@
     padding-top: 0px;
     width: 127px;
   }
+  .timeInputOut {
+    margin-left: 0px;
+  }
+  .inputOut {
+    margin-left: 0px;
+  }
 }
 
 /* 1100以下畫面原長度/1.75 */

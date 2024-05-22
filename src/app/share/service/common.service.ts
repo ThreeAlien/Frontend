@@ -5,6 +5,7 @@ import { AccModel, MccModel } from 'src/app/page/report-manage/report-manage.mod
 import { environment } from 'src/environments/environment';
 import { BaseResponse, LoginInfoModel } from '../Models/share.model';
 import { ApiService } from './api.service';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ import { ApiService } from './api.service';
 /**常用方法 */
 export class CommonService {
 
-  constructor(public apiService: ApiService) { }
+  constructor(public apiService: ApiService,private msgSvc: MessageService,) { }
   /**客戶資料 */
   newAccItemData!: AccModel[];
   AccItemListSub: BehaviorSubject<AccModel[]> = new BehaviorSubject<AccModel[]>(this.newAccItemData);
@@ -32,7 +33,7 @@ export class CommonService {
       map(res => res && res.data ? res.data : []),
       tap((data: AccModel[]) => this.AccItemListSub.next(data)),
       catchError(async (err) => {
-        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '客戶名稱未知錯誤!' });        
+        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '客戶名稱未知錯誤!' });
       })
     )
   }
@@ -43,7 +44,7 @@ export class CommonService {
       map(res => res && res.data ? res.data : []),
       tap((data: MccModel[]) => this.ChildMccItemListSub.next(data)),
       catchError(async (err) => {
-        this.messageService.add({ severity: 'error', summary: '錯誤', detail: '子帳戶活動名稱未知錯誤!' })     
+        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '子帳戶活動名稱未知錯誤!' })
       })
     )
   }
