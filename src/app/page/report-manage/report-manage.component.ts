@@ -302,7 +302,7 @@ export class ReportManageComponent implements OnInit {
         }
       }),
       catchError(async (err) => {
-        console.log("複製報表未知錯誤");
+        this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '複製報表未知錯誤!' });        
         return false;
       })
     )
