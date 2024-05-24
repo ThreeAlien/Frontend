@@ -50,8 +50,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   get dataList() {
     return this.firstFormGroup.get('dataList') as FormArray;
   }
-  isLinear = true;
-  tableContainer = document.querySelector('.table-container');
+  isLinear = true;  
   isIcon = true;
   //報表內容id
   colId: string = "";
@@ -85,7 +84,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       { name: 'nike_gdn', completed: false, color: 'primary' }
     ],
   };
-
+  allComplete: boolean = false;
   async ngAfterViewInit(): Promise<void> {
     await this.getReportDetail(this.colId);
   }
