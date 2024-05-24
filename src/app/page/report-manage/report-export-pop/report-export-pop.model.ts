@@ -1,3 +1,10 @@
+export interface ExportReportData {
+  /**子帳戶活動ID */
+  subId: string;
+  /**子帳戶活動名稱 */
+  subName: string;
+  ExportReportData: ExportReportModel[];
+}
 export interface ExportReportModel{
   /**報表名稱 */
   reportName:string;

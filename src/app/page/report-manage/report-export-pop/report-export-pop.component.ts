@@ -58,7 +58,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   //子帳號ID
   subId: string = "";
   @ViewChild('tableList', { static: true }) tableList?: ElementRef;
-
+  exportData: ExportReportData[] = [];
   exportDataList: ExportReportModel[] = [];
   impressTotal: number = 0;
   clickTotal: number = 0;

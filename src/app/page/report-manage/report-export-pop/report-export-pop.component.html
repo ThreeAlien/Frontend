@@ -71,57 +71,63 @@
           <ng-template matStepLabel>報表產生</ng-template>
           <div style="margin:0px auto;">
             <form #tableList id="tableList">
-              <ng-container *ngFor="let tableList of exportDataList">
+              <ng-container *ngFor="let table of exportData">
                 <div class="table_center90">
                   <div style="display: flex;justify-content: space-between;">
-                    <div style="display: flex;" *ngIf="isIcon == true">
-                      <div class="ExcelIcon" (click)="exportSingleExcel(tableList)"></div>
-                      <div class="PdfIcon" (click)="exportSinglePdf(tableList)"></div>
+                    <div style="display: flex;" *ngIf="isIcon === true">
+                      <div class="ExcelIcon" (click)="exportSingleExcel(table)"></div>
+                      <div class="PdfIcon" (click)="exportSinglePdf(table)"></div>
                     </div>
                   </div>
-                  <table id="{{tableList.tableId}}" class='table'
+                  <table id="{{table.subId}}" class='table'
                     style="width: 100%;align-items: center;border-collapse: collapse;">
-                    <!-- 報表項目 -->
-                    <tr class='tr_th_title str_center'>
-                      <td [attr.colspan]="tableList.colNameList.length" style="border: 3px #000000 solid;">
-                        {{tableList.reportName}}
-                      </td>
-                    </tr>
-                    <!-- 標題 -->
-                    <tr class='tr_th_1 str_center' cdkDropList cdkDropListOrientation="horizontal"
-                      [cdkDropListData]="tableList.colNameList"(cdkDropListDropped)="dropTable($event,tableList.tableId)">
-                      <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
-                        <th cdkDrag (mousedown)="mouseDown($event)" cdkDragLockAxis="x" class="th_Nor"
-                          [ngClass]="{ th_R : i == tableList.colNameList.length-1,th_L : i==0}">
-                          {{thD.colValue}}
-                          <div *cdkDragPreview style="font-size: 18px;" class="placeholder" [style.width]="pos?.width">
+                    <ng-container *ngFor="let tableList of table.ExportReportData">
+                      <!-- 報表項目 -->
+                      <tr class='tr_th_title str_center'>
+                        <td [attr.colspan]="tableList.colNameList.length" style="border: 3px #000000 solid;">
+                          {{tableList.reportName}}
+                        </td>
+                      </tr>
+                      <!-- 標題 -->
+                      <tr class='tr_th_1 str_center' cdkDropList cdkDropListOrientation="horizontal"
+                        [cdkDropListData]="tableList.colNameList"
+                        (cdkDropListDropped)="dropTable($event,tableList.tableId)">
+                        <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
+                          <th cdkDrag (mousedown)="mouseDown($event)" cdkDragLockAxis="x" class="th_Nor"
+                            [ngClass]="{ th_R : i === tableList.colNameList.length-1,th_L : i===0}">
+                            {{thD.colValue}}
+                            <div *cdkDragPreview style="font-size: 18px;" class="placeholder"
+                              [style.width]="pos?.width">
                               {{thD.colValue}}
-                          </div>
-                        </th>
+                            </div>
+                          </th>
+                        </ng-container>
+                      </tr>
+                      <!-- 內容數據 -->
+                      <ng-container *ngFor="let trList of tableList.colValueList;index as index;">
+                        <tr class="tr_td_2 str_center" [ngClass]="{ trCss2 : index %2 === 0,trCss : index%2 !== 0}">
+                          <ng-container *ngFor="let td of trList.tdList;index as i;">
+                            <td class="td_1" [ngClass]="{ th_R : i === trList.tdList.length-1,th_L : i===0}">
+                              {{td.colValue}}
+                            </td>
+                          </ng-container>
+                        </tr>
                       </ng-container>
-                    </tr>
-                    <!-- 內容數據 -->
-                    <ng-container *ngFor="let trList of tableList.colValueList;index as index;">
-                      <tr class="tr_td_2 str_center" [ngClass]="{ trCss2 : index %2 == 0,trCss : index%2 !== 0}">
-                        <ng-container *ngFor="let td of trList.tdList;index as i;">
-                          <td class="td_1" [ngClass]="{ th_R : i == trList.tdList.length-1,th_L : i==0}">{{td.colValue}}
-                          </td>
+                      <tr class='tr_th_1 str_center' *ngIf="tableList.reportName !== '關鍵字成效'">
+                        <ng-container *ngFor="let footD of tableList.totalList;index as i;">
+                          <th class="th_2" [ngClass]="{ th_R : i === tableList.totalList.length-1,th_L : i===0}">
+                            {{footD.colValue}}</th>
+                        </ng-container>
+                      </tr>
+                      <tr class='tr_th_1 str_center' *ngIf="tableList.reportName === '關鍵字成效'">
+                        <th colspan="4" class="th_L th_2">總計</th>
+                        <ng-container *ngFor="let footD of tableList.totalList;index as i;">
+                          <th class="th_2" [ngClass]="{ th_R : i === tableList.totalList.length-1}">
+                            {{footD.colValue}}</th>
                         </ng-container>
                       </tr>
                     </ng-container>
-                    <tr class='tr_th_1 str_center' *ngIf="tableList.reportName !== '關鍵字成效'">
-                      <ng-container *ngFor="let footD of tableList.totalList;index as i;">
-                        <th class="th_2" [ngClass]="{ th_R : i == tableList.totalList.length-1,th_L : i==0}">
-                          {{footD.colValue}}</th>
-                      </ng-container>
-                    </tr>
-                    <tr class='tr_th_1 str_center' *ngIf="tableList.reportName == '關鍵字成效'">
-                      <th colspan="4" class="th_L th_2">總計</th>
-                      <ng-container *ngFor="let footD of tableList.totalList;index as i;">
-                        <th class="th_2" [ngClass]="{ th_R : i == tableList.totalList.length-1}">
-                          {{footD.colValue}}</th>
-                      </ng-container>
-                    </tr>
+
                   </table>
                 </div>
               </ng-container>
