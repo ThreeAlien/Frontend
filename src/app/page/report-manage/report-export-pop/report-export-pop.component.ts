@@ -11,7 +11,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList } from './report-export-pop.model';
+import { MccModel,ExportReportData,ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList } from './report-export-pop.model';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -73,6 +73,18 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   subClientName: string = "";
   /**是否顯示 關鍵字 footer */
   isKwEnable: boolean = false;
+  /**子帳戶活動總清單*/
+  ChildMccItemListData: MccModel[] = [];
+  /**chkBox */
+  task: Task = {
+    name: '全選',
+    completed: false,
+    color: 'primary',
+    subtasks: [
+      { name: 'nike_kw', completed: false, color: 'primary' },
+      { name: 'nike_gdn', completed: false, color: 'primary' }
+    ],
+  };
 
   async ngAfterViewInit(): Promise<void> {
     await this.getReportDetail(this.colId);
@@ -81,6 +93,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.colId = this.inPutdata.columnID;
     this.subId = this.inPutdata.subID;
     this.subClientName = this.inPutdata.subClientName;
+    this.CommonSvc.ChildMccItemList().pipe(
+      tap(x => this.ChildMccItemListData = x)
+    ).subscribe();
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -182,9 +197,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     const doc = new jsPDF("p", "pt", "a4")
     doc.setFont('msjh');
     doc.text('汎古數位媒體行銷股份有限公司', 14, 20)
-    this.exportDataList.forEach(x => {
+    this.exportData.forEach(x => {
       autoTable(doc, {
-        html: `#${x.tableId}`,
+        html: `#${x.subId}`,
         tableWidth: 'auto',
         useCss: true,
         styles: {
@@ -196,12 +211,12 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     doc.save(fileName);
   }
   /**單筆匯出PDF */
-  async exportSinglePdf(table: ExportReportModel) {
+  async exportSinglePdf(table: ExportReportData) {
     const doc = new jsPDF("p", "pt", "a4")
     doc.setFont('msjh');
     doc.text('汎古數位媒體行銷股份有限公司', 14, 20)
     autoTable(doc, {
-      html: `#${table.tableId}`,
+      html: `#${table.subId}`,
       tableWidth: 'auto',
       useCss: true,
       styles: {
@@ -249,21 +264,32 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   exportExcel() {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     try {
-      this.exportDataList.forEach(x => {
+      this.exportData.forEach(x => {
         let lastRow = -1;
-        var excelTable = document.getElementById(x.tableId);
-        let ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
+        let totalRow = 0;
+        let titleRow = 0;
+        const excelTable = document.getElementById(x.subId);
+        const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
         //抓最後一比在第幾行
-        for (let i in ws) {
+        for (const i in ws) {
           if (typeof ws[i] !== 'object') continue;
-          let cell = XLSX.utils.decode_cell(i);
+          const cell = XLSX.utils.decode_cell(i);
           if (cell.r > lastRow && ws[i].t !== undefined) {
             lastRow = cell.r;
           }
         }
-        for (var i in ws) {
+        for (const i in ws) {
           if (typeof ws[i] != 'object') continue;
-          let cell = XLSX.utils.decode_cell(i);
+          const cell = XLSX.utils.decode_cell(i);
+          const totalCell = XLSX.utils.decode_cell(i);
+          const titleCell = XLSX.utils.decode_cell(i);
+
+          if (typeof ws[i].v === 'string' && ws[i].v.startsWith("總計")) {
+            totalRow = totalCell.r;
+          }
+          if (typeof ws[i].v === 'string' && ws[i].v.startsWith("#")) {
+            titleRow = titleCell.r;
+          }
           //整個table
           ws[i].s = {
             //字形
@@ -294,8 +320,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               fgColor: { rgb: 'EAEEE5' },
             };
           }
-          //第二列跟最後一列(標題)
-          if (cell.r == 1 || cell.r == lastRow) {
+          ///th總計那列
+          if (cell.r == titleRow + 1 || cell.r == totalRow) {
             ws[i].s = {
               font: {
                 bold: true,
@@ -314,34 +340,68 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               }
             };
           }
-          ws['!cols']?.push({ wch: 15 });
+          //標題
+          if (cell.r == titleRow) {
+            ws[i].v = ws[i].v.split('#')[1];
+            ws[i].s = {
+              font: {
+                bold: true,
+                name: 'arial',
+                sz: 18,
+              },
+              //字體位置
+              alignment: {
+                vertical: 'center',
+                horizontal: 'center',
+                wrapText: true, //換行
+              },
+              fill: {
+                patternType: 'solid',
+                fgColor: { rgb: 'ffffff' },
+              },
+            };
+          }
+          /**字元數 */
+          ws['!cols']?.push({ wch: 16 });
+          ws['!rows']?.push({ hpx: 28 });
         }
-        XLSX.utils.book_append_sheet(wb, ws, x.reportName);
+        XLSX.utils.book_append_sheet(wb, ws, x.subName);
       });
-      let fileName = `${this.subClientName}報表.xlsx`
+      const fileName = `${this.subClientName}報表.xlsx`
       XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);
     }
   }
   /** 單筆匯出EXCEL報表 */
-  exportSingleExcel(table: ExportReportModel) {
+  exportSingleExcel(table: ExportReportData) {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     try {
       let lastRow = -1;
-      var excelTable = document.getElementById(table.tableId);
-      let ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
+      let totalRow = 0;
+      let titleRow = 0;
+      const excelTable = document.getElementById(table.subId);
+      const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
       //抓最後一比在第幾行
-      for (let i in ws) {
+      for (const i in ws) {
         if (typeof ws[i] !== 'object') continue;
-        let cell = XLSX.utils.decode_cell(i);
+        const cell = XLSX.utils.decode_cell(i);
         if (cell.r > lastRow && ws[i].t !== undefined) {
           lastRow = cell.r;
         }
       }
-      for (var i in ws) {
+      for (const i in ws) {
         if (typeof ws[i] != 'object') continue;
-        let cell = XLSX.utils.decode_cell(i);
+        const cell = XLSX.utils.decode_cell(i);
+        const totalCell = XLSX.utils.decode_cell(i);
+        const titleCell = XLSX.utils.decode_cell(i);
+
+        if (typeof ws[i].v === 'string' && ws[i].v.startsWith("總計")) {
+          totalRow = totalCell.r;
+        }
+        if (typeof ws[i].v === 'string' && ws[i].v.startsWith("#")) {
+          titleRow = titleCell.r;
+        }
         //整個table
         ws[i].s = {
           //字形
@@ -372,8 +432,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             fgColor: { rgb: 'EAEEE5' },
           };
         }
-        //第二列跟最後一列(標題)
-        if (cell.r == 1 || cell.r == lastRow) {
+        //th總計那列
+        if (cell.r == titleRow + 1 || cell.r == totalRow) {
           ws[i].s = {
             font: {
               bold: true,
@@ -392,10 +452,33 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             }
           };
         }
-        ws['!cols']?.push({ wch: 15 });
+        //標題
+        if (cell.r == titleRow) {
+          ws[i].v = ws[i].v.split('#')[1];
+          ws[i].s = {
+            font: {
+              bold: true,
+              name: 'arial',
+              sz: 18,
+            },
+            //字體位置
+            alignment: {
+              vertical: 'center',
+              horizontal: 'center',
+              wrapText: true, //換行
+            },
+            fill: {
+              patternType: 'solid',
+              fgColor: { rgb: 'ffffff' },
+            },
+          };
+        }
+        /**字元數 */
+        ws['!cols']?.push({ wch: 16 });
+        ws['!rows']?.push({ hpx: 28 });
       }
-      XLSX.utils.book_append_sheet(wb, ws, table.reportName);
-      let fileName = `${this.subClientName}_${table.reportName}.xlsx`
+      XLSX.utils.book_append_sheet(wb, ws, table.subName);
+      const fileName = `${this.subClientName}_${table.subName}.xlsx`
       XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);
@@ -443,6 +526,44 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.costTotal = 0;
     this.ctrTotal = '';
     this.cpcTotal = 0;
+  }
+  //#region checkBox 相關
+  updateAllComplete() {
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  }
+
+  someComplete(): boolean {
+    if (this.task.subtasks == null) {
+      return false;
+    }
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
+  }
+
+  setAll(completed: boolean) {
+    this.allComplete = completed;
+    if (this.task.subtasks == null) {
+      return;
+    }
+    this.task.subtasks.forEach(t => (t.completed = completed));
+  }
+  //#endregion
+  /**
+   *選擇子帳戶活動多或單 TODO單選要把值塞進去
+   *
+   * @param {string} type s 單選 m 多選
+   * @memberof ExportComponent
+   */
+  oneOrMoreChange(type: string) {
+    switch (type) {
+      case "s":
+
+        break;
+      case "m":
+        this.setAll(true);
+        break;
+      default:
+        break;
+    }
   }
 
   exportReportCalled: boolean = false;

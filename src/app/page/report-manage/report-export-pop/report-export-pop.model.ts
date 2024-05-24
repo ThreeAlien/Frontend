@@ -82,3 +82,19 @@ export interface exportData{
   gender:string;
   impressions:number;
 }
+/**帳戶活動名稱 */
+export interface MccModel {
+  /**客戶ID */
+  clientId: string;
+  /**子帳戶ID */
+  subId: string;
+  /**子帳戶名稱 */
+  subName: string;
+}
+/**chkBox */
+export interface Task {
+  name: string;
+  completed: boolean;
+  color: ThemePalette;
+  subtasks?: Task[];
+}
