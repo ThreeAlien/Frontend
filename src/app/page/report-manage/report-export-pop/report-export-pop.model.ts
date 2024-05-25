@@ -1,3 +1,5 @@
+import { ThemePalette } from "@angular/material/core";
+
 export interface ExportReportData {
   /**子帳戶活動ID */
   subId: string;
@@ -97,4 +99,9 @@ export interface Task {
   completed: boolean;
   color: ThemePalette;
   subtasks?: Task[];
+}
+export interface exportSubListModel{
+  isCheck:boolean;
+  subId:string;
+  subName:string;
 }

@@ -11,7 +11,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { MccModel,ExportReportData,ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList } from './report-export-pop.model';
+import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, Task, exportSubListModel } from './report-export-pop.model';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -27,7 +27,7 @@ import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from '../../../share/loading/loading.component';
 import { ApiService } from 'src/app/share/service/api.service';
 import { LoadingService } from 'src/app/share/service/loading.service';
-import { tap } from 'rxjs';
+import { map } from 'rxjs';
 
 
 @Component({
@@ -50,8 +50,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   get dataList() {
     return this.firstFormGroup.get('dataList') as FormArray;
   }
-  isLinear = true;  
+  isLinear = true;
   isIcon = true;
+  clientId: string = "";
   //報表內容id
   colId: string = "";
   //子帳號ID
@@ -72,8 +73,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   subClientName: string = "";
   /**是否顯示 關鍵字 footer */
   isKwEnable: boolean = false;
-  /**子帳戶活動總清單*/
-  ChildMccItemListData: MccModel[] = [];
   /**chkBox */
   task: Task = {
     name: '全選',
@@ -84,17 +83,32 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       { name: 'nike_gdn', completed: false, color: 'primary' }
     ],
   };
+  /**要匯出得子帳戶名單*/
+  exportSubList: exportSubListModel[] = []
   allComplete: boolean = false;
   async ngAfterViewInit(): Promise<void> {
     await this.getReportDetail(this.colId);
   }
   async ngOnInit(): Promise<void> {
+    this.clientId = this.inPutdata.clienId;
+    console.log(this.clientId);
     this.colId = this.inPutdata.columnID;
     this.subId = this.inPutdata.subID;
     this.subClientName = this.inPutdata.subClientName;
     this.CommonSvc.ChildMccItemList().pipe(
-      tap(x => this.ChildMccItemListData = x)
+      map(subData => subData = subData.filter(x => x.clientId == this.clientId)),
+      map((res) => {
+        res.forEach(resD => {
+          this.exportSubList.push(
+            {
+              isCheck: false, subId: resD.subId, subName: resD.subName
+            }
+          )
+        })
+      }),
+
     ).subscribe();
+    console.log(this.exportSubList)
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -222,7 +236,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         font: "msjh"
       }
     })
-    let fileName = `${this.subClientName}_${table.reportName}.pdf`
+    let fileName = `${this.subClientName}.pdf`
     doc.save(fileName);
   }
   mouseDown(event: any, el: any = null) {
@@ -526,16 +540,20 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.ctrTotal = '';
     this.cpcTotal = 0;
   }
+  /**設定報表匯出 */
+  setExportData() {
+
+  }
   //#region checkBox 相關
   updateAllComplete() {
-    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every((t: { completed: any; }) => t.completed);
   }
 
   someComplete(): boolean {
     if (this.task.subtasks == null) {
       return false;
     }
-    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
+    return this.task.subtasks.filter((t: { completed: any; }) => t.completed).length > 0 && !this.allComplete;
   }
 
   setAll(completed: boolean) {
@@ -543,7 +561,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     if (this.task.subtasks == null) {
       return;
     }
-    this.task.subtasks.forEach(t => (t.completed = completed));
+    this.task.subtasks.forEach((t: { completed: boolean; }) => (t.completed = completed));
   }
   //#endregion
   /**
