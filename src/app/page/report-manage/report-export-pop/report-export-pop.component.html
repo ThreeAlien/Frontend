@@ -13,12 +13,43 @@
     <mat-stepper orientation="vertical" [linear]="isLinear" #stepper (selectionChange)="selectionChange($event)">
       <mat-step [stepControl]="firstFormGroup">
         <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>請選擇子帳戶活動</ng-template>
+          <div style="width: 100%; height: 100%;">
+            <input matInput hidden formControlName="exportType" />
+            <mat-radio-group style="margin-left: 10px" formControlName="exportType">
+              <mat-radio-button *ngFor="let type of exportType" [value]="type.value"
+                (change)="oneOrMoreChange($event.value)">{{type.name}}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <section style="padding-left: 9px;">
+            <span>
+              <mat-checkbox [checked]="allComplete" [color]="chkAllBox.color" [indeterminate]="someComplete()"
+                (change)="setAll($event.checked)">
+                {{chkAllBox.name}}
+              </mat-checkbox>
+            </span>
+            <span>
+              <ul>
+                <li *ngFor="let subtask of chkAllBox.subChkBox">
+                  <mat-checkbox [(ngModel)]="subtask.isCheck" [color]="subtask.color"
+                    [ngModelOptions]="{standalone: true}" (ngModelChange)="chkBoxChange()">
+                    {{subtask.subName}}
+                  </mat-checkbox>
+                </li>
+              </ul>
+            </span>
+          </section>
+          <button mat-button matStepperNext class="nextBtn">下一步</button>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
           <ng-template matStepLabel>請選擇要匯出的報表</ng-template>
           <table class='table' style="width: 100%;align-items: center;border-collapse: collapse;border-color: #111111;">
             <tr class='tr_th_1 str_center'>
               <th class="th_1" style="width: 5%;border-right: 3px #000000 solid;">
                 <mat-checkbox color="primary"
-                  (change)="onCheckAll($event,firstFormGroup.controls.dataList)"></mat-checkbox>
+                  (change)="onCheckAll($event,secondFormGroup.controls.dataList)"></mat-checkbox>
               </th>
               <th class="th_1" style="width: 25%;">報表內容</th>
               <th class="th_1">時間區間</th>

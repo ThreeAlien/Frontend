@@ -11,7 +11,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, Task, exportSubListModel } from './report-export-pop.model';
+import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel } from './report-export-pop.model';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -44,11 +44,15 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     public datePipe: DatePipe, private formBuilder: FormBuilder, public apiService: ApiService,
     public loadingService: LoadingService, private messageService: MessageService, private CommonSvc: CommonService) { }
 
-  firstFormGroup = this.formBuilder.group({
+  secondFormGroup = this.formBuilder.group({
     dataList: this.formBuilder.array([])
   });
+  exportType = [{ value: "s", name: "單筆" }, { value: "m", name: "多筆" }];
+  firstFormGroup = new FormGroup({
+    exportType: new FormControl('s', [Validators.required])
+  });
   get dataList() {
-    return this.firstFormGroup.get('dataList') as FormArray;
+    return this.secondFormGroup.get('dataList') as FormArray;
   }
   isLinear = true;
   isIcon = true;
@@ -74,14 +78,11 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   /**是否顯示 關鍵字 footer */
   isKwEnable: boolean = false;
   /**chkBox */
-  task: Task = {
+  chkAllBox: subChkBoxModel = {
     name: '全選',
-    completed: false,
+    isCheck: false,
     color: 'primary',
-    subtasks: [
-      { name: 'nike_kw', completed: false, color: 'primary' },
-      { name: 'nike_gdn', completed: false, color: 'primary' }
-    ],
+    subChkBox: []
   };
   /**要匯出得子帳戶名單*/
   exportSubList: exportSubListModel[] = []
@@ -91,7 +92,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   }
   async ngOnInit(): Promise<void> {
     this.clientId = this.inPutdata.clienId;
-    console.log(this.clientId);
     this.colId = this.inPutdata.columnID;
     this.subId = this.inPutdata.subID;
     this.subClientName = this.inPutdata.subClientName;
@@ -101,12 +101,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         res.forEach(resD => {
           this.exportSubList.push(
             {
-              isCheck: false, subId: resD.subId, subName: resD.subName
+              isCheck: false, subId: resD.subId, subName: resD.subName,color: 'primary'
             }
           )
         })
       }),
-
+      map(()=>{
+        this.chkAllBox.subChkBox = this.exportSubList;
+      })
     ).subscribe();
     console.log(this.exportSubList)
   }
@@ -545,23 +547,23 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
 
   }
   //#region checkBox 相關
-  updateAllComplete() {
-    this.allComplete = this.task.subtasks != null && this.task.subtasks.every((t: { completed: any; }) => t.completed);
+  chkBoxChange() {
+    this.allComplete = this.chkAllBox.subChkBox != null && this.chkAllBox.subChkBox.every((t: { completed: any; }) => t.completed);
   }
 
   someComplete(): boolean {
-    if (this.task.subtasks == null) {
+    if (this.chkAllBox.subChkBox == null) {
       return false;
     }
-    return this.task.subtasks.filter((t: { completed: any; }) => t.completed).length > 0 && !this.allComplete;
+    return this.chkAllBox.subChkBox.filter((t: { completed: any; }) => t.completed).length > 0 && !this.allComplete;
   }
 
   setAll(completed: boolean) {
     this.allComplete = completed;
-    if (this.task.subtasks == null) {
+    if (this.chkAllBox.subChkBox == null) {
       return;
     }
-    this.task.subtasks.forEach((t: { completed: boolean; }) => (t.completed = completed));
+    this.chkAllBox.subChkBox.forEach((t: { completed: boolean; }) => (t.completed = completed));
   }
   //#endregion
   /**
@@ -647,6 +649,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             if (data.data.length > 0) {
               data.data as exportData;
               let tmpD: ExportReportModel = {
+                subId: "",                
                 reportName: "性別成效",
                 tableId: "",
                 colNameList: [
@@ -664,6 +667,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 tmpD.colValueList.push({ tdList: [] });
               });
               data.data.forEach((y: exportData, index: number) => {
+                tmpD.subId = y.subId;
                 switch (y.gender) {
                   case "Male":
                     y.gender = colMapping.genderMale
@@ -740,6 +744,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             if (data.data.length > 0) {
               data.data as exportData;
               let tmpD: ExportReportModel = {
+                subId: "",
                 reportName: "年齡成效",
                 tableId: "",
                 colNameList: [
@@ -757,6 +762,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 tmpD.colValueList.push({ tdList: [] });
               });
               data.data.forEach((y: exportData, index: number) => {
+                tmpD.subId = y.subId;
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
@@ -822,6 +828,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             if (data.data.length > 0) {
               data.data as exportData;
               let tmpD: ExportReportModel = {
+                subId: "",
                 reportName: "關鍵字成效",
                 tableId: "",
                 colNameList: [
@@ -842,6 +849,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 tmpD.colValueList.push({ tdList: [] });
               });
               data.data.forEach((y: exportData, index: number) => {
+                tmpD.subId = y.subId;
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
@@ -909,6 +917,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             if (data.data.length > 0) {
               data.data as exportData;
               let tmpD: ExportReportModel = {
+                subId:"",
                 reportName: "地區成效",
                 tableId: "",
                 colNameList: [
@@ -926,6 +935,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 tmpD.colValueList.push({ tdList: [] });
               });
               data.data.forEach((y: exportData, index: number) => {
+                tmpD.subId = y.subId;
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;
@@ -1008,6 +1018,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             if (data.data.length > 0) {
               data.data as exportData;
               let tmpD: ExportReportModel = {
+                subId:"",
                 reportName: type == "Day" ? "每日報表" : "每周報表",
                 tableId: "",
                 colNameList: [
@@ -1025,6 +1036,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 tmpD.colValueList.push({ tdList: [] });
               });
               data.data.forEach((y: exportData, index: number) => {
+                tmpD.subId = y.subId;
                 this.impressTotal += y.impressions;
                 this.clickTotal += y.click;
                 this.costTotal += y.cost;

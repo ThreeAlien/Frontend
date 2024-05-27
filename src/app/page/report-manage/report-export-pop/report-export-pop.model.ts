@@ -8,6 +8,8 @@ export interface ExportReportData {
   ExportReportData: ExportReportModel[];
 }
 export interface ExportReportModel{
+  /**子帳戶活動Id */
+  subId:string;
   /**報表名稱 */
   reportName:string;
   /**HTMLID 標籤用 */
@@ -70,6 +72,7 @@ export interface dateRangeModel {
   value: string;
 }
 export interface exportData{
+  subId:string;
   date:string;
   adGroupName:string;
   campaignName:string;
@@ -94,14 +97,15 @@ export interface MccModel {
   subName: string;
 }
 /**chkBox */
-export interface Task {
+export interface subChkBoxModel {
   name: string;
-  completed: boolean;
+  isCheck: boolean;
   color: ThemePalette;
-  subtasks?: Task[];
+  subChkBox: exportSubListModel[];
 }
-export interface exportSubListModel{
-  isCheck:boolean;
-  subId:string;
-  subName:string;
+export interface exportSubListModel {
+  isCheck: boolean;
+  subId: string;
+  subName: string;
+  color: ThemePalette;
 }
