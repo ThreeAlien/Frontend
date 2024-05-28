@@ -1150,7 +1150,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
                 this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
                 return {
-                  reportName: type == "Day" ? "每日報表" : "每周報表",
+                  reportName: type == "Day" ? "#每日報表" : "#每周報表",
                   subId: subId,
                   tableId: '',
                   colNameList: [
