@@ -16,7 +16,7 @@
           <ng-template matStepLabel>請選擇子帳戶活動</ng-template>
           <div style="width: 100%; height: 100%;">
             <input matInput hidden formControlName="exportType" />
-            <mat-radio-group style="margin-left: 10px" formControlName="exportType">
+            <mat-radio-group style="margin-left: 10px" formControlName="exportType" color="primary">
               <mat-radio-button *ngFor="let type of exportType" [value]="type.value"
                 (change)="oneOrMoreChange($event.value)">{{type.name}}</mat-radio-button>
             </mat-radio-group>
@@ -32,14 +32,14 @@
               <ul>
                 <li *ngFor="let subtask of chkAllBox.subChkBox">
                   <mat-checkbox [(ngModel)]="subtask.isCheck" [color]="subtask.color"
-                    [ngModelOptions]="{standalone: true}" (ngModelChange)="chkBoxChange()">
+                    [ngModelOptions]="{standalone: true}" (change)="chkBoxChange(subtask)">
                     {{subtask.subName}}
                   </mat-checkbox>
                 </li>
               </ul>
             </span>
           </section>
-          <button mat-button matStepperNext class="nextBtn">下一步</button>
+          <button mat-button matStepperNext class="nextBtn" (click)="chkSubChkBox()">下一步</button>
         </form>
       </mat-step>
       <mat-step [stepControl]="secondFormGroup">
@@ -93,7 +93,10 @@
             </ng-container>
           </table>
           <div style="float: left;padding-top: 10px;">
-            <button mat-button matStepperNext class="nextBtn">下一步</button>
+            <div style="display: flex; ">
+              <button mat-button matStepperPrevious class="nextBtn" style="margin-right: 15px;">上一步</button>
+              <button mat-button matStepperNext class="nextBtn">下一步</button>
+            </div>
           </div>
         </form>
       </mat-step>
@@ -105,12 +108,15 @@
               <ng-container *ngFor="let table of exportData">
                 <div class="table_center90">
                   <div style="display: flex;justify-content: space-between;">
-                    <div style="display: flex;" *ngIf="isIcon === true">
+                    <div>
+                      <div class="tr_th_title">{{table.subName}}</div>
+                    </div>
+                    <div style="display: flex;">
                       <div class="ExcelIcon" (click)="exportSingleExcel(table)"></div>
                       <div class="PdfIcon" (click)="exportSinglePdf(table)"></div>
                     </div>
                   </div>
-                  <table id="{{table.subId}}" class='table'
+                  <table id="REP{{table.subId}}" class='table'
                     style="width: 100%;align-items: center;border-collapse: collapse;">
                     <ng-container *ngFor="let tableList of table.ExportReportData">
                       <!-- 報表項目 -->
@@ -122,7 +128,7 @@
                       <!-- 標題 -->
                       <tr class='tr_th_1 str_center' cdkDropList cdkDropListOrientation="horizontal"
                         [cdkDropListData]="tableList.colNameList"
-                        (cdkDropListDropped)="dropTable($event,tableList.tableId)">
+                        (cdkDropListDropped)="dropTable($event,tableList.tableId,tableList.subId)">
                         <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
                           <th cdkDrag (mousedown)="mouseDown($event)" cdkDragLockAxis="x" class="th_Nor"
                             [ngClass]="{ th_R : i === tableList.colNameList.length-1,th_L : i===0}">

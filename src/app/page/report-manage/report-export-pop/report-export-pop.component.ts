@@ -1,8 +1,10 @@
+import { data } from 'jquery';
+import { MatRadioModule } from '@angular/material/radio';
 import { CommonService } from 'src/app/share/service/common.service';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { DatePipe, NgFor, NgIf, NgClass } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -11,7 +13,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel } from './report-export-pop.model';
+import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel, colValueModel } from './report-export-pop.model';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -27,7 +29,7 @@ import { ToastModule } from 'primeng/toast';
 import { LoadingComponent } from '../../../share/loading/loading.component';
 import { ApiService } from 'src/app/share/service/api.service';
 import { LoadingService } from 'src/app/share/service/loading.service';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 
 @Component({
@@ -35,7 +37,7 @@ import { map } from 'rxjs';
   templateUrl: './report-export-pop.component.html',
   styleUrls: ['./report-export-pop.component.css'],
   standalone: true,
-  imports: [LoadingComponent, ToastModule, MatIconModule, MatStepperModule, ReactiveFormsModule, MatCheckboxModule, NgFor, NgIf, MatFormFieldModule, MatDatepickerModule, MatChipsModule, CdkDropList, CdkDrag, CdkDragPreview, MatButtonModule, FormsModule, NgClass, MatMenuModule]
+  imports: [MatRadioModule, LoadingComponent, ToastModule, MatIconModule, MatStepperModule, ReactiveFormsModule, MatCheckboxModule, NgFor, NgIf, MatFormFieldModule, MatDatepickerModule, MatChipsModule, CdkDropList, CdkDrag, CdkDragPreview, MatButtonModule, FormsModule, NgClass, MatMenuModule]
 })
 //報表匯出
 export class ReportExpotPopComponent implements AfterViewInit, OnInit {
@@ -48,8 +50,10 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     dataList: this.formBuilder.array([])
   });
   exportType = [{ value: "s", name: "單筆" }, { value: "m", name: "多筆" }];
+  subListForm: string[] = []
   firstFormGroup = new FormGroup({
-    exportType: new FormControl('s', [Validators.required])
+    exportType: new FormControl('s', [Validators.required]),
+    subList: new FormControl(this.subListForm, [Validators.required]),
   });
   get dataList() {
     return this.secondFormGroup.get('dataList') as FormArray;
@@ -95,22 +99,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.colId = this.inPutdata.columnID;
     this.subId = this.inPutdata.subID;
     this.subClientName = this.inPutdata.subClientName;
-    this.CommonSvc.ChildMccItemList().pipe(
-      map(subData => subData = subData.filter(x => x.clientId == this.clientId)),
-      map((res) => {
-        res.forEach(resD => {
-          this.exportSubList.push(
-            {
-              isCheck: false, subId: resD.subId, subName: resD.subName,color: 'primary'
-            }
-          )
-        })
-      }),
-      map(()=>{
-        this.chkAllBox.subChkBox = this.exportSubList;
-      })
-    ).subscribe();
-    console.log(this.exportSubList)
+    this.setSubData('s');
   }
   //有勾選到的報表內容要給必填日期
   onCheckExport(value: any, data: any) {
@@ -188,11 +177,12 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   }
   /**步驟切換(案下一步) */
   async selectionChange(data: StepperSelectionEvent) {
-    //第一步
-    if (data.selectedIndex == 0) {
-    }
     //第二步
     if (data.selectedIndex == 1) {
+      this.exportData = [];
+    }
+    //第三步
+    if (data.selectedIndex == 2) {
       let isExport = false;
       for (const x of this.dataList.controls) {
         if (x.value.sta) {
@@ -214,7 +204,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     doc.text('汎古數位媒體行銷股份有限公司', 14, 20)
     this.exportData.forEach(x => {
       autoTable(doc, {
-        html: `#${x.subId}`,
+        html: `#REP${x.subId}`,
         tableWidth: 'auto',
         useCss: true,
         styles: {
@@ -222,7 +212,9 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         }
       })
     })
-    let fileName = `${this.subClientName}報表.pdf`
+    let now = new Date();
+    let nowday = this.datePipe.transform(now, "yyyyMMdd")
+    let fileName = `${nowday}報表.pdf`
     doc.save(fileName);
   }
   /**單筆匯出PDF */
@@ -231,7 +223,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     doc.setFont('msjh');
     doc.text('汎古數位媒體行銷股份有限公司', 14, 20)
     autoTable(doc, {
-      html: `#${table.subId}`,
+      html: `#REP${table.subId}`,
       tableWidth: 'auto',
       useCss: true,
       styles: {
@@ -249,10 +241,11 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       width: el.getBoundingClientRect().width + "px"
     };
   }
-  dropTable(event: CdkDragDrop<any[]>, tableId: any) {
-    let totalData = this.exportDataList.find(x => x.tableId == tableId);
-    const data = this.exportDataList.find(x => x.tableId == tableId)?.colNameList;
-    const footerData = this.exportDataList.find(x => x.tableId == tableId)?.totalList;
+  dropTable(event: CdkDragDrop<any[]>, tableId: string, subId: string) {
+    let totalData = this.exportData.find(x => x.subId == subId)?.ExportReportData.find(y => y.tableId == tableId)
+    const data = totalData?.colNameList;
+    const footerData = totalData?.totalList;
+
     if (data && footerData) {
       if (event.previousContainer === event.container) {
         //更改 內容
@@ -283,7 +276,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         let lastRow = -1;
         let totalRow = 0;
         let titleRow = 0;
-        const excelTable = document.getElementById(x.subId);
+        const excelTable = document.getElementById(`REP${x.subId}`);
         const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
         //抓最後一比在第幾行
         for (const i in ws) {
@@ -377,12 +370,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             };
           }
           /**字元數 */
-          ws['!cols']?.push({ wch: 16 });
+          ws['!cols']?.push({ wch: 25 });
           ws['!rows']?.push({ hpx: 28 });
         }
         XLSX.utils.book_append_sheet(wb, ws, x.subName);
       });
-      const fileName = `${this.subClientName}報表.xlsx`
+      let now = new Date();
+      let nowday = this.datePipe.transform(now, "yyyyMMdd")
+      const fileName = `${nowday}報表.xlsx`
       XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);
@@ -395,7 +390,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       let lastRow = -1;
       let totalRow = 0;
       let titleRow = 0;
-      const excelTable = document.getElementById(table.subId);
+      const excelTable = document.getElementById(`REP${table.subId}`);
       const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(excelTable);
       //抓最後一比在第幾行
       for (const i in ws) {
@@ -489,11 +484,11 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
           };
         }
         /**字元數 */
-        ws['!cols']?.push({ wch: 16 });
+        ws['!cols']?.push({ wch: 25 });
         ws['!rows']?.push({ hpx: 28 });
       }
       XLSX.utils.book_append_sheet(wb, ws, table.subName);
-      const fileName = `${this.subClientName}_${table.subName}.xlsx`
+      const fileName = `${this.subClientName}報表.xlsx`
       XLSX.writeFile(wb, fileName);
     } catch (e) {
       console.log(e);
@@ -529,9 +524,11 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   //把每張報表設定ID
   setTableId() {
     return new Promise<void>((resolve, reject) => {
-      for (let i = 0; i < this.exportDataList.length; i++) {
-        this.exportDataList[i].tableId = `table_${i}`;
-      }
+      this.exportData.forEach((data, i) => {
+        for (let num = 0; num < data.ExportReportData.length; num++) {
+          data.ExportReportData[num].tableId = `table_${num}`;
+        }
+      })
       resolve();
     });
   }
@@ -542,28 +539,119 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     this.ctrTotal = '';
     this.cpcTotal = 0;
   }
-  /**設定報表匯出 */
-  setExportData() {
+  /**設定子帳戶活動 */
+  setSubData(type: string) {
+    this.CommonSvc.ChildMccItemList().pipe(
+      map(subData => subData = subData.filter(x => x.clientId == this.clientId)),
+      tap(() => this.exportSubList = []),
+      map((res) => {
+        switch (type) {
+          case 's':
+            let tmpSinString: string[] = [];
+            this.exportSubList.push(
+              {
+                isCheck: false, subId: this.subId, subName: this.subClientName, color: 'primary'
+              }
+            )
+            tmpSinString.push(this.subId);
+            this.firstFormGroup.controls.subList.setValue(tmpSinString);
+            break;
+          case 'm':
+            let tmpMulString: string[] = [];
+            res.forEach(resD => {
+              this.exportSubList.push(
+                {
+                  isCheck: false, subId: resD.subId, subName: resD.subName, color: 'primary'
+                }
+              )
+              tmpMulString.push(resD.subId);
+            })
+            this.firstFormGroup.controls.subList.setValue(tmpMulString);
+            break;
 
+          default:
+            break;
+        }
+      }),
+      map(() => {
+        this.chkAllBox.subChkBox = this.exportSubList;
+        this.setAll(true);
+      })
+    ).subscribe();
+  }
+  /**更新報表 */
+  updateExport(data: ExportReportModel[]) {
+    let subName:string="";
+    // 更新 exportData
+    if (this.exportData.length === 0) {
+      data.forEach((report, i) => {
+        this.CommonSvc.ChildMccItemList().pipe(
+          map(subData => subData = subData.filter(x => x.subId == report.subId)),
+          map(data=> subName = data[0].subName)
+        ).subscribe();
+        this.exportData.push(
+          {
+            subId: report.subId,
+            subName: `${subName}`,
+            ExportReportData: [report]
+          });
+      });
+    }
+    else {
+      data.forEach((report, i) => {
+        this.CommonSvc.ChildMccItemList().pipe(
+          map(subData => subData = subData.filter(x => x.subId == report.subId)),
+          map(data=> subName = data[0].subName)
+        ).subscribe();
+        const Index = this.exportData.findIndex(data => data.subId === report.subId);
+        if (Index === -1) {
+          this.exportData.push({
+            subId: report.subId,
+            subName: `${subName}`,
+            ExportReportData: [report]
+          });
+        }
+        else {
+          this.exportData[Index].ExportReportData.push(report);
+        }
+      });
+    }
   }
   //#region checkBox 相關
-  chkBoxChange() {
-    this.allComplete = this.chkAllBox.subChkBox != null && this.chkAllBox.subChkBox.every((t: { completed: any; }) => t.completed);
+  chkBoxChange(data: exportSubListModel) {
+    console.log(data);
+    this.allComplete = this.chkAllBox.subChkBox != null && this.chkAllBox.subChkBox.every((t: { isCheck: any; }) => t.isCheck);
+    let tmpD = this.firstFormGroup.controls.subList.value;
+    /**檢視是否被勾選，有勾的才加入subList */
+    if (tmpD && data.isCheck == false) {
+      let index = tmpD.findIndex(x => x == data.subId);
+      tmpD.splice(index, 1);
+      this.firstFormGroup.controls.subList.setValue(tmpD);
+    } else if (tmpD && data.isCheck == true) {
+      tmpD.push(data.subId);
+      this.firstFormGroup.controls.subList.setValue(tmpD);
+    }
   }
-
   someComplete(): boolean {
     if (this.chkAllBox.subChkBox == null) {
       return false;
     }
-    return this.chkAllBox.subChkBox.filter((t: { completed: any; }) => t.completed).length > 0 && !this.allComplete;
+    return this.chkAllBox.subChkBox.filter((t: { isCheck: any; }) => t.isCheck).length > 0 && !this.allComplete;
   }
 
-  setAll(completed: boolean) {
-    this.allComplete = completed;
+  setAll(isCheck: boolean) {
+    this.allComplete = isCheck;
     if (this.chkAllBox.subChkBox == null) {
       return;
     }
-    this.chkAllBox.subChkBox.forEach((t: { completed: boolean; }) => (t.completed = completed));
+    this.chkAllBox.subChkBox.forEach((t: { isCheck: any; }) => (t.isCheck = isCheck));
+  }
+  /**檢查子帳戶活動是否都有被勾到 */
+  chkSubChkBox() {
+    let tmpD = this.firstFormGroup.controls.subList.value;
+    if (tmpD?.length == 0) {
+      this.messageService.add({ severity: 'warn', summary: '提醒', detail: '尚未勾選子帳戶活動' })
+    }
   }
   //#endregion
   /**
@@ -575,10 +663,10 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   oneOrMoreChange(type: string) {
     switch (type) {
       case "s":
-
+        this.setSubData('s');
         break;
       case "m":
-        this.setAll(true);
+        this.setSubData('m');
         break;
       default:
         break;
@@ -630,81 +718,88 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     })
 
   }
+  //#region  API 相關
+
   /**性別報表匯出API */
   getExportGender(sd: string, ed: string) {
     try {
-      let SD = sd;
-      let ED = ed;
+      const SD = sd;
+      const ED = ed;
       const request = {
-        subId: this.subId,
+        subId: this.firstFormGroup.controls.subList.value,
         startDate: SD,
         endDate: ED,
       };
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportGender`;
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportGender`;
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
-            let data = res as BaseResponse;
+            const data = res as BaseResponse;
             if (data.data.length > 0) {
-              data.data as exportData;
-              let tmpD: ExportReportModel = {
-                subId: "",                
-                reportName: "性別成效",
-                tableId: "",
-                colNameList: [
-                  { colValue: colMapping.genderTitie, colSta: true, width: "auto" },
-                  { colValue: colMapping.impression, colSta: true, width: "auto" },
-                  { colValue: colMapping.click, colSta: true, width: "auto" },
-                  { colValue: colMapping.ctr, colSta: true, width: "auto" },
-                  { colValue: colMapping.cpc, colSta: true, width: "auto" },
-                  { colValue: colMapping.cost, colSta: true, width: "auto" },
-                ],
-                colValueList: [],
-                totalList: []
-              }
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
-              });
-              data.data.forEach((y: exportData, index: number) => {
-                tmpD.subId = y.subId;
-                switch (y.gender) {
-                  case "Male":
-                    y.gender = colMapping.genderMale
-                    break;
-                  case "Female":
-                    y.gender = colMapping.genderFemale
-                    break;
-                  case "Undetermined":
-                    y.gender = colMapping.genderUnknow
-                    break;
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
                 }
-                this.impressTotal += y.impressions;
-                this.clickTotal += y.click;
-                this.costTotal += y.cost;
-
-                tmpD.colValueList[index].tdList.push(
-                  { colValue: y.gender, colSta: true },
-                  { colValue: y.impressions.toLocaleString(), colSta: true },
-                  { colValue: y.click.toLocaleString(), colSta: true },
-                  { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
-                )
-              })
-              this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
-              this.costTotal = this.cpcTotal * this.clickTotal;
-              tmpD.totalList.push(
-                { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
-              )
-
-              this.exportDataList.push(tmpD);
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                const colValueList = dataList.map(data => {
+                  // 根據 gender 字段進行轉換
+                  let genderDisplay;
+                  switch (data.gender) {
+                    case "Male": genderDisplay = colMapping.genderMale;
+                      break;
+                    case "Female": genderDisplay = colMapping.genderFemale;
+                      break;
+                    case "Undetermined": genderDisplay = colMapping.genderUnknow;
+                      break;
+                    default:
+                      genderDisplay = data.gender;
+                    // 保持原樣
+                  }
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: genderDisplay, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: '#性別成效',
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.genderTitie, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" },
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: "總計", colSta: true },
+                    { colValue: this.impressTotal.toLocaleString(), colSta: true },
+                    { colValue: this.clickTotal.toLocaleString(), colSta: true },
+                    { colValue: this.ctrTotal, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true }
+                  ]
+                };
+              });
+              this.updateExport(exportReport);
             } else {
               this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無性別成效報表資訊!' })
             }
@@ -728,67 +823,70 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   /**年齡報表匯出API */
   getExportAge(sd: string, ed: string) {
     try {
-      let SD = sd;
-      let ED = ed;
+      const SD = sd;
+      const ED = ed;
       const request = {
-        subId: this.subId,
+        subId: this.firstFormGroup.controls.subList.value,
         startDate: SD,
         endDate: ED,
       };
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportAge`;
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportAge`;
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
-            let data = res as BaseResponse;
+            const data = res as BaseResponse;
             if (data.data.length > 0) {
-              data.data as exportData;
-              let tmpD: ExportReportModel = {
-                subId: "",
-                reportName: "年齡成效",
-                tableId: "",
-                colNameList: [
-                  { colValue: colMapping.ageTitle, colSta: true, width: "auto" },
-                  { colValue: colMapping.impression, colSta: true, width: "auto" },
-                  { colValue: colMapping.click, colSta: true, width: "auto" },
-                  { colValue: colMapping.ctr, colSta: true, width: "auto" },
-                  { colValue: colMapping.cpc, colSta: true, width: "auto" },
-                  { colValue: colMapping.cost, colSta: true, width: "auto" },
-                ],
-                colValueList: [],
-                totalList: []
-              }
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
+                }
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                const colValueList = dataList.map(data => {
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: data.age, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: '#年齡成效',
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.ageTitle, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" },
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: "總計", colSta: true },
+                    { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.ctrTotal}`, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
+                  ]
+                };
               });
-              data.data.forEach((y: exportData, index: number) => {
-                tmpD.subId = y.subId;
-                this.impressTotal += y.impressions;
-                this.clickTotal += y.click;
-                this.costTotal += y.cost;
-
-                tmpD.colValueList[index].tdList.push(
-                  { colValue: y.age, colSta: true },
-                  { colValue: y.impressions.toLocaleString(), colSta: true },
-                  { colValue: y.click.toLocaleString(), colSta: true },
-                  { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
-                )
-              })
-              this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
-              this.costTotal = this.cpcTotal * this.clickTotal;
-              tmpD.totalList.push(
-                { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
-              )
-
-              this.exportDataList.push(tmpD);
+              this.updateExport(exportReport);
             } else {
               this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無年齡成效報表資訊!' })
             }
@@ -812,72 +910,76 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   /**關鍵字報表匯出 API */
   getExportKeyWord(sd: string, ed: string) {
     try {
-      let SD = sd;
-      let ED = ed;
+      const SD = sd;
+      const ED = ed;
       const request = {
-        subId: this.subId,
+        subId: this.firstFormGroup.controls.subList.value,
         startDate: SD,
         endDate: ED,
       };
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportKeyWord`;
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportKeyWord`;
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
-            let data = res as BaseResponse;
+            const data = res as BaseResponse;
             if (data.data.length > 0) {
-              data.data as exportData;
-              let tmpD: ExportReportModel = {
-                subId: "",
-                reportName: "關鍵字成效",
-                tableId: "",
-                colNameList: [
-                  { colValue: colMapping.kwCampaignName, colSta: true, width: "auto" },
-                  { colValue: colMapping.kwAdGroupName, colSta: true, width: "auto" },
-                  { colValue: colMapping.kwColSrchKeyWord, colSta: true, width: "auto" },
-                  { colValue: colMapping.matchType, colSta: true, width: "auto" },
-                  { colValue: colMapping.impression, colSta: true, width: "auto" },
-                  { colValue: colMapping.click, colSta: true, width: "auto" },
-                  { colValue: colMapping.ctr, colSta: true, width: "auto" },
-                  { colValue: colMapping.cpc, colSta: true, width: "auto" },
-                  { colValue: colMapping.cost, colSta: true, width: "auto" },
-                ],
-                colValueList: [],
-                totalList: []
-              }
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
+                }
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                const colValueList = dataList.map(data => {
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: data.campaignName, colSta: true },
+                      { colValue: data.adGroupName, colSta: true },
+                      { colValue: data.colSrchKeyWord, colSta: true },
+                      { colValue: data.matchType, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },
+                    ]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: '#關鍵字成效',
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.kwCampaignName, colSta: true, width: "auto" },
+                    { colValue: colMapping.kwAdGroupName, colSta: true, width: "auto" },
+                    { colValue: colMapping.kwColSrchKeyWord, colSta: true, width: "auto" },
+                    { colValue: colMapping.matchType, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" },
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.ctrTotal}`, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
+                  ]
+                };
               });
-              data.data.forEach((y: exportData, index: number) => {
-                tmpD.subId = y.subId;
-                this.impressTotal += y.impressions;
-                this.clickTotal += y.click;
-                this.costTotal += y.cost;
-
-                tmpD.colValueList[index].tdList.push(
-                  { colValue: y.campaignName, colSta: true },
-                  { colValue: y.adGroupName, colSta: true },
-                  { colValue: y.colSrchKeyWord, colSta: true },
-                  { colValue: y.matchType, colSta: true },
-                  { colValue: y.impressions.toLocaleString(), colSta: true },
-                  { colValue: y.click.toLocaleString(), colSta: true },
-                  { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
-                )
-              })
-              this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
-              this.costTotal = this.cpcTotal * this.clickTotal;
-              tmpD.totalList.push(
-                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
-              )
-
-              this.exportDataList.push(tmpD);
+              this.updateExport(exportReport);
             } else {
               this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無關鍵字報表資訊!' })
             }
@@ -901,67 +1003,71 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   /**地區報表匯出 API*/
   getExportLocation(sd: string, ed: string) {
     try {
-      let SD = sd;
-      let ED = ed;
+      const SD = sd;
+      const ED = ed;
       const request = {
-        subId: this.subId,
+        subId: this.firstFormGroup.controls.subList.value,
         startDate: SD,
         endDate: ED,
       };
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportLocation`;
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportLocation`;
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
-            let data = res as BaseResponse;
+            const data = res as BaseResponse;
             if (data.data.length > 0) {
-              data.data as exportData;
-              let tmpD: ExportReportModel = {
-                subId:"",
-                reportName: "地區成效",
-                tableId: "",
-                colNameList: [
-                  { colValue: colMapping.locationTitle, colSta: true, width: "auto" },
-                  { colValue: colMapping.impression, colSta: true, width: "auto" },
-                  { colValue: colMapping.click, colSta: true, width: "auto" },
-                  { colValue: colMapping.ctr, colSta: true, width: "auto" },
-                  { colValue: colMapping.cpc, colSta: true, width: "auto" },
-                  { colValue: colMapping.cost, colSta: true, width: "auto" },
-                ],
-                colValueList: [],
-                totalList: []
-              }
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
+                }
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                const colValueList = dataList.map(data => {
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: data.location, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },
+                    ]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: '#地區成效',
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.locationTitle, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" }
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: "總計", colSta: true },
+                    { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.ctrTotal}`, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
+                  ]
+                };
               });
-              data.data.forEach((y: exportData, index: number) => {
-                tmpD.subId = y.subId;
-                this.impressTotal += y.impressions;
-                this.clickTotal += y.click;
-                this.costTotal += y.cost;
-
-                tmpD.colValueList[index].tdList.push(
-                  { colValue: y.location, colSta: true },
-                  { colValue: y.impressions.toLocaleString(), colSta: true },
-                  { colValue: y.click.toLocaleString(), colSta: true },
-                  { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
-                )
-              })
-              this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
-              this.costTotal = this.cpcTotal * this.clickTotal;
-              tmpD.totalList.push(
-                { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
-              )
-
-              this.exportDataList.push(tmpD);
+              this.updateExport(exportReport);
             } else {
               this.messageService.add({ severity: 'error', summary: '錯誤', detail: '查無地區成效報表資訊!' })
             }
@@ -984,13 +1090,13 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   /**每日或每周報表匯出API */
   getExportDayOrWeek(sd: string, ed: string, type: string) {
     try {
-      let SD = sd;
-      let ED = ed;
-      let staBoth = ["Day", "Week"];
-      let staDay = ["Day"];
-      let staWeek = ["Week"];
+      const SD = sd;
+      const ED = ed;
+      const staBoth = ["Day", "Week"];
+      const staDay = ["Day"];
+      const staWeek = ["Week"];
       const request = {
-        subId: this.subId,
+        subId: this.firstFormGroup.controls.subList.value,
         status: [""],
         startDate: SD,
         endDate: ED,
@@ -1008,61 +1114,65 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         default:
           break;
       }
-      let typeStr = type == "Day" ? "每日報表" : "每周報表";
-      let rD = JSON.stringify(request);
-      const qryDataUrl = environment.apiServiceHost + `api/ReportExport/ReportExportWithWeekOrDay`;
+      const typeStr = type == "Day" ? "#每日報表" : "#每周報表";
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportWithWeekOrDay`;
       return new Promise<void>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
-            let data = res as BaseResponse;
+            const data = res as BaseResponse;
             if (data.data.length > 0) {
-              data.data as exportData;
-              let tmpD: ExportReportModel = {
-                subId:"",
-                reportName: type == "Day" ? "每日報表" : "每周報表",
-                tableId: "",
-                colNameList: [
-                  { colValue: colMapping.date, colSta: true, width: "auto" },
-                  { colValue: colMapping.impression, colSta: true, width: "auto" },
-                  { colValue: colMapping.click, colSta: true, width: "auto" },
-                  { colValue: colMapping.ctr, colSta: true, width: "auto" },
-                  { colValue: colMapping.cpc, colSta: true, width: "auto" },
-                  { colValue: colMapping.cost, colSta: true, width: "auto" },
-                ],
-                colValueList: [],
-                totalList: []
-              }
-              data.data.forEach((x: exportData) => {
-                tmpD.colValueList.push({ tdList: [] });
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
+                }
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                const colValueList = dataList.map(data => {
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: data.date, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },
+                    ]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: type == "Day" ? "每日報表" : "每周報表",
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.date, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" },
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: "總計", colSta: true },
+                    { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.ctrTotal}`, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
+                  ]
+                };
               });
-              data.data.forEach((y: exportData, index: number) => {
-                tmpD.subId = y.subId;
-                this.impressTotal += y.impressions;
-                this.clickTotal += y.click;
-                this.costTotal += y.cost;
-
-                tmpD.colValueList[index].tdList.push(
-                  { colValue: y.date, colSta: true },
-                  { colValue: y.impressions.toLocaleString(), colSta: true },
-                  { colValue: y.click.toLocaleString(), colSta: true },
-                  { colValue: y.ctr, colSta: true },
-                  { colValue: this.twFormat(y.cpc, 'cpc'), colSta: true },
-                  { colValue: this.twFormat(y.cost, 'cost'), colSta: true },
-                )
-              })
-              this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
-              this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
-              this.costTotal = this.cpcTotal * this.clickTotal;
-              tmpD.totalList.push(
-                { colValue: "總計", colSta: true },
-                { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
-                { colValue: `${this.ctrTotal}`, colSta: true },
-                { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
-                { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
-              )
-
-              this.exportDataList.push(tmpD);
+              this.updateExport(exportReport);
             } else {
               this.messageService.add({ severity: 'error', summary: '錯誤', detail: `查無${typeStr}報表資訊!` })
             }
@@ -1128,6 +1238,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       console.log(e);
     }
   }
+
+  //#endregion
 
 }
 
