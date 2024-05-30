@@ -680,7 +680,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       for (const x of this.dataList.controls) {
         this.loadingService.loadingOn();
         if (x.value.sta == true) {
-          this.setTotalToZero();
           switch (x.value.contentId) {
             //每日報表
             case "repCon00001":
@@ -747,6 +746,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 return acc;
               }, {});
               const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
                 const colValueList = dataList.map(data => {
                   // 根據 gender 字段進行轉換
                   let genderDisplay;
@@ -847,6 +847,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 return acc;
               }, {});
               const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
                 const colValueList = dataList.map(data => {
                   this.impressTotal += data.impressions;
                   this.clickTotal += data.click;
@@ -934,6 +935,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 return acc;
               }, {});
               const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
                 const colValueList = dataList.map(data => {
                   this.impressTotal += data.impressions;
                   this.clickTotal += data.click;
@@ -1027,6 +1029,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 return acc;
               }, {});
               const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
                 const colValueList = dataList.map(data => {
                   this.impressTotal += data.impressions;
                   this.clickTotal += data.click;
@@ -1132,6 +1135,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 return acc;
               }, {});
               const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
                 const colValueList = dataList.map(data => {
                   this.impressTotal += data.impressions;
                   this.clickTotal += data.click;
