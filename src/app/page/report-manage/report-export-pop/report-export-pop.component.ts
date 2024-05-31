@@ -13,7 +13,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel, colValueModel } from './report-export-pop.model';
+import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel, reportNameMapping } from './report-export-pop.model';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -777,7 +777,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
                 this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
                 return {
-                  reportName: '#性別成效',
+                  reportName: reportNameMapping.genderRepName,
                   subId: subId,
                   tableId: '',
                   colNameList: [
@@ -865,7 +865,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
                 this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
                 return {
-                  reportName: '#年齡成效',
+                  reportName: reportNameMapping.ageRepName,
                   subId: subId,
                   tableId: '',
                   colNameList: [
@@ -957,7 +957,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
                 this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
                 return {
-                  reportName: '#關鍵字成效',
+                  reportName: reportNameMapping.kwRepName,
                   subId: subId,
                   tableId: '',
                   colNameList: [
@@ -1048,7 +1048,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
                 this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
                 return {
-                  reportName: '#地區成效',
+                  reportName: reportNameMapping.locationRepName,
                   subId: subId,
                   tableId: '',
                   colNameList: [
@@ -1117,7 +1117,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         default:
           break;
       }
-      const typeStr = type == "Day" ? "#每日報表" : "#每周報表";
+      const typeStr = type == "Day" ? `${reportNameMapping.dayRepName}` : `${reportNameMapping.weekRepName}`;
       const rD = JSON.stringify(request);
       const qryDataUrl = `api/ReportExport/ReportExportWithWeekOrDay`;
       return new Promise<void>((resolve, reject) => {
@@ -1154,7 +1154,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                 this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
                 this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
                 return {
-                  reportName: type == "Day" ? "#每日報表" : "#每周報表",
+                  reportName: type == "Day" ? `${reportNameMapping.dayRepName}` : `${reportNameMapping.weekRepName}`,
                   subId: subId,
                   tableId: '',
                   colNameList: [

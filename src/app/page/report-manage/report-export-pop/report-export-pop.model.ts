@@ -51,6 +51,14 @@ export enum colMapping{
   cpc = "CPC",
   ctr = "點閱率"
 }
+export enum reportNameMapping{
+  genderRepName = "#性別成效",
+  ageRepName = "#年齡成效",
+  dayRepName = "#每日報表",
+  weekRepName = "#每週報表",
+  kwRepName = "#關鍵字成效",
+  locationRepName = "#地區成效",
+}
 export class exportDataList {
   /**是否被勾選 */
   sta!: boolean;

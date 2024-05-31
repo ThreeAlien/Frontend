@@ -5,7 +5,7 @@ export class exportSampleModels {
   reportID!: string;
   /**報表範本名稱 */
   reportName!: string;
-  /**子帳戶名稱 to do*/
+  /**子帳戶名稱*/
   subClientName!: string;
   /**目標廣告 */
   reportGoalAds!: string;
