@@ -19,5 +19,10 @@
         <button  mat-raised-button routerLink="./billManage"  class="btnitemOut">帳單管理</button>
       </div>
     </div>
+    <div style="margin-top: 3px;" *ngIf="userLv === '1'">
+      <div>
+        <button  mat-raised-button class="btnitemOut" (click)="udDateData()">Ads資料更新</button>
+      </div>
+    </div>
   </div>
 </mat-list>

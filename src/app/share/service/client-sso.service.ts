@@ -3,6 +3,8 @@ import { ApiService } from './api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BaseResponse } from '../Models/share.model';
+import { environment } from 'src/environments/environment';
+import { catchError, tap } from 'rxjs';
 
 /**登入存一個TOKEN */
 const TOKEN_KEY = '';
@@ -10,8 +12,8 @@ const TOKEN_KEY = '';
 const USER_ADSINFO = 'USER_ADSINFO';
 /**有效期限 */
 const EXPIRATION_KEY = "";
-const NAME ="name";
-const ID ="id";
+const NAME = "name";
+const ID = "id";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ const ID ="id";
 /**登入SSO認證 導入google */
 export class ClientSSOService {
 
-  constructor(public apiService: ApiService,private router:Router) { }
+  constructor(public apiService: ApiService, private router: Router) { }
   public nowPageUrl: any;
   public nextPageUrl: any;
   refreshToken = "<REFRESH-TOKEN>";
@@ -36,12 +38,12 @@ export class ClientSSOService {
       return false;
     }
   }
-/**
- * 設定localStorage 資料,在登入時將用戶資訊和過期時間存儲到本地存儲
- * @param userInfo 廣告帳號權限
- * @param expirationMinutes  有效期限(天)
- */
-   setUserInfo(userInfo: any, expirationMinutes: number): void {
+  /**
+   * 設定localStorage 資料,在登入時將用戶資訊和過期時間存儲到本地存儲
+   * @param userInfo 廣告帳號權限
+   * @param expirationMinutes  有效期限(天)
+   */
+  setUserInfo(userInfo: any, expirationMinutes: number): void {
 
     const currentTime = new Date().getTime();
     const expirationTime = currentTime + expirationMinutes * 24 * 60 * 60 * 1000;
@@ -84,9 +86,24 @@ export class ClientSSOService {
     }
     return false;
   }
-//#region  API 相關
+  /**取得ADS 權限認證 */
+  oidcLogin(type: string) {
+    try {
+      const client: google.accounts.oauth2.CodeClient = google.accounts.oauth2.initCodeClient({
+        client_id: environment.clientId,
+        scope: 'https://www.googleapis.com/auth/adwords',
+        ux_mode: 'redirect',
+        redirect_uri: environment.redirect_uri,
+        state: type,
+      });
+      client.requestCode();
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  //#region  API 相關
   /**登入 取登入者的帳號權限 可以看到有權限的廣告帳號 */
-  getPermissions(refreshToken:any) {
+  getPermissions(refreshToken: any) {
     const path = "api/AdsData/GetAdsAccount";
     let req = {
       RefreshToken: refreshToken
@@ -109,28 +126,28 @@ export class ClientSSOService {
     })
   }
   /**取得 ReFreshToke */
-  getReFreshToken(code:string) {
+  getReFreshToken(code: string) {
     const path = "api/Sso/AuthorizeCallBack";
     let req = {
       code: code
     }
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       this.apiService.CallApi(path, 'POST', req).subscribe({
         next: (res) => {
           var data = res as BaseResponse;
           if (data.code == "200") {
             resolve(data.data);
-          } else {            
-            resolve(false);
+          } else {
+            resolve("");
           }
         },
         error: (error: HttpErrorResponse) => {
           console.log(error.message);
-          reject(false);
+          reject("");
         },
       });
     })
   }
-//#endregion
+  //#endregion
 }
 

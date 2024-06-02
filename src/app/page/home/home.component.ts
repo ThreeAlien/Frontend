@@ -8,6 +8,7 @@ import { AsideComponent } from './aside/aside.component';
 import { CommonService } from 'src/app/share/service/common.service';
 import { LoginInfoService } from 'src/app/share/service/login-info.service';
 import { tap } from 'rxjs';
+import { LoadingComponent } from "../../share/loading/loading.component";
 
 
 @Component({
@@ -15,7 +16,7 @@ import { tap } from 'rxjs';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
     standalone: true,
-    imports: [MatSidenavModule, AsideComponent, MatButtonModule, MatIconModule, TopComponent, RouterOutlet]
+    imports: [MatSidenavModule, AsideComponent, MatButtonModule, MatIconModule, TopComponent, RouterOutlet, LoadingComponent]
 })
 export class HomeComponent implements OnInit {
 
@@ -25,11 +26,15 @@ export class HomeComponent implements OnInit {
     // await this.CommonSvc.getClinetName();
     const id = localStorage.getItem('id');
     const name = localStorage.getItem('name');
+    const lv = localStorage.getItem('lv');
     if(id){
-      this.loginInfoSvc.userInfo.id = id;
+      this.loginInfoSvc.userInfo.userId = id;
     }
     if(name){
-      this.loginInfoSvc.userInfo.name = name
+      this.loginInfoSvc.userInfo.userName = name;
+    }
+    if(lv){
+      this.loginInfoSvc.userInfo.userLv = lv;
     }
   }
 

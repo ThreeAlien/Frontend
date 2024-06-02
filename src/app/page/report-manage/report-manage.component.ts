@@ -243,7 +243,7 @@ export class ReportManageComponent implements OnInit {
         reportMedia: req ? req.reportMedia : '',
         startDate: sD ? sD : '',
         endDate: eD ? eD : '',
-        userId: this.loginInfoSvc.userInfo.id
+        userId: this.loginInfoSvc.userInfo.userId
       }
       this.msgData = new MsgBoxInfo;
       const qryDataUrl = environment.apiServiceHost + `api/ReportInfo/GetReport`;

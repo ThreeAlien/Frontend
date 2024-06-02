@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterOutlet } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { MessageService } from 'primeng/api';
-import { BaseResponse } from '../share/Models/share.model';
+import { LoginInfoModel } from '../share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterComponent } from './register/register.component';
@@ -16,7 +16,6 @@ import { ApiService } from '../share/service/api.service';
 import { ClientSSOService } from '../share/service/client-sso.service';
 import { LoadingService } from '../share/service/loading.service';
 import { LoginInfoService } from '../share/service/login-info.service';
-import { tap } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
 
@@ -37,7 +36,6 @@ export class LoginComponent implements OnInit {
     public apiService: ApiService,
     private msgSvc: MessageService,
     public loadingService: LoadingService,
-    private LoginInfoSvc: LoginInfoService,
     public dialog: MatDialog,
   ) { }
   account: string = "";
@@ -62,25 +60,11 @@ export class LoginComponent implements OnInit {
     if (this.isCheck()) {
       let sta = await this.getLoginAuth();
       if (sta) {
-        this.oidcLogin();
+        this.clientSSO.oidcLogin("ssoLogin");
       }
     }
   }
-  /**取得ADS 權限認證 */
-  oidcLogin() {
-    try {
-      const client: google.accounts.oauth2.CodeClient = google.accounts.oauth2.initCodeClient({
-        client_id: environment.clientId,
-        scope: 'https://www.googleapis.com/auth/adwords',
-        ux_mode: 'redirect',
-        redirect_uri: environment.redirect_uri,
-        state: 'ssoLogin',
-      });
-      client.requestCode();
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
 
   isCheck(): boolean {
     if (!this.form.valid) {
@@ -130,10 +114,10 @@ export class LoginComponent implements OnInit {
       return new Promise<boolean>((resolve, reject) => {
         this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
           next: (res) => {
-            var data = res as BaseResponse;
-            if (data.code == "200") {
-              localStorage.setItem('id', data.data.userId);
-              localStorage.setItem('name', data.data.userName);
+            if (res.code == "200") {
+              localStorage.setItem('lv', res.data.userLv.toString());
+              localStorage.setItem('id', res.data.userId);
+              localStorage.setItem('name', res.data.userName);
               resolve(true);
             } else {
               this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });

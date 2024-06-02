@@ -332,7 +332,7 @@ export class AddRepExmplePopComponent implements OnInit {
       const subID = this.myForm.controls.ChildMccItem.value?.subId;
       const tMedia = this.myForm.controls.targetMedia.value?.goalId;
       const media = this.mediaType == "G" ? "google" : "META";
-      const id = this.loginInfoSvc.userInfo.id;
+      const id = this.loginInfoSvc.userInfo.userId;
       const date = this.SDtm;
       let setData: setReportRequest = {
         reportId: '',

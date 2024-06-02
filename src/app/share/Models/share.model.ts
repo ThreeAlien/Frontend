@@ -8,7 +8,9 @@ export class BaseResponse {
 }
 export class LoginInfoModel{
   /**使用者ID */
-  public id!: string;
+  public userId!: string;
   /**使用者名稱 */
-  public name!: string;
+  public userName!: string;
+  /**使用者階級 */
+  public userLv!:string;
 }

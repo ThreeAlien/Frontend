@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { MatIconModule } from '@angular/material/icon';
-import { tap } from 'rxjs';
 import { ClientSSOService } from 'src/app/share/service/client-sso.service';
 import { LoginInfoService } from 'src/app/share/service/login-info.service';
 
@@ -23,7 +22,7 @@ export class TopComponent implements OnInit {
   userName!: string;
 
   ngOnInit(): void {
-    const name = this.loginInfoSvc.userInfo.name;
+    const name = this.loginInfoSvc.userInfo.userName;
     if (name) {
       this.userName = name
     }
