@@ -13,7 +13,7 @@ import { BaseResponse } from 'src/app/share/Models/share.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { exportSampleModels, getReportDetailRes } from '../report-manage.models';
-import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel, reportNameMapping } from './report-export-pop.model';
+import { ExportReportData, ExportReportModel, colMapping, dateRangeModel, exportData, exportDataList, subChkBoxModel, exportSubListModel, reportNameMapping, colValueModel } from './report-export-pop.model';
 import '../../../../assets/msjh-normal.js';
 import { MessageService } from 'primeng/api';
 import { MatMenuModule } from '@angular/material/menu';
@@ -1245,5 +1245,62 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
 
   //#endregion
 
+  //#region CSS 相關
+  reportNameColspan(data: ExportReportModel[]) {
+    let titleLength = 0;
+    data.forEach(x => {
+      titleLength = x.colNameList.length;
+    })
+    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
+    const kwTitileLength = data.find(x => x.reportName == "#關鍵字成效")?.colNameList.length;
+    if (sta != -1) {
+      return kwTitileLength;
+    } else {
+      return titleLength;
+    }
+  }
+  titleColspan(data: ExportReportModel[], reportName: ExportReportModel, isLast: boolean) {
+    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
+    const kwData = data.find(x => x.reportName == "#關鍵字成效");
+    let kwTitileLength = 0;
+    if (kwData) {
+      kwTitileLength = kwData.colNameList.length;
+    }
+    const count = kwTitileLength - reportName.colNameList.length;
+    if (sta != -1 && isLast) {
+      return count + 1;
+    } else {
+      return null;
+    }
+  }
+  contentColspan(data: ExportReportModel[], colD: colValueModel, isLast: boolean) {
+    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
+    const kwData = data.find(x => x.reportName == "#關鍵字成效");
+    let kwTitileLength = 0;
+    if (kwData) {
+      kwTitileLength = kwData.colNameList.length;
+    }
+    const count = kwTitileLength - colD.tdList.length;
+    if (sta != -1 && isLast) {
+      return count + 1;
+    } else {
+      return null;
+    }
+  }
+  footerColspan(data: ExportReportModel[], footer: ExportReportModel, isLast: boolean) {
+    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
+    const kwData = data.find(x => x.reportName == "#關鍵字成效");
+    let kwTitileLength = 0;
+    if (kwData) {
+      kwTitileLength = kwData.colNameList.length;
+    }
+    const count = kwTitileLength - footer.totalList.length;
+    if (sta != -1 && isLast) {
+      return count + 1;
+    } else {
+      return null;
+    }
+  }
+  //#endregion
 }
 

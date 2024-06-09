@@ -121,7 +121,8 @@
                     <ng-container *ngFor="let tableList of table.ExportReportData">
                       <!-- 報表項目 -->
                       <tr class='tr_th_title str_center'>
-                        <td [attr.colspan]="tableList.colNameList.length" style="border: 3px #000000 solid;">
+                        <td [attr.colspan]="reportNameColspan(table.ExportReportData)"
+                          style="border: 3px #000000 solid;">
                           {{tableList.reportName}}
                         </td>
                       </tr>
@@ -129,12 +130,12 @@
                       <tr class='tr_th_1 str_center' cdkDropList cdkDropListOrientation="horizontal"
                         [cdkDropListData]="tableList.colNameList"
                         (cdkDropListDropped)="dropTable($event,tableList.tableId,tableList.subId)">
-                        <ng-container *ngFor="let thD of tableList.colNameList ;index as i;">
+                        <ng-container *ngFor="let thD of tableList.colNameList ;index as i;let islast = last;">
                           <th cdkDrag (mousedown)="mouseDown($event)" cdkDragLockAxis="x" class="th_Nor"
+                            [attr.colspan]="titleColspan(table.ExportReportData,tableList,islast)"
                             [ngClass]="{ th_R : i === tableList.colNameList.length-1,th_L : i===0}">
                             {{thD.colValue}}
-                            <div *cdkDragPreview style="font-size: 18px;" class="placeholder"
-                              [style.width]="pos?.width">
+                            <div *cdkDragPreview style="font-size: 18px;" class="placeholder" width='100%'>
                               {{thD.colValue}}
                             </div>
                           </th>
@@ -143,16 +144,18 @@
                       <!-- 內容數據 -->
                       <ng-container *ngFor="let trList of tableList.colValueList;index as index;">
                         <tr class="tr_td_2 str_center" [ngClass]="{ trCss2 : index %2 === 0,trCss : index%2 !== 0}">
-                          <ng-container *ngFor="let td of trList.tdList;index as i;">
-                            <td class="td_1" [ngClass]="{ th_R : i === trList.tdList.length-1,th_L : i===0}">
+                          <ng-container *ngFor="let td of trList.tdList;index as i;let islast = last;">
+                            <td [attr.colspan]="contentColspan(table.ExportReportData,trList,islast)" class="td_1"
+                            [ngClass]="{ th_R : i === trList.tdList.length-1,th_L : i===0}">
                               {{td.colValue}}
                             </td>
                           </ng-container>
                         </tr>
                       </ng-container>
                       <tr class='tr_th_1 str_center' *ngIf="tableList.reportName !== '#關鍵字成效'">
-                        <ng-container *ngFor="let footD of tableList.totalList;index as i;">
-                          <th class="th_2" [ngClass]="{ th_R : i === tableList.totalList.length-1,th_L : i===0}">
+                        <ng-container *ngFor="let footD of tableList.totalList;index as i;let islast = last;">
+                          <th class="th_2" [attr.colspan]="footerColspan(table.ExportReportData,tableList,islast)"
+                          [ngClass]="{ th_R : i === tableList.totalList.length-1,th_L : i===0}">
                             {{footD.colValue}}</th>
                         </ng-container>
                       </tr>
