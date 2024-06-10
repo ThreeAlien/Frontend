@@ -120,7 +120,7 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('name', res.data.userName);
               resolve(true);
             } else {
-              this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: '查無此帳號!' });
+              this.msgSvc.add({ severity: 'error', summary: '錯誤', detail: `${res.msg}` });
               this.loadingService.loadingOff();
               reject(false);
             }
