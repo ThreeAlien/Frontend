@@ -56,7 +56,7 @@ export enum reportNameMapping{
   ageRepName = "#年齡成效",
   dayRepName = "#每日報表",
   weekRepName = "#每週報表",
-  kwRepName = "#關鍵字成效",
+  kwRepName = "#曝光前十大關鍵字成效",
   locationRepName = "#地區成效",
 }
 export class exportDataList {

@@ -151,14 +151,14 @@
                           </ng-container>
                         </tr>
                       </ng-container>
-                      <tr class='tr_th_1 str_center' *ngIf="tableList.reportName !== '#關鍵字成效'">
+                      <tr class='tr_th_1 str_center' *ngIf="tableList.reportName !== '#曝光前十大關鍵字成效'">
                         <ng-container *ngFor="let footD of tableList.totalList;index as i;let islast = last;">
                           <th class="th_2" [attr.colspan]="footerColspan(table.ExportReportData,tableList,islast)"
                           [ngClass]="{ th_R : i === tableList.totalList.length-1,th_L : i===0}">
                             {{footD.colValue}}</th>
                         </ng-container>
                       </tr>
-                      <tr class='tr_th_1 str_center' *ngIf="tableList.reportName === '#關鍵字成效'">
+                      <tr class='tr_th_1 str_center' *ngIf="tableList.reportName === '#曝光前十大關鍵字成效'">
                         <th colspan="4" class="th_L th_2">總計</th>
                         <ng-container *ngFor="let footD of tableList.totalList;index as i;">
                           <th class="th_2" [ngClass]="{ th_R : i === tableList.totalList.length-1}">

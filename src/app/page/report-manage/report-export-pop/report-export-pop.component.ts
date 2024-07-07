@@ -316,9 +316,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
           if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v < 1 && ws[i].v % 1 !== 0) {
             ws[i].z = '0.00%'
           }
-          if (typeof ws[i].v === 'number' && !ws[i].z) {
-            ws[i].z = '#,##0'
-          }
           //給每行一個顏色
           if (cell.r % 2) {
             // every other row
@@ -429,9 +426,6 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         //保留百分比
         if (typeof ws[i].v === 'number' && ws[i].v >= 0 && ws[i].v < 1 && ws[i].v % 1 !== 0) {
           ws[i].z = '0.00%'
-        }
-        if (typeof ws[i].v === 'number' && !ws[i].z) {
-          ws[i].z = '#,##0'
         }
         //給每行一個顏色
         if (cell.r % 2) {
@@ -936,6 +930,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
               }, {});
               const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
                 this.setTotalToZero();
+                dataList = dataList.slice(0, 10);
                 const colValueList = dataList.map(data => {
                   this.impressTotal += data.impressions;
                   this.clickTotal += data.click;
@@ -1251,8 +1246,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     data.forEach(x => {
       titleLength = x.colNameList.length;
     })
-    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
-    const kwTitileLength = data.find(x => x.reportName == "#關鍵字成效")?.colNameList.length;
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
+    const kwTitileLength = data.find(x => x.reportName == "#曝光前十大關鍵字成效")?.colNameList.length;
     if (sta != -1) {
       return kwTitileLength;
     } else {
@@ -1260,8 +1255,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   titleColspan(data: ExportReportModel[], reportName: ExportReportModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
-    const kwData = data.find(x => x.reportName == "#關鍵字成效");
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
+    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效");
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
@@ -1274,8 +1269,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   contentColspan(data: ExportReportModel[], colD: colValueModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
-    const kwData = data.find(x => x.reportName == "#關鍵字成效");
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
+    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效");
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
@@ -1288,8 +1283,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   footerColspan(data: ExportReportModel[], footer: ExportReportModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#關鍵字成效");
-    const kwData = data.find(x => x.reportName == "#關鍵字成效");
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
+    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效");
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
