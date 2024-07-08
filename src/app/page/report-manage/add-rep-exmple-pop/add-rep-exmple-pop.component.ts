@@ -713,9 +713,11 @@ export class AddRepExmplePopComponent implements OnInit {
           if (data.data) {
             data.data.forEach((x: repConModel) => {
               x.status = false;
-              //TODO 先把能用的報表寫死，目前提供六個
+              //TODO 先把能用的報表寫死，目前提供八個
               if (x.contentID == "repCon00001" ||
                 x.contentID == "repCon00002" ||
+                x.contentID == "repCon00003" ||
+                x.contentID == "repCon00004" ||
                 x.contentID == "repCon00005" ||
                 x.contentID == "repCon00006" ||
                 x.contentID == "repCon00007" || x.contentID == "repCon00015") {

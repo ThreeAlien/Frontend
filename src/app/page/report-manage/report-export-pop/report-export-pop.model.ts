@@ -40,8 +40,8 @@ export enum colMapping{
   genderUnknow = "未知",
   ageTitle = "年齡區間",
   locationTitle = "地區成效",
-  kwAdGroupName = "廣告群組",
-  kwCampaignName = "廣告活動",
+  AdGroupName = "廣告群組",
+  CampaignName = "廣告活動",
   kwColSrchKeyWord = "搜尋字詞",
   matchType = "搜尋關鍵字比對類型",
   impression = "曝光數",
@@ -58,6 +58,8 @@ export enum reportNameMapping{
   weekRepName = "#每週報表",
   kwRepName = "#曝光前十大關鍵字成效",
   locationRepName = "#地區成效",
+  CampaignRepName = "#廣告活動成效",
+  AdGroupRepName = "#廣告群組成效",
 }
 export class exportDataList {
   /**是否被勾選 */

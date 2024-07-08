@@ -683,6 +683,14 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             case "repCon00002":
               await this.getExportDayOrWeek(x.value.SD, x.value.ED, 'Week');
               break;
+             //廣告活動
+            case "repCon00003":
+              await this.getExportCampaign(x.value.SD, x.value.ED, 'Camp');
+              break;
+            //廣告群組
+            case "repCon00004":
+              await this.getExportAdGroup(x.value.SD, x.value.ED, 'AdG');
+              break;
             //年齡報表
             case "repCon00005":
               await this.getExportAge(x.value.SD, x.value.ED);
@@ -956,8 +964,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
                   subId: subId,
                   tableId: '',
                   colNameList: [
-                    { colValue: colMapping.kwCampaignName, colSta: true, width: "auto" },
-                    { colValue: colMapping.kwAdGroupName, colSta: true, width: "auto" },
+                    { colValue: colMapping.CampaignName, colSta: true, width: "auto" },
+                    { colValue: colMapping.AdGroupName, colSta: true, width: "auto" },
                     { colValue: colMapping.kwColSrchKeyWord, colSta: true, width: "auto" },
                     { colValue: colMapping.matchType, colSta: true, width: "auto" },
                     { colValue: colMapping.impression, colSta: true, width: "auto" },
@@ -1192,6 +1200,213 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       return;
     }
   }
+  /**廣告活動匯出API */
+  getExportCampaign(sd: string, ed: string, type: string) {
+    try {
+      const SD = sd;
+      const ED = ed;
+      const staCamp = ["Camp"];
+      const staAdG = ["AdG"];
+      const request = {
+        subId: this.firstFormGroup.controls.subList.value,
+        status: [""],
+        startDate: SD,
+        endDate: ED,
+      };
+      switch (type) {
+        case "Camp":
+          request.status = staCamp;
+          break;
+        case "AdG":
+          request.status = staAdG;
+          break;
+        default:
+          break;
+      }
+      const typeStr = type == "Camp" ? `${reportNameMapping.CampaignRepName}` : `${reportNameMapping.AdGroupRepName}`;
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportCampaignAdGroup`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            const data = res as BaseResponse;
+            if (data.data.length > 0) {
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
+                }
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
+                const colValueList = dataList.map(data => {
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: data.campaignName, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },
+                    ]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: type == "Camp" ? `${reportNameMapping.CampaignRepName}` : `${reportNameMapping.AdGroupRepName}`,
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.CampaignName, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" },
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: "總計", colSta: true },
+                    { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.ctrTotal}`, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
+                  ]
+                };
+              });
+              this.updateExport(exportReport);
+            } else {
+              this.messageService.add({ severity: 'error', summary: '錯誤', detail: `查無${typeStr}報表資訊!` })
+            }
+            this.loadingService.loadingOff();
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            this.loadingService.loadingOff();
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      this.loadingService.loadingOff();
+      return;
+    }
+  }
+  /**廣告活動匯出API */
+  getExportAdGroup(sd: string, ed: string, type: string) {
+    try {
+      const SD = sd;
+      const ED = ed;
+      const staCamp = ["Camp"];
+      const staAdG = ["AdG"];
+      const request = {
+        subId: this.firstFormGroup.controls.subList.value,
+        status: [""],
+        startDate: SD,
+        endDate: ED,
+      };
+      switch (type) {
+        case "Camp":
+          request.status = staCamp;
+          break;
+        case "AdG":
+          request.status = staAdG;
+          break;
+        default:
+          break;
+      }
+      const typeStr = type == "Camp" ? `${reportNameMapping.CampaignRepName}` : `${reportNameMapping.AdGroupRepName}`;
+      const rD = JSON.stringify(request);
+      const qryDataUrl = `api/ReportExport/ReportExportCampaignAdGroup`;
+      return new Promise<void>((resolve, reject) => {
+        this.apiService.CallApi(qryDataUrl, 'POST', rD).subscribe({
+          next: (res) => {
+            const data = res as BaseResponse;
+            if (data.data.length > 0) {
+              const resData = data.data as exportData[];
+              // 使用 reduce 方法按 subId 分组
+              const groupedData = resData.reduce<Record<string, exportData[]>>((acc, item) => {
+                if (!acc[item.subId]) {
+                  acc[item.subId] = [];
+                }
+                acc[item.subId].push(item);
+                return acc;
+              }, {});
+              const exportReport: ExportReportModel[] = Object.entries(groupedData).map(([subId, dataList]) => {
+                this.setTotalToZero();
+                const colValueList = dataList.map(data => {
+                  this.impressTotal += data.impressions;
+                  this.clickTotal += data.click;
+                  this.costTotal += data.cost;
+                  return {
+                    tdList: [
+                      { colValue: data.campaignName, colSta: true },
+                      { colValue: data.adGroupName, colSta: true },
+                      { colValue: data.impressions.toLocaleString(), colSta: true },
+                      { colValue: data.click.toLocaleString(), colSta: true },
+                      { colValue: data.ctr, colSta: true },
+                      { colValue: this.twFormat(data.cpc, 'cpc'), colSta: true },
+                      { colValue: this.twFormat(data.cost, 'cost'), colSta: true },
+                    ]
+                  };
+                });
+                this.ctrTotal = this.ctrCount(this.clickTotal, this.impressTotal);
+                this.cpcTotal = this.cpcCount(this.costTotal, this.clickTotal);
+                return {
+                  reportName: type == "Camp" ? `${reportNameMapping.CampaignRepName}` : `${reportNameMapping.AdGroupRepName}`,
+                  subId: subId,
+                  tableId: '',
+                  colNameList: [
+                    { colValue: colMapping.CampaignName, colSta: true, width: "auto" },
+                    { colValue: colMapping.AdGroupName, colSta: true, width: "auto" },
+                    { colValue: colMapping.impression, colSta: true, width: "auto" },
+                    { colValue: colMapping.click, colSta: true, width: "auto" },
+                    { colValue: colMapping.ctr, colSta: true, width: "auto" },
+                    { colValue: colMapping.cpc, colSta: true, width: "auto" },
+                    { colValue: colMapping.cost, colSta: true, width: "auto" },
+                  ],
+                  colValueList: colValueList,
+                  totalList: [
+                    { colValue: `${this.impressTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.clickTotal.toLocaleString()}`, colSta: true },
+                    { colValue: `${this.ctrTotal}`, colSta: true },
+                    { colValue: this.twFormat(this.cpcTotal, 'cpc'), colSta: true },
+                    { colValue: this.twFormat(this.costTotal, 'cost'), colSta: true },
+                  ]
+                };
+              });
+              this.updateExport(exportReport);
+            } else {
+              this.messageService.add({ severity: 'error', summary: '錯誤', detail: `查無${typeStr}報表資訊!` })
+            }
+            this.loadingService.loadingOff();
+            resolve();
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error.error);
+            this.loadingService.loadingOff();
+            reject();
+          }
+        });
+      })
+    }
+    catch (e: any) {
+      console.log(e);
+      this.loadingService.loadingOff();
+      return;
+    }
+  }
   /**取得報表明細(報表欄位_匯出用)API */
   async getReportDetail(id?: string) {
     try {
@@ -1246,8 +1461,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     data.forEach(x => {
       titleLength = x.colNameList.length;
     })
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
-    const kwTitileLength = data.find(x => x.reportName == "#曝光前十大關鍵字成效")?.colNameList.length;
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const kwTitileLength = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效")?.colNameList.length;
     if (sta != -1) {
       return kwTitileLength;
     } else {
@@ -1255,8 +1470,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   titleColspan(data: ExportReportModel[], reportName: ExportReportModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
-    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效");
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
@@ -1269,8 +1484,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   contentColspan(data: ExportReportModel[], colD: colValueModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
-    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效");
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
@@ -1283,8 +1498,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   footerColspan(data: ExportReportModel[], footer: ExportReportModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效");
-    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效");
+    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
