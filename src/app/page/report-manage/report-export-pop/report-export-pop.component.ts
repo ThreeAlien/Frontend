@@ -109,6 +109,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       { name: "本周", value: "W" },
       { name: "上個月", value: "LM" },
       { name: "本月", value: "M" },
+      { name: "統一此表日期", value: "All" },
     ])
     if (value) {
       data.controls['SD'].setValidators([Validators.required]);
@@ -132,7 +133,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   //日期快速篩選
-  dateRangeClick(chip: dateRangeModel, data: any) {
+  dateRangeClick(chip: dateRangeModel, data: any, allData: any) {
     let today = new Date();
     switch (chip.value) {
       case "D":
@@ -170,6 +171,12 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
         let lastLastMonDay = new Date(today.getFullYear(), today.getMonth() - 1 + 1, 0);
         data.controls['SD'].setValue(firstLastMonDay);
         data.controls['ED'].setValue(lastLastMonDay);
+        break;
+      case "All":
+        allData.controls.forEach((x:FormGroup)=>{
+          x.controls['SD'].setValue(data.controls['SD'].value);
+          x.controls['ED'].setValue(data.controls['ED'].value);
+        })
         break;
       default:
         return;
@@ -575,13 +582,13 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   }
   /**更新報表 */
   updateExport(data: ExportReportModel[]) {
-    let subName:string="";
+    let subName: string = "";
     // 更新 exportData
     if (this.exportData.length === 0) {
       data.forEach((report, i) => {
         this.CommonSvc.ChildMccItemList().pipe(
           map(subData => subData = subData.filter(x => x.subId == report.subId)),
-          map(data=> subName = data[0].subName)
+          map(data => subName = data[0].subName)
         ).subscribe();
         this.exportData.push(
           {
@@ -595,7 +602,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
       data.forEach((report, i) => {
         this.CommonSvc.ChildMccItemList().pipe(
           map(subData => subData = subData.filter(x => x.subId == report.subId)),
-          map(data=> subName = data[0].subName)
+          map(data => subName = data[0].subName)
         ).subscribe();
         const Index = this.exportData.findIndex(data => data.subId === report.subId);
         if (Index === -1) {
@@ -683,7 +690,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
             case "repCon00002":
               await this.getExportDayOrWeek(x.value.SD, x.value.ED, 'Week');
               break;
-             //廣告活動
+            //廣告活動
             case "repCon00003":
               await this.getExportCampaign(x.value.SD, x.value.ED, 'Camp');
               break;

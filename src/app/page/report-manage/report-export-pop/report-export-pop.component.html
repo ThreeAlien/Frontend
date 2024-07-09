@@ -78,7 +78,7 @@
                         <div style="padding-left: 12px;">
                           <mat-chip-set cdkDropList cdkDropListOrientation="horizontal" *ngIf="d.value.sta == true">
                             <ng-container *ngFor="let chip of d.value.dateRangePickList">
-                              <mat-chip cdkDrag (click)="dateRangeClick(chip,d)" class="clickChips">
+                              <mat-chip  (click)="dateRangeClick(chip,d,dataList)" class="clickChips">
                                 {{chip.name}}
                               </mat-chip>
                             </ng-container>
