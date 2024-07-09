@@ -76,7 +76,7 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   pos: any;
   release: boolean = true;
   kwRepName = reportNameMapping.kwRepName;
-  adGroupRepName  = reportNameMapping.adGroupRepName;
+  adGroupRepName  = reportNameMapping.AdGroupRepName;
   /**總比數 */
   tableCount = 0;
   /**報表名稱 */
