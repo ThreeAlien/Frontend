@@ -75,6 +75,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
   costTotal: number = 0;
   pos: any;
   release: boolean = true;
+  kwRepName = reportNameMapping.kwRepName;
+  adGroupRepName  = reportNameMapping.adGroupRepName;
   /**總比數 */
   tableCount = 0;
   /**報表名稱 */
@@ -1461,8 +1463,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     data.forEach(x => {
       titleLength = x.colNameList.length;
     })
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
-    const kwTitileLength = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效")?.colNameList.length;
+    const sta = data.findIndex(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
+    const kwTitileLength = data.find(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`)?.colNameList.length;
     if (sta != -1) {
       return kwTitileLength;
     } else {
@@ -1470,8 +1472,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   titleColspan(data: ExportReportModel[], reportName: ExportReportModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
-    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const sta = data.findIndex(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
+    const kwData = data.find(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
@@ -1484,8 +1486,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   contentColspan(data: ExportReportModel[], colD: colValueModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
-    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const sta = data.findIndex(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
+    const kwData = data.find(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
@@ -1498,8 +1500,8 @@ export class ReportExpotPopComponent implements AfterViewInit, OnInit {
     }
   }
   footerColspan(data: ExportReportModel[], footer: ExportReportModel, isLast: boolean) {
-    const sta = data.findIndex(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
-    const kwData = data.find(x => x.reportName == "#曝光前十大關鍵字成效" || x.reportName == "#廣告群組成效");
+    const sta = data.findIndex(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
+    const kwData = data.find(x => x.reportName == `${reportNameMapping.kwRepName}` || x.reportName == `${reportNameMapping.AdGroupRepName}`);
     let kwTitileLength = 0;
     if (kwData) {
       kwTitileLength = kwData.colNameList.length;
