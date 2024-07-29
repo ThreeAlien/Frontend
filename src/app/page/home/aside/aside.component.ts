@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { ApiService } from 'src/app/share/service/api.service';
@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
 export class AsideComponent implements OnInit {
   msgData: MsgBoxInfo = new MsgBoxInfo;
   userLv:string ="";
-  constructor(private clientSSoSvc: ClientSSOService, private msgBox: MsgBoxService,private loadSvc:LoadingService,private loginInfo:LoginInfoService) {
+  constructor(private apiSvc:ApiService, private msgBox: MsgBoxService,private loadSvc:LoadingService,private loginInfo:LoginInfoService, private router: Router) {
     this.loadSvc.loadingOff();
    }
   ngOnInit(): void {
@@ -49,7 +49,34 @@ export class AsideComponent implements OnInit {
         const msgResult = this.msgBox.msgBoxShow(this.msgData);
         msgResult.then(async x => {
           if (x?.result == "ok") {
-            this.clientSSoSvc.oidcLogin("upData");
+            //this.clientSSoSvc.oidcLogin("upData");
+            let refresh = localStorage.getItem('refresh');
+            if (refresh != "") {
+              const request = { RefreshToken: refresh };
+              let rD = JSON.stringify(request);
+              const path = environment.apiServiceHost + `api/InsertAdsData/InsertAllAdsData`;
+              this.apiSvc.CallApi(path, "POST", rD).pipe(
+                tap(res => {
+                  {
+                    if (res.code == "200") {
+                      alert("更新資料成功!");
+                      this.router.navigate(["/home"]);
+                    } else {
+                      alert("更新資料失敗，請聯絡工程師");
+                      this.router.navigate(["/home"]);
+                    }
+                  }
+                }),
+                catchError(async (err) => {
+                  console.log(err);
+                  alert("更新資料失敗，請聯絡工程師");
+                  this.router.navigate(["/home"]);
+                })
+              ).subscribe();
+            } else {
+              alert("取得Token失敗!!");
+              this.router.navigate(["/login"]);
+            }
           } else {
             return;
           }

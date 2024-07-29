@@ -14,6 +14,7 @@ const USER_ADSINFO = 'USER_ADSINFO';
 const EXPIRATION_KEY = "";
 const NAME = "name";
 const ID = "id";
+const REFRESH = "refresh"
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,6 @@ export class ClientSSOService {
   constructor(public apiService: ApiService, private router: Router) { }
   public nowPageUrl: any;
   public nextPageUrl: any;
-  refreshToken = "<REFRESH-TOKEN>";
 
   // 確認伺服器認證登入
   async checklogInfo(NowUrl: any, NextUrl: any): Promise<boolean> {
@@ -61,6 +61,7 @@ export class ClientSSOService {
     localStorage.removeItem(EXPIRATION_KEY);
     localStorage.removeItem(NAME);
     localStorage.removeItem(ID);
+    localStorage.removeItem(REFRESH);
   }
 
   /**檢查是否有登入過 */
@@ -79,6 +80,7 @@ export class ClientSSOService {
         localStorage.removeItem(TOKEN_KEY);
         localStorage.removeItem(USER_ADSINFO);
         localStorage.removeItem(EXPIRATION_KEY);
+        localStorage.removeItem(REFRESH);
         alert("登入已超時，請重新登入!!");
 
         return false

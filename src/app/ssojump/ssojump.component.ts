@@ -29,6 +29,8 @@ export class SSOJumpComponent implements OnInit {
           this.stateString = "取得權限中，請稍後...";
           try {
             let refresh = await this.clientSSO.getReFreshToken(code);
+            localStorage.removeItem('refresh');
+            localStorage.setItem('refresh', refresh);
             if (refresh != "") {
               let PermissionsAds = await this.clientSSO.getPermissions(refresh);
               if (PermissionsAds) {
